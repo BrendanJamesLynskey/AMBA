@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXI Deep Dive — Channels, Bursts &amp; Ordering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<style>
+  :root {
+    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
+    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+  }
+  .reveal-viewport { background: var(--bg); }
+  .reveal .slides section { background: transparent; }
+  .reveal section { text-align: left; }
+  .reveal .slides > section { padding: 0.5em; overflow-y: auto !important; align-items: flex-start !important; justify-content: flex-start !important; }
+  .reveal .progress { color: var(--amber); height: 3px; }
+  .reveal .controls { color: var(--amber); }
+  .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
+  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
+  .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
+  .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
+  .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
+  .reveal p  { font-size: 0.75em; line-height: 1.5; color: var(--text); }
+  .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
+  .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
+  .slide-hdr h2 { margin: 0; font-size: 1.4em; }
+  .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
+  .card h3 { font-size: 1em; margin: 0 0 0.4em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
+  .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
+  svg.diagram { display: block; margin: 0 auto; overflow: visible; }
+  .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
+  .pill.amber{color:var(--amber);border-color:var(--amber);} .pill.green{color:var(--green);border-color:var(--green);} .pill.purple{color:var(--purple);border-color:var(--purple);} .pill.blue{color:var(--blue);border-color:var(--blue);} .pill.red{color:var(--red);border-color:var(--red);}
+  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .dim { color: var(--muted); } .small { font-size: 0.65em; } .smaller { font-size: 0.55em; } .tiny { font-size: 0.48em; }
+  .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
+
+  .burst-picker { display: flex; gap: 6px; margin: 0.4em 0; font-family: 'JetBrains Mono', monospace; font-size: 0.65em; flex-wrap: wrap; }
+  .burst-picker .btn { cursor: pointer; padding: 0.4em 0.9em; border: 1px solid var(--border); border-radius: 5px; background: var(--bg2); color: var(--text); transition: all 0.15s; }
+  .burst-picker .btn:hover { border-color: var(--amber); color: var(--amber); }
+  .burst-picker .btn.active { background: var(--amber); color: var(--bg); border-color: var(--amber); font-weight: 700; }
+  .burst-info { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 6px; padding: 0.7em 1em; margin-top: 0.3em; font-size: 0.75em; min-height: 140px; }
+  .burst-info .t { color: var(--amber); font-weight: 700; font-family: 'Playfair Display', serif; font-size: 1.15em; margin-bottom: 0.15em; }
+  .burst-info .s { color: var(--green); font-family: 'JetBrains Mono', monospace; font-size: 0.8em; margin-bottom: 0.3em; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section class="title-slide" data-background-color="#0a0a0f">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 03</div>
+  <h1>AXI Deep Dive</h1>
+  <div class="subtitle">Channels · Bursts · IDs · Ordering · QoS · Lite &amp; Stream</div>
+  <div style="width:60px;height:3px;background:var(--amber);margin-bottom:1.4em;"></div>
+  <div class="meta">AXI3 · AXI4 · AXI4-Lite · AXI4-Stream · AXI5 · 5 channels · VALID/READY · ID-based OOO</div>
+  <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">02</span><h2>What AXI Solves</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>AHB couples address and data phases. One slow transaction stalls the entire bus.</li>
+        <li>AXI <strong>fully decouples</strong> five channels, each with its own VALID/READY handshake.</li>
+        <li>Transactions carry <strong>IDs</strong> — the same master can issue multiple outstanding transactions, and the slave (e.g. DRAM controller) can reorder and return them in any order <em>as long as ordering rules per-ID are preserved</em>.</li>
+        <li>This is the single most important AMBA innovation since 1996 — it's what lets a modern CPU maintain hundreds of outstanding loads while streaming DMA writes concurrently.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">The five channels</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong class="a">AW</strong> — Write Address (AWID, AWADDR, AWLEN, AWSIZE, AWBURST, AWLOCK, AWCACHE, AWPROT, AWQOS)</li>
+          <li><strong class="a">W</strong>  — Write Data (WDATA, WSTRB, WLAST)</li>
+          <li><strong class="p">B</strong>  — Write Response (BID, BRESP)</li>
+          <li><strong class="g">AR</strong> — Read Address (ARID, …)</li>
+          <li><strong class="g">R</strong>  — Read Data (RID, RDATA, RRESP, RLAST)</li>
+        </ul>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        Every channel has exactly the same handshake: source drives VALID, sink drives READY, transfer happens on the rising edge when both are high.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">03</span><h2>VALID / READY — The One Handshake</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Source drives <code>VALID</code> and the payload; sink drives <code>READY</code>.</li>
+        <li>Transfer happens on the rising <code>ACLK</code> edge when both are asserted.</li>
+        <li><strong>Source must not wait</strong> for READY before asserting VALID (no combinational dependency) — this prevents deadlock and keeps static timing clean.</li>
+        <li>Sink <em>may</em> wait for VALID before asserting READY.</li>
+        <li>Once VALID is high, it stays high until the handshake; payload must not change.</li>
+      </ul>
+    </div>
+    <div>
+      <pre><code>// Source side — safe shape
+always_ff @(posedge ACLK) begin
+  if (!ARESETn) begin
+    VALID &lt;= 0;
+    data  &lt;= 0;
+  end else begin
+    if (VALID &amp;&amp; READY) begin
+      // handshake — advance
+      VALID &lt;= next_valid;
+      data  &lt;= next_data;
+    end else if (!VALID &amp;&amp; have_data) begin
+      // present new data
+      VALID &lt;= 1;
+      data  &lt;= new_data;
+    end
+  end
+end</code></pre>
+      <p class="smaller dim" style="margin-top:0.2em;">Sink-side back-pressure is just: assert READY whenever it has buffer room.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">04</span><h2>A Read Transaction Walk-through</h2></div>
+  <svg viewBox="0 0 900 320" class="diagram" style="width:100%;">
+    <g font-family="JetBrains Mono" font-size="11" fill="#cdd6f4">
+      <text x="20" y="20" fill="#f5a623">Burst read of 4 words — ARLEN=3, INCR</text>
+
+      <text x="10" y="60" fill="#f5a623">ACLK</text>
+      <g stroke="#f5a623" fill="none" stroke-width="1.3">
+        <polyline points="70,70 90,70 90,50 130,50 130,70 170,70 170,50 210,50 210,70 250,70 250,50 290,50 290,70 330,70 330,50 370,50 370,70 410,70 410,50 450,50 450,70 490,70 490,50 530,50 530,70 570,70 570,50 610,50 610,70"/>
+      </g>
+
+      <text x="10" y="100" fill="#4ecb8d">ARVALID</text>
+      <g stroke="#4ecb8d" fill="none" stroke-width="1.5">
+        <polyline points="70,108 90,108 90,92 170,92 170,108 610,108"/>
+      </g>
+      <text x="10" y="130" fill="#4ecb8d">ARREADY</text>
+      <g stroke="#4ecb8d" fill="none" stroke-width="1.5">
+        <polyline points="70,138 90,138 90,122 170,122 170,138 610,138"/>
+      </g>
+      <text x="100" y="88" fill="#8888a8" font-size="10">AR handshake (1 cycle)</text>
+
+      <text x="10" y="170" fill="#a78bfa">RVALID</text>
+      <g stroke="#a78bfa" fill="none" stroke-width="1.5">
+        <polyline points="70,178 250,178 250,162 410,162 410,178 490,178 490,162 530,162 530,178 610,178"/>
+      </g>
+      <text x="10" y="200" fill="#a78bfa">RREADY</text>
+      <g stroke="#a78bfa" fill="none" stroke-width="1.5">
+        <polyline points="70,208 250,208 250,192 610,192"/>
+      </g>
+
+      <text x="10" y="240" fill="#60a5fa">RDATA</text>
+      <rect x="250" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
+      <text x="270" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">D0</text>
+      <rect x="290" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
+      <text x="310" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">D1</text>
+      <rect x="330" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
+      <text x="350" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">D2</text>
+      <rect x="370" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
+      <text x="390" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">wait</text>
+      <rect x="490" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
+      <text x="510" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">D3</text>
+
+      <text x="10" y="280" fill="#f87171">RLAST</text>
+      <g stroke="#f87171" fill="none" stroke-width="1.5">
+        <polyline points="70,288 490,288 490,272 530,272 530,288 610,288"/>
+      </g>
+
+      <text x="650" y="170" fill="#8888a8" font-size="10">Slave pauses on D3</text>
+      <text x="650" y="185" fill="#8888a8" font-size="10">by dropping RVALID.</text>
+      <text x="650" y="210" fill="#8888a8" font-size="10">RLAST only on the</text>
+      <text x="650" y="225" fill="#8888a8" font-size="10">final beat (D3).</text>
+    </g>
+  </svg>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">05</span><h2>Burst Types — FIXED / INCR / WRAP</h2></div>
+  <p class="dim small">Click a burst type to see how the address evolves.</p>
+  <div class="burst-picker" id="bp">
+    <div class="btn" data-k="fixed">FIXED</div>
+    <div class="btn active" data-k="incr">INCR</div>
+    <div class="btn" data-k="wrap">WRAP</div>
+  </div>
+  <div class="burst-info" id="bi">
+    <div class="t">INCR (AWBURST = 2'b01)</div>
+    <div class="s">Most common. Address increments by 2^AxSIZE each beat.</div>
+    <ul style="font-size:0.9em;">
+      <li>Length: 1–16 beats (AXI3); 1–256 beats (AXI4, provided not crossing 4 KB boundary).</li>
+      <li>Typical use: DMA memcpy, CPU cache line fill (usually 1 beat × 64 B), NIC packet read/write.</li>
+      <li>Example: ARLEN=3, ARSIZE=2 (4-byte beats), ARADDR=0x1000 → 0x1000, 0x1004, 0x1008, 0x100C.</li>
+    </ul>
+  </div>
+  <script>
+    (function(){
+      var data = {
+        fixed: { t:'FIXED (AWBURST = 2\'b00)', s:'Address stays the same across all beats.',
+          b:['Typical use: streaming to a single register (e.g. FIFO write port, peripheral TX buffer).',
+             'All beats must target the same address, same AxSIZE.',
+             'Max length 16 beats.',
+             'Example: ARLEN=3, ARADDR=0xFF00_2000 → 0xFF00_2000, 0xFF00_2000, 0xFF00_2000, 0xFF00_2000.']
+        },
+        incr: { t:'INCR (AWBURST = 2\'b01)', s:'Most common. Address increments by 2^AxSIZE each beat.',
+          b:['Length: 1–16 beats (AXI3); 1–256 beats (AXI4, provided not crossing 4 KB boundary).',
+             'Typical use: DMA memcpy, CPU cache line fill (usually 1 beat × 64 B), NIC packet read/write.',
+             'Example: ARLEN=3, ARSIZE=2 (4-byte beats), ARADDR=0x1000 → 0x1000, 0x1004, 0x1008, 0x100C.']
+        },
+        wrap: { t:'WRAP (AWBURST = 2\'b10)', s:'Address wraps within a naturally aligned boundary.',
+          b:['Length: 2, 4, 8, or 16 beats only.',
+             'Wrap boundary = AxLEN+1 × 2^AxSIZE bytes, aligned to that size.',
+             'Typical use: cache line fill with critical-word-first — the CPU gets the word it missed on first, then the rest in wraparound.',
+             'Example: ARLEN=3, ARSIZE=2, ARADDR=0x1008 → 0x1008, 0x100C, 0x1000, 0x1004.']
+        }
+      };
+      var info = document.getElementById('bi');
+      document.querySelectorAll('#bp .btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          document.querySelectorAll('#bp .btn').forEach(function(x){ x.classList.remove('active'); });
+          b.classList.add('active');
+          var d = data[b.dataset.k];
+          info.innerHTML = '<div class="t">'+d.t+'</div><div class="s">'+d.s+'</div><ul style="font-size:0.9em;">'+d.b.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
+        });
+      });
+    })();
+  </script>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">06</span><h2>Burst Lengths &amp; Alignment</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>AXI version</th><th>INCR max</th><th>WRAP options</th></tr>
+        <tr><td>AXI3</td><td>16 beats</td><td>2/4/8/16</td></tr>
+        <tr><td>AXI4</td><td>256 beats</td><td>2/4/8/16</td></tr>
+        <tr><td>AXI4-Lite</td><td>1 beat only</td><td>—</td></tr>
+        <tr><td>AXI4-Stream</td><td>no length concept</td><td>—</td></tr>
+      </table>
+      <p class="small" style="margin-top:0.4em;"><strong>4 KB rule:</strong> a single INCR burst must not cross a 4 KB address boundary — because that's the smallest MMU page size, and bursts that cross pages would risk partial permission violations.</p>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">AxSIZE encoding</h3>
+        <table>
+          <tr><th>AxSIZE</th><th>Beat width</th></tr>
+          <tr><td>0</td><td>8 bits (byte)</td></tr>
+          <tr><td>1</td><td>16 bits (half)</td></tr>
+          <tr><td>2</td><td>32 bits (word)</td></tr>
+          <tr><td>3</td><td>64 bits</td></tr>
+          <tr><td>4</td><td>128 bits</td></tr>
+          <tr><td>5</td><td>256 bits</td></tr>
+          <tr><td>6</td><td>512 bits</td></tr>
+          <tr><td>7</td><td>1024 bits</td></tr>
+        </table>
+      </div>
+      <p class="small" style="margin-top:0.3em;">AxSIZE must be ≤ the data-bus width. Narrower bursts on a wide bus waste lanes (write strobes, or read-mask on the consumer side).</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">07</span><h2>AXI IDs — The Out-of-Order Engine</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Every transaction carries an <code>AxID</code> (AWID or ARID). Responses come back tagged with the same ID (BID or RID).</li>
+        <li>Ordering rules (AXI4):
+          <ul>
+            <li>Transactions with the <strong>same ID</strong>: responses return <em>in order</em>.</li>
+            <li>Transactions with <strong>different IDs</strong>: responses may return <em>in any order</em>.</li>
+          </ul>
+        </li>
+        <li>This lets a DRAM controller satisfy ID=7 (which hit a page) before ID=3 (which missed and had to open a new row).</li>
+        <li>A master that wants strong ordering just uses one ID; a master that wants bandwidth uses many.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Worked example — 4 outstanding reads</h3>
+        <pre><code>Master issues:
+  ARID=3 AR0
+  ARID=5 AR1
+  ARID=3 AR2
+  ARID=5 AR3
+
+Slave can return:
+  RID=5 R1  (ahead — page hit)
+  RID=5 R3  (after R1, same ID)
+  RID=3 R0  (ID=3 first outstanding)
+  RID=3 R2  (after R0, same ID)</code></pre>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        A <em>single</em>-ID system loses the advantage: all responses must stay in order, so the slowest transaction stalls the rest. Modern DRAM and NIC traffic needs many IDs.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">08</span><h2>Write Interleaving — and Why It's Gone</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>AXI3 allowed <em>write-data interleaving</em>: a master could send W-beats belonging to two different write IDs alternately on the W channel.</li>
+        <li>This was bounded by <code>AWINTERLEAVE</code> depth ≥ 2.</li>
+        <li><strong>AXI4 removed it.</strong> Write data must now be sent strictly in the order of the AW transactions, and all beats of one AW are sent before the first beat of the next.</li>
+      </ul>
+      <p class="small" style="margin-top:0.5em;">Why? Because nobody ever used it. Masters either couldn't buffer the second write's data, or preferred to serialise writes to avoid corner cases. Verification shops hated it — the state space exploded for zero benefit.</p>
+    </div>
+    <div>
+      <div class="card red">
+        <h3 class="r">Consequence today</h3>
+        <p>Write-side ordering on AXI4: AW order defines W order. Read-side ordering per-ID only. Most masters can still issue AWs with different IDs and rely on the slave to reorder responses (B channel) — that was the more important part anyway.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        If you see AXI3-derived RTL with AWINTERLEAVE depth &gt;1, it's a legacy path. Modern AXI4/AXI5 design implicitly keeps it at depth 1.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">09</span><h2>Write Strobes — WSTRB</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><code>WSTRB[N-1:0]</code> has one bit per <em>byte</em> lane of WDATA. A bit of 1 means "write this byte"; 0 means "ignore it".</li>
+        <li>Lets partial writes happen without separate transactions — useful for byte and half-word stores on a 64-bit bus.</li>
+        <li>Align strobes with WDATA byte order: for little-endian, bit 0 corresponds to byte 0 (bits 7:0 of WDATA).</li>
+        <li>The slave must honour WSTRB exactly — setting it wrong corrupts neighbouring bytes.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Sparse writes</h3>
+        <pre><code>// Write 0xAA to byte 3 of a word
+// on a 64-bit (8-byte) bus
+AWADDR = 0x1000
+AWSIZE = 3 (64-bit)
+WDATA  = 0x0000_0000_AA00_0000
+WSTRB  = 8'b0000_1000
+// Byte 3 = 0xAA; others untouched</code></pre>
+      </div>
+      <div class="card green" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="g">AXI4-Lite rule:</strong> WSTRB must be all-ones for aligned register writes. A Lite master doing a byte-lane-selective write should use full AXI4.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">10</span><h2>Responses — BRESP &amp; RRESP</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>RRESP/BRESP</th><th>Meaning</th></tr>
+        <tr><td>2'b00 OKAY</td><td>Normal success (non-exclusive)</td></tr>
+        <tr><td>2'b01 EXOKAY</td><td>Exclusive access succeeded (store visible atomically)</td></tr>
+        <tr><td>2'b10 SLVERR</td><td>Slave error (bad address, protected region, internal error)</td></tr>
+        <tr><td>2'b11 DECERR</td><td>Decode error (no slave selected for this address)</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Exclusive access</h3>
+        <ul style="font-size:0.8em;">
+          <li>Master drives <code>ARLOCK/AWLOCK = 1</code> to mark an exclusive pair.</li>
+          <li>A matching read + write must target the same address, same ID, same size.</li>
+          <li>If no other master wrote that location between the read and write → EXOKAY (write committed).</li>
+          <li>If another write invalidated the reservation → OKAY (write failed silently; master must retry).</li>
+          <li>Implements LDREX/STREX, LDAXR/STLXR semantics on Arm.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">11</span><h2>AxCACHE — Memory Attributes</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><code>AxCACHE[3:0]</code> tells the bus what memory type the transaction targets. Crucial for cache maintenance and correctness.</li>
+        <li>Bits:
+          <ul>
+            <li>[0] <strong>Bufferable</strong> — write buffer allowed to re-order (writes)</li>
+            <li>[1] <strong>Cacheable / Modifiable</strong> — the transaction can be merged, split, or buffered by the system cache</li>
+            <li>[2] <strong>Read-Allocate</strong> — cache should allocate on read miss</li>
+            <li>[3] <strong>Write-Allocate</strong> — cache should allocate on write miss</li>
+          </ul>
+        </li>
+        <li>AXI4 renamed some bits (Modifiable / Allocate) and clarified semantics for system-cache-aware slaves.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Common patterns</h3>
+        <table>
+          <tr><th>AxCACHE</th><th>Meaning</th></tr>
+          <tr><td>4'b0000</td><td>Strongly-Ordered device</td></tr>
+          <tr><td>4'b0001</td><td>Device, bufferable</td></tr>
+          <tr><td>4'b0010</td><td>Normal Non-cacheable Non-buff.</td></tr>
+          <tr><td>4'b0011</td><td>Normal Non-cacheable Bufferable</td></tr>
+          <tr><td>4'b1111</td><td>Normal Cacheable WB WA RA</td></tr>
+        </table>
+      </div>
+      <p class="smaller dim" style="margin-top:0.3em;">The MMU page table attributes on Armv8 map directly to AxCACHE when the CPU issues the transaction.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">12</span><h2>AxPROT — Security &amp; Privilege</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><code>AxPROT[2:0]</code> = 3 attribute bits on every transaction:
+          <ul>
+            <li>[0] <strong>Privileged</strong> — 1 = privileged CPU mode</li>
+            <li>[1] <strong>Non-Secure</strong> — 1 = NS, 0 = Secure</li>
+            <li>[2] <strong>Instruction</strong> — 1 = instruction fetch, 0 = data</li>
+          </ul>
+        </li>
+        <li>Bus filters (TrustZone AXI filters, SMMU fault modes) gate traffic based on AxPROT.</li>
+        <li>An AXI5 SoC with RME (Realm Management Extension) adds <code>AxPROT[3]=NSE</code> so a 4-way security state (Root/Realm/Secure/Non-Secure) can be encoded.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Hardware attribution</h3>
+        <p>AxPROT is produced at the CPU (based on the MMU / EL) and must propagate unaltered through bridges, crossbars, and async FIFOs to the slave. Losing it is a security bug.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        A common SoC design pattern: place an <strong>AXI firewall</strong> between a Non-Secure master and a Secure slave. It inspects AxPROT[1] and responds DECERR / SLVERR for disallowed combinations.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">13</span><h2>AxQOS &amp; AxREGION</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3>AxQOS[3:0] — Quality of Service</h3>
+      <ul>
+        <li>4-bit hint: higher value = higher priority.</li>
+        <li>Implementation-defined — the spec does not dictate behaviour.</li>
+        <li>Typical use: memory controllers prioritise display-refresh or real-time DMA over CPU loads.</li>
+      </ul>
+      <h3>AxREGION[3:0]</h3>
+      <ul>
+        <li>4-bit region identifier, set by the <em>interconnect</em>, not the master.</li>
+        <li>Lets a slave expose up to 16 distinct logical regions from one physical port.</li>
+        <li>E.g. a DRAM controller exposing banked regions without needing 16 separate slave ports.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Newer AMBA5 AxMMUVALID / AxMMUSIDV</h3>
+        <p>AMBA 5 AXI adds SMMU-side-band signals so a master's <em>StreamID</em> can travel with the transaction — crucial for virtualised I/O and IOMMUs:</p>
+        <ul style="font-size:0.8em;">
+          <li>AWMMUVALID, AWMMUSID, AWMMUSSID</li>
+          <li>ARMMUVALID, ARMMUSID, ARMMUSSID</li>
+        </ul>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        Most crossbars propagate AxQOS to downstream slaves but do not prioritise inside the crossbar itself — prioritisation is left to the memory controller.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">14</span><h2>AxUSER — the Escape Hatch</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Per-channel USER signals (AWUSER, WUSER, BUSER, ARUSER, RUSER) — implementation-defined width, spec-defined <em>presence</em>.</li>
+        <li>Intended for SoC-specific sideband: PMU hints, parity, ECC side-channel, IP licensee IDs, SMMU stream hints.</li>
+        <li>Master and slave must <em>agree</em> on the semantics — the spec does nothing here except carry bits.</li>
+        <li>AMBA5 formalises more attributes so the USER channel isn't the only sideband: AxMMUSID, MPAM PARTID, MTE tags, etc.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Cache stashing (AMBA 5)</h3>
+        <p>AXI5 AxSTASH signals let a coherent master hint that a transaction's data should be <em>installed</em> into a target cache, not just delivered to the slave. Used for low-latency NIC → CPU producer-consumer.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">MPAM PARTID:</strong> AxMPAM fields let a hypervisor tag transactions with a partition ID; the memory controller enforces per-partition bandwidth/cache quotas.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">15</span><h2>AXI4-Lite</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Stripped-down AXI4 for control/status register access:
+          <ul>
+            <li>Burst length = 1 (no AxLEN)</li>
+            <li>No AxID (or implied ID=0)</li>
+            <li>No AxLOCK, AxCACHE, AxBURST, AxQOS</li>
+            <li>AxSIZE fixed to bus width</li>
+            <li>WSTRB only for byte-level writes</li>
+          </ul>
+        </li>
+        <li>Still keeps the five channels and the VALID/READY handshake — so it composes cleanly with full AXI via a gateway.</li>
+        <li>Used by virtually every register-mapped IP block a CPU talks to today.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Why AXI4-Lite beat APB for IP</h3>
+        <p>Between ~2012 and ~2018 IP vendors (especially on FPGA, via Xilinx) switched register interfaces from APB to AXI4-Lite. Reasons:</p>
+        <ul style="font-size:0.8em;">
+          <li>No bridge needed when the host bus is AXI.</li>
+          <li>5 channels give you inherent pipelining — 10–100× throughput vs APB for CSR bursts.</li>
+          <li>Same VIP / same formal assertions / same training as full AXI.</li>
+        </ul>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        MCUs still use APB — <em>area</em> matters there. Servers/FPGAs use AXI4-Lite — <em>integration</em> matters more.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">16</span><h2>AXI4-Stream</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>A <em>pure data pipe</em>. No address, no response. Just data flowing between a Source ("Master") and Sink ("Slave").</li>
+        <li>Signals:
+          <ul>
+            <li><code>TDATA</code> — data (any width)</li>
+            <li><code>TVALID</code>, <code>TREADY</code> — VALID/READY handshake</li>
+            <li><code>TLAST</code> — end of packet</li>
+            <li><code>TKEEP</code> — per-byte "this byte is valid"</li>
+            <li><code>TSTRB</code> — per-byte "this byte is a data byte (vs null)"</li>
+            <li><code>TID</code>, <code>TDEST</code>, <code>TUSER</code> — routing &amp; metadata</li>
+          </ul>
+        </li>
+        <li>The de-facto FPGA streaming interface. Every Xilinx video, Ethernet, and DSP IP block exposes it.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Why AXI4-Stream caught on</h3>
+        <p>DSP pipelines don't address memory — they're just chains of "process one beat, hand it to the next stage". AXI4-Stream <em>is</em> that interface standardised.</p>
+        <p style="margin-top:0.3em;">Because it's so light, you can clock-gate entire stages based on TVALID activity.</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="p">Deadlock hazard:</strong> rings of AXI4-Stream without back-pressure credit protocols can deadlock. Always break rings with DMA buffers.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">17</span><h2>AXI5 — AMBA 5 Evolution</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Significant additions</h3>
+      <ul>
+        <li><strong>Atomic transactions</strong> — AtomicStore, AtomicLoad, AtomicSwap, AtomicCompare — offloaded from the CPU to the memory system (for LSE instructions on Armv8.1+).</li>
+        <li><strong>Cache stashing</strong> — AxSTASH hints to push data into a target cache (NIC → L3).</li>
+        <li><strong>User request attributes</strong> — AxNSAID (Non-Secure Access Identifier for RME/CCA).</li>
+        <li><strong>MTE (Memory Tagging Extension)</strong> support — tag bits on every transfer.</li>
+        <li><strong>Deallocation hints</strong> — AxCHUNK / WriteNoSnoop / CMO (Cache Maintenance Operations).</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">AXI5-Lite, AXI5-Stream</h3>
+        <p>Lite and Stream got AMBA 5 refreshes too — mostly adding security attributes (NSE) and user-signal alignment with the rest of AMBA 5.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">Atomic offload is a big deal:</strong> instead of LR/SC loops with ~100-cycle retries on contention, the atomic operation is performed <em>inside the memory controller</em> — one round trip, success guaranteed.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">18</span><h2>AXI Crossbar — What Happens in the Middle</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Routes masters to slaves based on AxADDR decoding.</li>
+        <li>Each slave port has its own arbiter across masters; each master port has its own response multiplexer across slaves.</li>
+        <li><strong>ID re-mapping</strong>: the crossbar prepends a master-index to AxID so slaves see unique IDs, and strips it on the way back.</li>
+        <li>Typical delays inserted per stage for timing closure — a 4×4 AXI crossbar at 2 GHz typically has 3–5 cycle latency per direction.</li>
+        <li>Must preserve ordering <em>per source-ID</em>: the same master's same-ID transactions come back in order.</li>
+      </ul>
+    </div>
+    <div>
+      <svg viewBox="0 0 340 260" style="width:100%;">
+        <rect x="6" y="6" width="328" height="248" rx="8" fill="#10101a" stroke="#2a2a3a"/>
+        <text x="170" y="26" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">AXI 3×3 crossbar</text>
+
+        <g font-family="JetBrains Mono" font-size="10">
+          <rect x="20" y="50" width="70" height="28" rx="4" fill="#181824" stroke="#f5a623"/>
+          <text x="55" y="68" text-anchor="middle" fill="#f5a623">CPU</text>
+          <rect x="20" y="90" width="70" height="28" rx="4" fill="#181824" stroke="#f5a623"/>
+          <text x="55" y="108" text-anchor="middle" fill="#f5a623">GPU</text>
+          <rect x="20" y="130" width="70" height="28" rx="4" fill="#181824" stroke="#f5a623"/>
+          <text x="55" y="148" text-anchor="middle" fill="#f5a623">DMA</text>
+
+          <rect x="120" y="40" width="100" height="160" rx="6" fill="#0e0e18" stroke="#4ecb8d"/>
+          <text x="170" y="70" text-anchor="middle" fill="#4ecb8d">Address</text>
+          <text x="170" y="88" text-anchor="middle" fill="#4ecb8d">decode +</text>
+          <text x="170" y="106" text-anchor="middle" fill="#4ecb8d">per-slave</text>
+          <text x="170" y="124" text-anchor="middle" fill="#4ecb8d">arbiter +</text>
+          <text x="170" y="142" text-anchor="middle" fill="#4ecb8d">per-master</text>
+          <text x="170" y="160" text-anchor="middle" fill="#4ecb8d">response mux</text>
+
+          <rect x="250" y="50" width="70" height="28" rx="4" fill="#181824" stroke="#a78bfa"/>
+          <text x="285" y="68" text-anchor="middle" fill="#a78bfa">DDR</text>
+          <rect x="250" y="90" width="70" height="28" rx="4" fill="#181824" stroke="#a78bfa"/>
+          <text x="285" y="108" text-anchor="middle" fill="#a78bfa">SRAM</text>
+          <rect x="250" y="130" width="70" height="28" rx="4" fill="#181824" stroke="#a78bfa"/>
+          <text x="285" y="148" text-anchor="middle" fill="#a78bfa">Peri</text>
+        </g>
+
+        <g stroke="#8888a8">
+          <line x1="90" y1="64" x2="120" y2="64"/>
+          <line x1="90" y1="104" x2="120" y2="104"/>
+          <line x1="90" y1="144" x2="120" y2="144"/>
+          <line x1="220" y1="64" x2="250" y2="64"/>
+          <line x1="220" y1="104" x2="250" y2="104"/>
+          <line x1="220" y1="144" x2="250" y2="144"/>
+        </g>
+        <text x="170" y="230" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">3 masters × 3 slaves — 9 directed paths</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">19</span><h2>Common AXI Pitfalls</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="r">Pitfall: VALID → READY dependency</h3>
+      <p class="small">Source must not <em>wait</em> for READY before asserting VALID. Creating that combinational loop deadlocks the bus and breaks STA.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: Changing payload while VALID is high</h3>
+      <p class="small">Once VALID is asserted, the payload (ADDR, DATA, etc.) must not change until READY takes effect.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: RLAST / WLAST missed or premature</h3>
+      <p class="small">RLAST must be high on exactly the last beat. Generating it too early or too late confuses the master's burst counter.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: Burst crosses 4 KB boundary</h3>
+      <p class="small">Protocol-illegal. Split at the master or have the slave error out.</p>
+    </div>
+    <div>
+      <h3 class="r">Pitfall: Write response before all W-beats</h3>
+      <p class="small">Slave must wait for WLAST before issuing B. Some slaves combine this with an internal write buffer; you still must respect the ordering.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: Deadlock rings</h3>
+      <p class="small">If Master A is waiting on Slave X's B channel while A holds up Slave Y's AR queue that X in turn waits on, the bus deadlocks. Topology and depth of outstanding transactions must be analysed.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: ID width explosion</h3>
+      <p class="small">Crossbars widen AxID by log2(N_masters). If downstream slaves hard-code the ID width, the crossbar break-out fails.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: AxCACHE mismatch vs MMU attributes</h3>
+      <p class="small">CPU's MMU attributes must match what the CPU drives on AxCACHE, or coherency contracts break.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">20</span><h2>Protocol Comparison — AXI3 vs AXI4 vs AXI5</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>Feature</th><th>AXI3</th><th>AXI4</th><th>AXI5</th></tr>
+        <tr><td>INCR burst len</td><td>1–16</td><td>1–256</td><td>1–256</td></tr>
+        <tr><td>Write interleave</td><td>yes</td><td>no</td><td>no</td></tr>
+        <tr><td>QoS / Region</td><td>no</td><td>yes</td><td>yes</td></tr>
+        <tr><td>USER sideband</td><td>no</td><td>yes</td><td>yes</td></tr>
+        <tr><td>Atomics</td><td>Exclusive only</td><td>Exclusive only</td><td>Atomic*</td></tr>
+        <tr><td>Cache stashing</td><td>no</td><td>no</td><td>yes</td></tr>
+        <tr><td>RME / MTE hooks</td><td>no</td><td>no</td><td>yes</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Which will you see in practice?</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong>AXI3:</strong> legacy IP, FPGA interfaces from the Zynq-7000 era.</li>
+          <li><strong>AXI4:</strong> dominant today — Cortex-A53/A72/A76, Mali GPU, most ASIC design.</li>
+          <li><strong>AXI5:</strong> Neoverse N2/V2, Cortex-M85, new NPU/accelerator designs requiring atomics/MTE.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">21</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong class="a">"Why five channels?"</strong> → Independent backpressure for AW, W, B, AR, R. Lets the memory controller overlap reads and writes while respecting per-ID ordering.</li>
+        <li><strong class="a">"What does AxID buy you?"</strong> → Out-of-order responses across IDs; in-order within the same ID. Maps neatly to a CPU's load queue and a DRAM controller's reorder buffer.</li>
+        <li><strong class="a">"Why isn't WLAST redundant?"</strong> → Because the slave might not know AWLEN in time (gated by arbitration/clock crossings). WLAST is the single bit that authoritatively ends the burst.</li>
+        <li><strong class="a">"Why the 4 KB rule?"</strong> → Prevents a single burst from spanning two MMU pages with potentially different permissions.</li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li><strong class="g">"What's the difference between AXI4-Lite and APB?"</strong> → Channel count (5 vs effectively 2), pipelining, and ecosystem. AXI4-Lite wins on integration, APB wins on area.</li>
+        <li><strong class="g">"When do you use AXI4-Stream?"</strong> → DSP/video/packet pipelines where there's no address — just a directed flow of data with TLAST packet boundaries.</li>
+        <li><strong class="g">"Why did AXI4 drop write interleaving?"</strong> → Nobody implemented it usefully; verification was expensive; AXI's response reordering already gave you the bandwidth you wanted.</li>
+        <li><strong class="g">"When do you use AXI5 atomics vs Exclusive?"</strong> → Atomics for contended counters (faster, one round trip); Exclusive for ABA-style compare-and-swap patterns still supported by older CPUs.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">22</span><h2>References</h2></div>
+  <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
+    <p>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA AXI and ACE Protocol Specification (IHI 0022)</em> — AXI3, AXI4, AXI5<br>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA AXI-Stream Protocol Specification (IHI 0051)</em><br>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA AXI4-Lite FAQ and errata</em> (Arm Developer website)<br>
+      <strong class="a">Arm Ltd.</strong> — <em>Neoverse N2 / V2 Technical Reference Manual</em> — AXI5 port definitions, atomic transactions<br>
+      <strong class="a">Xilinx UG761 / UG1037</strong> — <em>AXI Reference Guide</em> — practical AXI4 / AXI4-Lite / AXI4-Stream examples<br>
+      <strong class="a">Xilinx PG059</strong> — <em>AXI Interconnect v2.1</em> — crossbar architecture reference<br>
+      <strong class="a">Siemens EDA / Cadence / Synopsys</strong> — AXI protocol checker docs &amp; coverage models<br>
+      <strong class="a">Arm ABVIP</strong> — <em>AMBA Protocol Verification IP (AXI, AXI-Stream)</em> — formal property libraries<br>
+      <strong class="a">Clifford Wolf, Dan Gisselquist</strong> — "Building AXI Infrastructure" blog series — pragmatic protocol-checker implementation notes<br>
+      <strong class="a">Wikipedia</strong> — "Advanced eXtensible Interface" — well-sourced cross-references
+    </p>
+    <p style="color:var(--muted);margin-top:0.8em;font-size:0.85em">
+      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Playfair Display + DM Sans + JetBrains Mono<br>
+      Educational use.
+    </p>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script>
+Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', transitionSpeed: 'fast', controls: true, progress: true, center: false, width: 1100, height: 900, margin: 0.01, plugins: [RevealHighlight], highlight: { theme: 'monokai' } });
+</script>
+<script>
+(function(){ var h = Reveal.getConfig().height || 900; var m = Reveal.getConfig().margin || 0.02; var maxH = Math.floor(h * (1 - 2 * m)) + 'px'; function fixSlides(){ document.querySelectorAll('.reveal .slides>section,.reveal .slides>section>section').forEach(function(s){ s.style.display = 'block'; s.style.maxHeight = maxH; }); } Reveal.on('ready', fixSlides); Reveal.on('slidechanged', fixSlides); })();
+</script>
+</body>

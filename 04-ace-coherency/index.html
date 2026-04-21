@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACE &amp; ACE-Lite — Coherency over AXI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<style>
+  :root {
+    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
+    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+  }
+  .reveal-viewport { background: var(--bg); }
+  .reveal .slides section { background: transparent; }
+  .reveal section { text-align: left; }
+  .reveal .slides > section { padding: 0.5em; overflow-y: auto !important; align-items: flex-start !important; justify-content: flex-start !important; }
+  .reveal .progress { color: var(--amber); height: 3px; }
+  .reveal .controls { color: var(--amber); }
+  .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
+  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
+  .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
+  .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
+  .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
+  .reveal p  { font-size: 0.75em; line-height: 1.5; color: var(--text); }
+  .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
+  .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
+  .slide-hdr h2 { margin: 0; font-size: 1.4em; }
+  .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
+  .card h3 { font-size: 1em; margin: 0 0 0.4em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
+  .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
+  svg.diagram { display: block; margin: 0 auto; overflow: visible; }
+  .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
+  .pill.amber{color:var(--amber);border-color:var(--amber);} .pill.green{color:var(--green);border-color:var(--green);} .pill.purple{color:var(--purple);border-color:var(--purple);} .pill.blue{color:var(--blue);border-color:var(--blue);} .pill.red{color:var(--red);border-color:var(--red);}
+  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .dim { color: var(--muted); } .small { font-size: 0.65em; } .smaller { font-size: 0.55em; } .tiny { font-size: 0.48em; }
+  .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
+
+  .state-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4em; margin: 0.4em 0; }
+  .state-box { border: 1px solid var(--border); border-radius: 8px; padding: 0.6em 0.6em; background: var(--bg2); font-size: 0.65em; }
+  .state-box h4 { margin: 0 0 0.2em; font-family: 'Playfair Display', serif; font-size: 1em; color: var(--amber); }
+  .state-box p { margin: 0; font-size: 0.85em; color: #b8b8d0; }
+  .state-box.unique  { border-left: 3px solid var(--amber); }
+  .state-box.shared  { border-left: 3px solid var(--green); }
+  .state-box.dirty   { background: #1a0f05; }
+  .state-box.invalid { border-left: 3px solid var(--red); opacity: 0.8; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section class="title-slide" data-background-color="#0a0a0f">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 04</div>
+  <h1>ACE &amp; ACE-Lite</h1>
+  <div class="subtitle">Bringing Cache Coherency to AXI · Five Cache States, Three Snoop Channels</div>
+  <div style="width:60px;height:3px;background:var(--amber);margin-bottom:1.4em;"></div>
+  <div class="meta">AC · CR · CD · UC / UD / SC / SD / I · ReadShared · ReadUnique · DVM · CCI-400/500/550</div>
+  <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">02</span><h2>Why Coherency? Why AMBA?</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>By 2010, multi-core Arm SoCs (Cortex-A9 quad) had reached the point where software-managed cache maintenance was no longer acceptable.</li>
+        <li>The Linux kernel needed <em>hardware</em> cache coherency for SMP scheduling and page-table updates to work reasonably.</li>
+        <li><strong>big.LITTLE</strong> (Cortex-A7 + A15, 2011) made it unavoidable — the OS had to migrate threads between clusters with live cache state.</li>
+        <li>Arm needed a bus protocol that could carry coherency primitives. Bolting them onto AXI gave <strong>ACE</strong> — AXI Coherency Extensions — in AMBA 4 (2010).</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">ACE in one sentence</h3>
+        <p>ACE adds <strong>three snoop channels</strong> to AXI and <strong>extends the transaction type space</strong> so a requesting cache can signal what it wants (Shared, Unique, etc.) and peer caches can report back what they have.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        Arm publishes ACE alongside AXI in a single specification (IHI 0022). Every AXI signal still exists; ACE just layers on top.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">03</span><h2>MOESI — Refresher</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Classical cache-coherency states, named after the five-state protocol popularised by AMD / SPARC:
+          <ul>
+            <li><strong class="a">M</strong>odified — dirty, exclusive, must write back</li>
+            <li><strong class="a">O</strong>wned — dirty, shared (this cache responsible for write-back)</li>
+            <li><strong class="g">E</strong>xclusive — clean, only copy</li>
+            <li><strong class="g">S</strong>hared — clean, may be copies elsewhere</li>
+            <li><strong class="r">I</strong>nvalid — not valid</li>
+          </ul>
+        </li>
+        <li>ACE uses a variant with <strong>five equivalent states</strong> but renamed to fit AXI's semantics — UniqueClean / UniqueDirty / SharedClean / SharedDirty / Invalid.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">ACE ↔ MOESI mapping</h3>
+        <table>
+          <tr><th>ACE</th><th>MOESI</th></tr>
+          <tr><td>UniqueClean (UC)</td><td>E</td></tr>
+          <tr><td>UniqueDirty (UD)</td><td>M</td></tr>
+          <tr><td>SharedClean (SC)</td><td>S</td></tr>
+          <tr><td>SharedDirty (SD)</td><td>O</td></tr>
+          <tr><td>Invalid (I)</td><td>I</td></tr>
+        </table>
+      </div>
+      <p class="smaller dim" style="margin-top:0.3em;">The MOESI "O" (Owned) state — the one responsible for supplying clean copies to peers and eventually writing back — is SharedDirty in ACE-speak.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">04</span><h2>The Five ACE Cache States</h2></div>
+  <div class="state-grid">
+    <div class="state-box unique">
+      <h4>UniqueClean</h4>
+      <p>This cache holds the only copy. Memory is up to date. Equivalent to E.</p>
+    </div>
+    <div class="state-box unique dirty">
+      <h4>UniqueDirty</h4>
+      <p>Only copy; memory is <em>stale</em>. Must write back before eviction. Equivalent to M.</p>
+    </div>
+    <div class="state-box shared">
+      <h4>SharedClean</h4>
+      <p>Possibly shared with peers. Memory may be up-to-date or another peer may own a dirty copy. Equivalent to S.</p>
+    </div>
+    <div class="state-box shared dirty">
+      <h4>SharedDirty</h4>
+      <p>Shared with peers; <strong>this</strong> cache owns the dirty copy and is responsible for write-back. Equivalent to O.</p>
+    </div>
+    <div class="state-box invalid">
+      <h4>Invalid</h4>
+      <p>Line not present / dropped.</p>
+    </div>
+  </div>
+  <div class="cols cols-2" style="margin-top:0.6em;">
+    <div>
+      <h3 class="a">Key invariants</h3>
+      <ul>
+        <li>At most one cache can be Unique (UC or UD) for a given line.</li>
+        <li>At most one cache can be SharedDirty for a given line.</li>
+        <li>Multiple caches can be SharedClean simultaneously.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="g">What's "Dirty"?</h3>
+      <p class="small">A cache line is Dirty if the data in it differs from the underlying memory's value. The responsibility to eventually write-back is always with exactly one cache (UD or SD).</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">05</span><h2>ACE Channels — AXI Plus Three</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>On top of the five AXI channels (AR, R, AW, W, B), ACE adds <strong>three snoop channels</strong>:
+          <ul>
+            <li><strong class="a">AC</strong> — Snoop Address (interconnect → cache)</li>
+            <li><strong class="g">CR</strong> — Snoop Response (cache → interconnect)</li>
+            <li><strong class="p">CD</strong> — Snoop Data (cache → interconnect, optional)</li>
+          </ul>
+        </li>
+        <li>When a new request arrives at the interconnect, the Home logic broadcasts an AC snoop to all peer caches; each responds with CR (state + hit/miss), and if it has modified data, drives CD.</li>
+        <li>Plus a <strong>DVM</strong> logical channel (Distributed Virtual Memory) — piggybacks on the snoop channels for TLB invalidation, I-cache maintenance, and barrier messages.</li>
+      </ul>
+    </div>
+    <div>
+      <svg viewBox="0 0 340 260" style="width:100%;">
+        <rect x="10" y="10" width="320" height="240" rx="8" fill="#10101a" stroke="#2a2a3a"/>
+        <text x="170" y="30" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">ACE master ports</text>
+
+        <rect x="30" y="54" width="90" height="40" rx="5" fill="#181824" stroke="#f5a623"/>
+        <text x="75" y="78" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">ACE Master</text>
+
+        <rect x="200" y="54" width="110" height="170" rx="6" fill="#181824" stroke="#4ecb8d"/>
+        <text x="255" y="78" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">CCI / ACE</text>
+        <text x="255" y="92" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Interconnect</text>
+
+        <g stroke-width="1.4" font-family="JetBrains Mono" font-size="9">
+          <line x1="120" y1="60"  x2="200" y2="60"  stroke="#f5a623"/>
+          <text x="160" y="55" fill="#f5a623" text-anchor="middle">AR/AW</text>
+          <line x1="120" y1="78"  x2="200" y2="78"  stroke="#a78bfa"/>
+          <text x="160" y="73" fill="#a78bfa" text-anchor="middle">R/B</text>
+          <line x1="120" y1="96"  x2="200" y2="96"  stroke="#f5a623"/>
+          <text x="160" y="91" fill="#f5a623" text-anchor="middle">W</text>
+          <line x1="200" y1="128" x2="120" y2="128" stroke="#60a5fa"/>
+          <text x="160" y="123" fill="#60a5fa" text-anchor="middle">AC (snoop)</text>
+          <line x1="120" y1="146" x2="200" y2="146" stroke="#4ecb8d"/>
+          <text x="160" y="141" fill="#4ecb8d" text-anchor="middle">CR (resp)</text>
+          <line x1="120" y1="164" x2="200" y2="164" stroke="#a78bfa"/>
+          <text x="160" y="159" fill="#a78bfa" text-anchor="middle">CD (data)</text>
+        </g>
+
+        <text x="170" y="240" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">5 AXI channels + 3 snoop channels = 8 total</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">06</span><h2>ACE Transaction Types — Read Side</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>Transaction</th><th>When used</th><th>Finishing state</th></tr>
+        <tr><td>ReadOnce</td><td>One-shot snoop read; don't cache</td><td>(not cached)</td></tr>
+        <tr><td>ReadClean</td><td>Line fill expecting clean data only</td><td>UC or SC</td></tr>
+        <tr><td>ReadNotSharedDirty</td><td>Line fill, willing to accept any state except SD</td><td>UC / UD / SC</td></tr>
+        <tr><td>ReadShared</td><td>Read expecting to share it</td><td>UC/UD/SC/SD</td></tr>
+        <tr><td>ReadUnique</td><td>Read intending to modify — invalidate all peers</td><td>UC or UD</td></tr>
+        <tr><td>CleanUnique</td><td>Already have SC/SD, need to upgrade to unique before writing</td><td>UC</td></tr>
+        <tr><td>MakeUnique</td><td>Overwrite entire line — no data transfer needed</td><td>UD</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Why so many?</h3>
+        <p>Each type tells the coherency logic exactly what ownership and data transfer are needed — lets the interconnect do the minimum work. A cache-line upgrade (SC → UC) needs no data movement at all, only invalidation messages.</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="p">CleanUnique vs MakeUnique:</strong> CleanUnique keeps the current data valid (reading before writing); MakeUnique discards current data (full-line overwrite, like <code>memset</code>). MakeUnique saves bus bandwidth on whole-line writes.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">07</span><h2>ACE Transaction Types — Write Side</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>Transaction</th><th>Purpose</th></tr>
+        <tr><td>WriteUnique</td><td>Non-cached write; snoops others to invalidate first</td></tr>
+        <tr><td>WriteLineUnique</td><td>Full-line non-cached write</td></tr>
+        <tr><td>WriteBack</td><td>Evict a dirty line (UD or SD) to memory</td></tr>
+        <tr><td>WriteClean</td><td>Flush dirty line but keep cached (UD → UC)</td></tr>
+        <tr><td>Evict</td><td>Inform coherency that a clean line was dropped</td></tr>
+        <tr><td>WriteEvict</td><td>Write-back + invalidate in one step</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Why "Evict" (clean drop)?</h3>
+        <p>A snoop filter inside a coherent interconnect needs to know which caches currently hold which lines — if a CPU silently drops a clean line, the filter's tracking diverges. ACE requires explicit <strong>Evict</strong> for clean drops so the filter can reclaim that entry.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">WriteEvict</strong> is the efficient case: you want to write back <em>and</em> drop, in one transaction. Used at end-of-workload or on LRU eviction of a modified line.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">08</span><h2>Snoop Transactions — from the Interconnect</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>When a ReadShared / ReadUnique / CleanUnique arrives at the interconnect, it broadcasts a snoop to every peer cache on their AC channel.</li>
+        <li>Snoop types mirror the request semantics:
+          <ul>
+            <li><strong>ReadOnce / ReadClean / ReadNotSharedDirty / ReadShared / ReadUnique</strong> — peer must supply data if present, and transition its state accordingly.</li>
+            <li><strong>CleanInvalid</strong> — peer must write back dirty data, then invalidate.</li>
+            <li><strong>MakeInvalid</strong> — peer drops the line without writing back (used when the requester intends to overwrite the whole line).</li>
+          </ul>
+        </li>
+        <li>Peer responds with a 5-bit <code>CR[4:0]</code> encoding hit/miss, passed-dirty, passed-data, error.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">CRRESP encoding</h3>
+        <pre><code>CRRESP[0] DataTransfer — CD active
+CRRESP[1] Error         — snoop failed
+CRRESP[2] PassDirty     — responder owns dirty
+CRRESP[3] IsShared      — responder keeps shared
+CRRESP[4] WasUnique     — responder was unique</code></pre>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        A peer that's already Invalid for a line can respond with CRRESP=0 — "I have nothing." This is the common case; most snoops miss most peers.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">09</span><h2>A Coherent Read — Full Flow</h2></div>
+  <svg viewBox="0 0 900 300" class="diagram" style="width:100%;">
+    <g font-family="JetBrains Mono" font-size="11" fill="#cdd6f4">
+      <text x="20" y="20" fill="#f5a623">CPU0 issues ReadShared; CPU1 holds the line in UD (Modified)</text>
+
+      <rect x="20"  y="50" width="140" height="60" rx="6" fill="#10101a" stroke="#f5a623"/>
+      <text x="90"  y="75" text-anchor="middle" fill="#f5a623" font-weight="700">CPU0 / Cache</text>
+      <text x="90"  y="92" text-anchor="middle" fill="#8888a8" font-size="10">ACE Master</text>
+
+      <rect x="380" y="50" width="140" height="200" rx="6" fill="#10101a" stroke="#4ecb8d"/>
+      <text x="450" y="75" text-anchor="middle" fill="#4ecb8d" font-weight="700">CCI-400</text>
+      <text x="450" y="92" text-anchor="middle" fill="#8888a8" font-size="10">(Arbiter + Snoop Filter)</text>
+
+      <rect x="740" y="50" width="140" height="60" rx="6" fill="#10101a" stroke="#a78bfa"/>
+      <text x="810" y="75" text-anchor="middle" fill="#a78bfa" font-weight="700">CPU1 / Cache</text>
+      <text x="810" y="92" text-anchor="middle" fill="#8888a8" font-size="10">Line state: UD</text>
+
+      <rect x="380" y="200" width="140" height="40" rx="6" fill="#10101a" stroke="#f87171"/>
+      <text x="450" y="225" text-anchor="middle" fill="#f87171">DRAM controller</text>
+
+      <g font-size="11">
+        <line x1="160" y1="90" x2="380" y2="110" stroke="#f5a623" stroke-width="1.5" marker-end="url(#m1)"/>
+        <text x="270" y="100" fill="#f5a623">1. AR: ReadShared, ID=4, AxDOMAIN=Inner</text>
+
+        <line x1="520" y1="120" x2="740" y2="105" stroke="#60a5fa" stroke-width="1.5" marker-end="url(#m1)"/>
+        <text x="630" y="115" fill="#60a5fa">2. AC: ReadShared snoop</text>
+
+        <line x1="740" y1="130" x2="520" y2="145" stroke="#4ecb8d" stroke-width="1.5" marker-end="url(#m1)"/>
+        <text x="630" y="135" fill="#4ecb8d">3. CR: PassDirty=1, DataTransfer=1</text>
+
+        <line x1="740" y1="160" x2="520" y2="175" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#m1)"/>
+        <text x="630" y="165" fill="#a78bfa">4. CD: cache line contents</text>
+
+        <line x1="380" y1="180" x2="160" y2="160" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#m1)"/>
+        <text x="270" y="155" fill="#a78bfa">5. R: data + resp (CPU0 now SD)</text>
+
+        <line x1="520" y1="220" x2="740" y2="220" stroke="#f87171" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="630" y="215" fill="#f87171" font-size="10">WriteBack to DRAM optional</text>
+      </g>
+
+      <defs>
+        <marker id="m1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/>
+        </marker>
+      </defs>
+    </g>
+  </svg>
+  <p class="small dim" style="margin-top:0.3em;">CPU1 was UniqueDirty; after the snoop it becomes SharedDirty (retains ownership of dirty copy). CPU0 becomes SharedClean — it has the data, but responsibility for write-back stays with CPU1. No DRAM write was required.</p>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">10</span><h2>AxDOMAIN &amp; AxSNOOP</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="a">AxDOMAIN[1:0]</h3>
+      <p class="small">Controls the <em>scope</em> of snooping:</p>
+      <ul>
+        <li>00 Non-shareable — no snoop needed</li>
+        <li>01 Inner Shareable — snoop within the Inner domain (typically a cluster)</li>
+        <li>10 Outer Shareable — snoop across the outer domain (multiple clusters, system cache)</li>
+        <li>11 System — snoop to memory system</li>
+      </ul>
+      <h3 class="g" style="margin-top:0.6em;">AxSNOOP[3:0]</h3>
+      <p class="small">Encodes the specific transaction type (ReadOnce / ReadShared / CleanUnique / etc.). Combined with AxDOMAIN, the interconnect knows exactly who to snoop and how.</p>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Mapping from MMU to ACE</h3>
+        <p>Armv8 page tables specify Shareability (Inner / Outer / None) per-region. The CPU combines that with the memory-type to produce AxDOMAIN + AxCACHE — the ACE interconnect then enforces the coherency domain.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">Performance hint:</strong> marking a big DMA buffer Non-shareable saves every snoop cycle that would otherwise be wasted. Many OS drivers map DMA memory as Non-shareable for this reason.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">11</span><h2>ACE-Lite — I/O Coherency</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Most peripherals aren't caches — they're producers/consumers of memory. They don't need to <em>hold</em> cache state, but they benefit enormously from the CPU's caches <em>being coherent</em> with their traffic.</li>
+        <li><strong>ACE-Lite</strong> is a restricted ACE profile for such agents. Signals from the master side:
+          <ul>
+            <li>AXI + AxDOMAIN + AxSNOOP (so the interconnect can snoop CPU caches).</li>
+            <li><strong>No</strong> AC / CR / CD channels on the master (it has no caches to snoop).</li>
+          </ul>
+        </li>
+        <li>The master reads from / writes to memory, and the interconnect automatically snoops CPU caches to return fresh data or invalidate stale copies.</li>
+        <li>This is the coherent DMA / GPU / NIC / NPU interface.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">One-way coherency</h3>
+        <p>An ACE-Lite master is <em>coherency-transparent</em>: the CPU stays coherent with it, but the master itself has no caches. No peer snoops the master — it would find nothing.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        Cortex-A57 + Mali GPU over CCI-500 is the canonical example: the GPU uses ACE-Lite, so memory writes from CPUs are visible to the GPU without software cache maintenance.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">12</span><h2>DVM — Distributed Virtual Memory</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Cache coherency is only half of SMP correctness — the other half is <strong>TLB coherency</strong>.</li>
+        <li>When one CPU invalidates a page-table entry (e.g. page removed, permission changed), every other CPU's TLBs must drop the corresponding entries before the OS can reuse the page.</li>
+        <li><strong>DVM</strong> messages travel on the ACE snoop channels (AC, with a special SNOOP type) and carry:
+          <ul>
+            <li>TLB Invalidate (TLBI) — by VA, by ASID, by all</li>
+            <li>Branch Predictor Invalidate (BPI)</li>
+            <li>Instruction-cache Invalidate (ICI)</li>
+            <li>Sync — pipelined barrier</li>
+          </ul>
+        </li>
+        <li>Every receiver must acknowledge; a DVM Sync waits for all acks before proceeding.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">DVM + TLBI IS instructions</h3>
+        <p>When software executes <code>TLBI IS, ...</code> on Armv8, the CPU issues a DVM TLBI to the interconnect, which broadcasts it to every Inner-Shareable participant. The subsequent <code>DSB ISH</code> waits on the DVM Sync acks.</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        DVM is often the bottleneck on workloads with heavy <code>fork</code>/<code>mmap</code> churn. Arm server chips put serious engineering into DVM fan-out so it doesn't serialise.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">13</span><h2>CCI-400 / CCI-500 / CCI-550</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>CCI</th><th>Year</th><th>ACE masters</th><th>ACE-Lite slaves</th></tr>
+        <tr><td>CCI-400</td><td>2011</td><td>2 (clusters)</td><td>3</td></tr>
+        <tr><td>CCI-500</td><td>2014</td><td>4</td><td>7, + snoop filter</td></tr>
+        <tr><td>CCI-550</td><td>2015</td><td>6</td><td>7, larger snoop filter</td></tr>
+      </table>
+      <p class="small" style="margin-top:0.5em;">CCI = <em>Cache Coherent Interconnect</em>. Arm's off-the-shelf IP used in virtually every big.LITTLE and LITTLE-only SoC between 2011 and 2016.</p>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Why a snoop filter mattered</h3>
+        <p>CCI-400 broadcast every snoop to every ACE master. With 2 clusters × 4 CPUs, fine. With 6–8 clusters, every unrelated miss generated up to 7 snoops, overwhelming the ACE links.</p>
+        <p style="margin-top:0.3em;">CCI-500 added a <strong>snoop filter</strong> — an inclusive directory of which caches hold which lines — so only <em>relevant</em> snoops are broadcast. A 95%+ snoop-reduction rate was typical.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        CCI-550 was the last generation of CCI. Beyond 8 coherent masters, the broadcast architecture became uneconomical — which motivated the CHI transition.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">14</span><h2>Snoop Filters — How They Work</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>The snoop filter is a <strong>directory</strong>: for each cache line currently cached <em>anywhere</em> in the system, track which masters hold it.</li>
+        <li>Typically implemented as a set-associative tag structure, inclusive of the caches it tracks.</li>
+        <li>On a coherent request:
+          <ul>
+            <li>Lookup the address in the filter.</li>
+            <li>If no master holds it → skip snoop entirely, go direct to memory.</li>
+            <li>If one or more masters hold it → snoop <em>only those</em>.</li>
+          </ul>
+        </li>
+        <li>Filter <strong>capacity</strong> must be ≥ the sum of tracked cache capacities (or suffer back-invalidates to the slowest cache when the filter overflows).</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Filter as a cache</h3>
+        <p>A too-small snoop filter <em>becomes</em> a bottleneck: on filter-miss-with-back-invalidate, a potentially-valid cache line gets force-invalidated just to free a filter entry, causing the CPU to miss later.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        Arm's CCI-500/550 filters are typically sized 1.2–1.5× the aggregate cache capacity across the clusters they serve. CHI's Home Node filters (next deck) go further — they're often oversized and fully inclusive.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">15</span><h2>ACE Domains &amp; Sharing Scope</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <svg viewBox="0 0 340 260" style="width:100%;">
+        <rect x="10" y="10" width="320" height="240" rx="8" fill="#10101a" stroke="#2a2a3a"/>
+
+        <rect x="20" y="30" width="140" height="110" rx="6" fill="none" stroke="#f5a623" stroke-dasharray="4 3"/>
+        <text x="90" y="46" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">Inner (cluster 0)</text>
+
+        <rect x="30" y="56" width="50" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
+        <text x="55" y="75" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="9">CPU A</text>
+        <rect x="100" y="56" width="50" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
+        <text x="125" y="75" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="9">CPU B</text>
+        <rect x="30" y="92" width="50" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
+        <text x="55" y="111" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="9">CPU C</text>
+        <rect x="100" y="92" width="50" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
+        <text x="125" y="111" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="9">CPU D</text>
+
+        <rect x="180" y="30" width="140" height="110" rx="6" fill="none" stroke="#4ecb8d" stroke-dasharray="4 3"/>
+        <text x="250" y="46" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Inner (cluster 1)</text>
+        <rect x="190" y="56" width="50" height="30" rx="4" fill="#181824" stroke="#4ecb8d"/>
+        <text x="215" y="75" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="9">CPU E</text>
+        <rect x="260" y="56" width="50" height="30" rx="4" fill="#181824" stroke="#4ecb8d"/>
+        <text x="285" y="75" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="9">CPU F</text>
+
+        <rect x="20" y="160" width="300" height="50" rx="6" fill="#0e0e18" stroke="#a78bfa" stroke-dasharray="4 3"/>
+        <text x="170" y="176" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">Outer Shareable — CCI + ACE-Lite masters</text>
+        <rect x="32" y="184" width="80" height="20" rx="4" fill="#181824" stroke="#a78bfa"/>
+        <text x="72" y="198" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="9">Mali GPU</text>
+        <rect x="130" y="184" width="80" height="20" rx="4" fill="#181824" stroke="#a78bfa"/>
+        <text x="170" y="198" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="9">DMA</text>
+        <rect x="228" y="184" width="80" height="20" rx="4" fill="#181824" stroke="#a78bfa"/>
+        <text x="268" y="198" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="9">NIC</text>
+
+        <text x="170" y="240" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">Inner scope = one cluster; Outer = whole coherent domain</text>
+      </svg>
+    </div>
+    <div>
+      <ul>
+        <li>A CPU accessing a stack variable marks it <strong>Inner Shareable</strong> — only its own cluster needs to snoop.</li>
+        <li>A kernel data structure shared across clusters is marked <strong>Outer Shareable</strong> — all clusters + all ACE-Lite masters snoop.</li>
+        <li>DMA-mapped network buffer: typically <strong>Outer Shareable</strong> if the CPU and the NIC genuinely share it; <strong>Non-shareable</strong> if the driver manages cache maintenance manually.</li>
+        <li>This is why Armv8 OS kernels tune page table attributes carefully — the wrong shareability domain can be a 10% performance bug.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">16</span><h2>ACE5 — AMBA 5 Refresh</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>ACE5 (2017) brought AXI5's improvements to the coherent profile:
+          <ul>
+            <li><strong>Atomic transactions</strong> — same offload as AXI5, but can participate in coherency (other caches get snooped accordingly).</li>
+            <li><strong>Cache stashing</strong> — an ACE master can hint that a cache line be installed into a target cache's state (UC/SC).</li>
+            <li><strong>Cache Maintenance Operations (CMO)</strong> — system-wide cache clean/invalidate over the bus rather than CPU-executed loops.</li>
+            <li><strong>MTE support</strong> — tag bits on every coherent transaction.</li>
+            <li><strong>RME hooks</strong> — AxNSE for 4-way security states (Root/Realm/Secure/Non-Secure).</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">ACE5-Lite</h3>
+        <p>The I/O-coherent profile got AMBA 5'd as well — same changes, but without the master-side snoop channels. Every modern NPU or GPU that wants to see CPU cache writes uses ACE5-Lite.</p>
+      </div>
+      <div class="card green" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="g">Common question:</strong> "Why both ACE5 and CHI?" — Arm keeps ACE5 for master-side coherency at cluster scale, where its signal-level wire is cheapest. CHI is for system-level fabric.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">17</span><h2>ACE's Scaling Limits</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>ACE's basic model is <strong>snoop-everyone</strong>. At 2 clusters → 1 peer to snoop. At 8 clusters → 7 peers per miss.</li>
+        <li>Snoop filters amortise but don't eliminate the fan-out.</li>
+        <li>The AC / CR / CD channels are signal-level buses — every master port has them physically. For 32+ masters, the wire count becomes unbearable on a reticle-sized die.</li>
+        <li>Beyond ~8 coherent masters, the protocol's point-to-point wiring assumption runs out.</li>
+        <li>Solution: move to a <strong>packet-based</strong> protocol where any number of nodes can share the same physical transport (mesh NoC). That protocol is <strong>CHI</strong> (next deck).</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card red">
+        <h3 class="r">The 2015 crisis</h3>
+        <p>Arm's early server ambitions (Cortex-A57 16-core systems via CCI-550 + CCN-504) ran into ACE's scaling wall. The CCN-504 Cache Coherent Network interconnect used an internal CHI-like ring, but the customer-visible ACE ports were still signal-level. For Neoverse-class designs Arm pushed customers to CHI at the master interface too.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        Today ACE is the right choice at cluster scale (≤8 CPUs); CHI is the right choice at system scale (32–128+ coherent nodes).
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">18</span><h2>ACE in the Real World</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="a">ACE systems that shipped big</h3>
+      <ul>
+        <li><strong>Samsung Exynos 5 Octa (2013)</strong> — Cortex-A15 + A7 big.LITTLE over CCI-400.</li>
+        <li><strong>Qualcomm Snapdragon 820 (2016)</strong> — Kryo clusters over CCI-550.</li>
+        <li><strong>Mediatek Helio X10/X20 (2015–16)</strong> — deca-core designs via CCI-500.</li>
+        <li><strong>Apple A6 → A11</strong> — bespoke interconnects with ACE interfaces (though Apple runs custom cores).</li>
+        <li><strong>Amlogic, Allwinner, RockChip</strong> — countless set-top / automotive SoCs.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="g">ACE-Lite on the periphery</h3>
+      <ul>
+        <li><strong>Mali GPUs</strong> (T6xx, T7xx, G-series) — ACE-Lite for coherent buffer sharing with the CPU.</li>
+        <li><strong>Video decoders &amp; ISPs</strong> — ACE-Lite so decoded frames are visible to CPU caches.</li>
+        <li><strong>Cortex-R coherent peers</strong> in R82 (2020) — real-time cores joining an A-profile coherency domain.</li>
+        <li><strong>Arm SMMU MMU-600/MMU-700</strong> — participates in DVM on behalf of I/O devices.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">19</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong class="a">"What are the five ACE cache states?"</strong> → UC, UD, SC, SD, I. They map to E, M, S, O, I in MOESI.</li>
+        <li><strong class="a">"What's the difference between ReadShared and ReadUnique?"</strong> → ReadShared accepts shared copies elsewhere; ReadUnique invalidates all peers so the requester can modify.</li>
+        <li><strong class="a">"What are the three snoop channels?"</strong> → AC (snoop address, interconnect → cache), CR (snoop response), CD (snoop data).</li>
+        <li><strong class="a">"Why ACE-Lite for GPUs?"</strong> → GPUs are producers/consumers of memory, not holders of cache state. ACE-Lite lets them enter the coherency domain one-way, without exposing unused snoop channels.</li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li><strong class="g">"What is DVM?"</strong> → Distributed Virtual Memory — TLB/I-cache maintenance messages piggybacked on the ACE snoop channels so SMP software doesn't need cross-CPU IPIs for every TLBI.</li>
+        <li><strong class="g">"Why does a snoop filter matter?"</strong> → It turns a broadcast snoop into a targeted one. At 8+ masters, broadcasting is 10× more expensive than filtering.</li>
+        <li><strong class="g">"Why doesn't ACE scale to 32 coherent masters?"</strong> → Point-to-point signal-level wiring; the AC/CR/CD channels must physically reach every master port. Solved by moving to packet-based CHI.</li>
+        <li><strong class="g">"What did ACE5 add?"</strong> → Atomics, cache stashing, CMO, MTE tags, RME hooks.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">20</span><h2>References</h2></div>
+  <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
+    <p>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA AXI and ACE Protocol Specification (IHI 0022)</em> — contains the full ACE / ACE-Lite / ACE5 definitions<br>
+      <strong class="a">Arm Ltd.</strong> — <em>CoreLink CCI-400 Cache Coherent Interconnect Technical Reference Manual</em><br>
+      <strong class="a">Arm Ltd.</strong> — <em>CCI-500 / CCI-550 Technical Reference Manuals</em> — snoop filter design &amp; sizing<br>
+      <strong class="a">Arm Ltd.</strong> — <em>Cortex-A15 MPCore TRM</em> — reference ACE master definition<br>
+      <strong class="a">Hennessy &amp; Patterson</strong> — <em>Computer Architecture: A Quantitative Approach</em>, 6th ed. — chapter on multiprocessor cache coherence (MOESI variants)<br>
+      <strong class="a">Sorin, D., Hill, M., Wood, D.</strong> — <em>A Primer on Memory Consistency and Cache Coherence</em> (Synthesis Lectures, 2011) — the canonical textbook on directory vs snooping protocols<br>
+      <strong class="a">Sridharan, S. et al.</strong> — <em>ACE Protocol and Coherency</em> — Arm Tech Summit presentations (2013–2016)<br>
+      <strong class="a">Martonosi, M. et al.</strong> — papers on DVM scalability in Arm SoCs (ASPLOS, MICRO)<br>
+      <strong class="a">Wikipedia</strong> — "MOESI protocol", "Cache coherence" — well-sourced cross-references
+    </p>
+    <p style="color:var(--muted);margin-top:0.8em;font-size:0.85em">
+      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Playfair Display + DM Sans + JetBrains Mono<br>
+      Educational use.
+    </p>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script>
+Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', transitionSpeed: 'fast', controls: true, progress: true, center: false, width: 1100, height: 900, margin: 0.01, plugins: [RevealHighlight], highlight: { theme: 'monokai' } });
+</script>
+<script>
+(function(){ var h = Reveal.getConfig().height || 900; var m = Reveal.getConfig().margin || 0.02; var maxH = Math.floor(h * (1 - 2 * m)) + 'px'; function fixSlides(){ document.querySelectorAll('.reveal .slides>section,.reveal .slides>section>section').forEach(function(s){ s.style.display = 'block'; s.style.maxHeight = maxH; }); } Reveal.on('ready', fixSlides); Reveal.on('slidechanged', fixSlides); })();
+</script>
+</body>

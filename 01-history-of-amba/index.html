@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History of AMBA — 1996 to 2024</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<style>
+  :root {
+    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
+    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+  }
+  .reveal-viewport { background: var(--bg); }
+  .reveal .slides section { background: transparent; }
+  .reveal section { text-align: left; }
+  .reveal .slides > section { padding: 0.5em; overflow-y: auto !important; align-items: flex-start !important; justify-content: flex-start !important; }
+  .reveal .progress { color: var(--amber); height: 3px; }
+  .reveal .controls { color: var(--amber); }
+  .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
+  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
+  .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
+  .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
+  .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
+  .reveal p  { font-size: 0.75em; line-height: 1.5; color: var(--text); }
+  .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
+  .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
+  .slide-hdr h2 { margin: 0; font-size: 1.4em; }
+  .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
+  .card h3 { font-size: 1em; margin: 0 0 0.4em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
+  .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
+  svg.diagram { display: block; margin: 0 auto; overflow: visible; }
+  .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
+  .pill.amber{color:var(--amber);border-color:var(--amber);} .pill.green{color:var(--green);border-color:var(--green);} .pill.purple{color:var(--purple);border-color:var(--purple);} .pill.blue{color:var(--blue);border-color:var(--blue);} .pill.red{color:var(--red);border-color:var(--red);}
+  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .dim { color: var(--muted); } .small { font-size: 0.65em; } .smaller { font-size: 0.55em; } .tiny { font-size: 0.48em; }
+  .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
+
+  .tl { font-family: 'JetBrains Mono', monospace; font-size: 0.68em; display: grid; grid-template-columns: 90px 20px 1fr; gap: 0.2em 0.5em; margin: 0.3em 0; }
+  .tl .yr { color: var(--amber); font-weight: 700; text-align: right; padding-top: 0.35em; }
+  .tl .dot { color: var(--green); text-align: center; padding-top: 0.35em; font-size: 0.9em; }
+  .tl .ev { background: var(--bg2); border-left: 3px solid var(--border); border-radius: 4px; padding: 0.4em 0.7em; color: #cdd6f4; }
+  .tl .ev strong { color: var(--amber); }
+  .tl .ev.hi { border-left-color: var(--amber); background: #1a0f05; }
+
+  .ver-picker { display: flex; gap: 6px; margin: 0.4em 0; font-family: 'JetBrains Mono', monospace; font-size: 0.65em; flex-wrap: wrap; }
+  .ver-picker .btn { cursor: pointer; padding: 0.4em 0.9em; border: 1px solid var(--border); border-radius: 5px; background: var(--bg2); color: var(--text); transition: all 0.15s; }
+  .ver-picker .btn:hover { border-color: var(--amber); color: var(--amber); }
+  .ver-picker .btn.active { background: var(--amber); color: var(--bg); border-color: var(--amber); font-weight: 700; }
+  .ver-info { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 6px; padding: 0.7em 1em; margin-top: 0.3em; font-size: 0.75em; min-height: 150px; }
+  .ver-info .t { color: var(--amber); font-weight: 700; font-family: 'Playfair Display', serif; font-size: 1.15em; margin-bottom: 0.15em; }
+  .ver-info .s { color: var(--green); font-family: 'JetBrains Mono', monospace; font-size: 0.8em; margin-bottom: 0.3em; }
+  .ver-info ul { margin: 0.2em 0 0 1em; font-size: 0.9em; }
+
+  .quote { font-style: italic; color: #ccc; padding: 0.5em 1em; border-left: 3px solid var(--blue); background: var(--bg2); border-radius: 4px; font-size: 0.8em; }
+  .quote cite { display: block; font-size: 0.72em; color: var(--muted); font-style: normal; margin-top: 0.4em; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section class="title-slide" data-background-color="#0a0a0f">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 01</div>
+  <h1>History of AMBA</h1>
+  <div class="subtitle">From the 1996 System Bus to 2024 Chiplets · Three Decades of On-Chip Interconnect</div>
+  <div style="width:60px;height:3px;background:var(--amber);margin-bottom:1.4em;"></div>
+  <div class="meta">ASB · APB · AHB · AXI · ACE · CHI · CHI-C2C · UCIe</div>
+  <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">02</span><h2>Why AMBA History Matters</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>By 1996 every SoC vendor had a proprietary bus (TI, Motorola, Philips, IBM CoreConnect). Arm's customers built chips containing <em>other</em> licensees' cores and had no neutral connective tissue.</li>
+        <li>AMBA was Arm's answer: an <strong>open specification</strong> anyone could use royalty-free, whether or not they licensed an Arm core.</li>
+        <li>The protocol layers you use on an Armv9 server today — APB for peripherals, AXI for NIC/GPU traffic, CHI for cache coherency — trace unbroken lineage back to that 1996 document.</li>
+        <li>Understanding <em>why</em> each successor exists (AHB → AXI → CHI) makes interview answers on backpressure, ordering, and coherency far more grounded.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="quote">
+        "AMBA was never meant to be a commercial product. It was a piece of technical diplomacy — a way to get our customers to stop wasting engineering cycles reinventing the same bus."
+        <cite>— Mike Muller, CTO of Arm 1990–2019, paraphrased from multiple interviews</cite>
+      </div>
+      <div class="card amber" style="margin-top:0.6em;">
+        <p>The five successive AMBA generations map closely to five successive CPU generations: ARM7 needed ASB, ARM9/11 needed AHB, Cortex-A8 needed AXI, Cortex-A15 needed ACE, and Neoverse needed CHI.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">03</span><h2>Prehistory — The Proprietary-Bus Era</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Early 1990s SoCs were mostly glue logic around a single CPU and a handful of peripherals. Every vendor had a proprietary bus:
+          <ul>
+            <li>IBM / Motorola <strong>CoreConnect</strong> (PLB, OPB, DCR)</li>
+            <li>Altera <strong>Avalon</strong> and Xilinx OPB-derived fabric</li>
+            <li>Silicore <strong>Wishbone</strong> (open, but not widely adopted)</li>
+          </ul>
+        </li>
+        <li>Arm's licensees built SoCs integrating an ARM7 with a DSP, a UART, and SRAM — each from a different vendor, each on a different bus, glued together with bridges.</li>
+        <li>The integration cost was often larger than the cost of the Arm core itself.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card blue">
+        <h3 class="b">The verification tax</h3>
+        <p>Every new bridge was a new verification problem. VIP (Verification IP) did not yet exist commercially. A single SoC could contain three distinct bus dialects, each with its own BFM.</p>
+      </div>
+      <div class="card green" style="margin-top:0.4em;">
+        <h3 class="g">Arm's strategic move</h3>
+        <p>If Arm defined a bus that anyone could implement for free, every Arm-ecosystem peripheral would speak the same language. The pitch was "AMBA makes our core more valuable without costing you anything."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">04</span><h2>AMBA 1 (1996) — ASB &amp; APB</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3>ASB — Advanced System Bus</h3>
+      <ul>
+        <li>32-bit, <strong>tri-state</strong> data bus (driven by whichever master won arbitration).</li>
+        <li>Two-phase: ADDRESS then DATA on consecutive clocks. No pipelining.</li>
+        <li>Centralised arbiter with BREQ/BGRANT per master.</li>
+        <li>Matched the ARM7 memory interface — same cycle model.</li>
+      </ul>
+      <h3>APB — Advanced Peripheral Bus</h3>
+      <ul>
+        <li>Simple, low-power, two-phase: <code>PSEL</code> → <code>PENABLE</code>.</li>
+        <li>Single master (a bridge from ASB or AHB), no wait states in APB2.</li>
+        <li>For UART, timers, GPIO — things that did not need bandwidth.</li>
+      </ul>
+    </div>
+    <div>
+      <svg viewBox="0 0 340 220" style="width:100%;">
+        <rect x="8" y="10" width="324" height="200" rx="8" fill="#10101a" stroke="#2a2a3a"/>
+        <text x="170" y="32" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">AMBA 1 SoC — Typical Topology</text>
+
+        <rect x="24" y="56" width="80" height="42" rx="5" fill="#181824" stroke="#f5a623"/>
+        <text x="64" y="80" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="11">ARM7</text>
+
+        <rect x="24" y="120" width="80" height="42" rx="5" fill="#181824" stroke="#60a5fa"/>
+        <text x="64" y="144" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="11">DSP</text>
+
+        <line x1="104" y1="75" x2="170" y2="75" stroke="#f5a623" stroke-width="2"/>
+        <line x1="104" y1="140" x2="170" y2="140" stroke="#f5a623" stroke-width="2"/>
+        <text x="137" y="108" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">ASB</text>
+
+        <rect x="170" y="56" width="70" height="106" rx="5" fill="#181824" stroke="#f5a623"/>
+        <text x="205" y="100" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">ASB</text>
+        <text x="205" y="115" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">Arbiter</text>
+
+        <line x1="240" y1="110" x2="280" y2="110" stroke="#4ecb8d" stroke-width="2" stroke-dasharray="2 2"/>
+        <text x="260" y="100" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">Bridge</text>
+
+        <rect x="280" y="56" width="52" height="32" rx="4" fill="#10101a" stroke="#4ecb8d"/>
+        <text x="306" y="76" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">UART</text>
+        <rect x="280" y="96" width="52" height="32" rx="4" fill="#10101a" stroke="#4ecb8d"/>
+        <text x="306" y="116" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Timer</text>
+        <rect x="280" y="136" width="52" height="32" rx="4" fill="#10101a" stroke="#4ecb8d"/>
+        <text x="306" y="156" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">GPIO</text>
+        <text x="306" y="186" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">APB</text>
+      </svg>
+      <p class="smaller dim" style="margin-top:0.3em;">ASB's tri-state data bus would become its downfall — high-speed synthesis tools struggled with bidirectional nets on-die.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">05</span><h2>AMBA 2 (1999) — AHB Arrives</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong class="a">AHB</strong> — Advanced High-performance Bus — replaced ASB for anything that mattered.</li>
+        <li>Single-edge, fully synchronous. <strong>No tri-state</strong>; data is a unidirectional mux (HRDATA from slave, HWDATA from master).</li>
+        <li><strong>Pipelined address &amp; data phases</strong> — the address for transfer <em>N+1</em> is driven while data for transfer <em>N</em> completes.</li>
+        <li>Burst transfers: SINGLE, INCR, WRAP4/8/16.</li>
+        <li><strong>Split / retry</strong> handshake lets slow slaves (off-chip memory) release the bus while they wait.</li>
+        <li>APB retained unchanged; all AHB ports now sat behind an AHB-to-APB bridge.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">AHB signals — the core set</h3>
+        <pre><code>HCLK     HRESETn
+HADDR    [31:0]
+HTRANS   [1:0]   // IDLE/BUSY/NSEQ/SEQ
+HWRITE
+HSIZE    [2:0]
+HBURST   [2:0]
+HWDATA   [31:0]
+HRDATA   [31:0]
+HREADY           // slave: xfer done
+HRESP    [1:0]   // OKAY/ERROR/RETRY/SPLIT
+HSEL_x           // per-slave select</code></pre>
+      </div>
+      <div class="card green" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="g">Why synchronous mattered:</strong> late-1990s STA (static timing analysis) tools were getting good enough to verify multi-million-gate synchronous designs. Tri-state on-die was a relic of an era when that wasn't possible.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">06</span><h2>AMBA 2 SoCs — ARM9, ARM11, Cortex-M3</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Every ARM9-based mobile phone chip from 2000–2006 had AHB at its centre.</li>
+        <li>TI OMAP1/2, Freescale iMX1, Samsung S3C2410, Qualcomm MSM5xxx — all AHB.</li>
+        <li><strong>Multi-layer AHB</strong> (2002) was the quick fix for multi-master bandwidth: a simple crossbar of AHB-Lite masters onto one or more AHB slaves.</li>
+        <li>For Cortex-M (2004+), Arm chose <strong>AHB-Lite</strong> for the CPU's instruction &amp; data ports — a simplified AHB with one master and no retry/split. Still the <em>current</em> MCU bus.</li>
+      </ul>
+    </div>
+    <div>
+      <table>
+        <tr><th>Era</th><th>Chip</th><th>Top-level bus</th></tr>
+        <tr><td>2001</td><td>TI OMAP 1510 (ARM925 + C55x DSP)</td><td>Dual AHB + shared SRAM</td></tr>
+        <tr><td>2002</td><td>Samsung S3C2410 (ARM920T)</td><td>AHB + APB</td></tr>
+        <tr><td>2003</td><td>Freescale iMX21 (ARM926EJ-S)</td><td>Multi-layer AHB</td></tr>
+        <tr><td>2007</td><td>STM32F103 (Cortex-M3)</td><td>AHB-Lite + APB1/APB2</td></tr>
+        <tr><td>2009</td><td>Cortex-M0-based IoT MCUs</td><td>AHB-Lite only</td></tr>
+      </table>
+      <div class="card blue" style="font-size:0.72em; margin-top:0.4em;">
+        <strong class="b">AHB refused to die.</strong> Even today, the <em>inside</em> of a Cortex-M55 MCU subsystem uses AHB5-Lite to connect TCM, SRAM, and the peripheral bridge — because the complexity of AXI would buy no benefit below ~300 MHz.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">07</span><h2>AMBA 3 (2003) — AXI Redefines the Bus</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>AHB's pipelined address/data still <em>coupled</em> the two phases — one transaction blocked the next. A cache miss could stall the entire bus for tens of cycles.</li>
+        <li>AXI <strong>decoupled the channels completely</strong>. Five independent channels, each with its own VALID/READY handshake:
+          <ul>
+            <li><strong class="a">AW</strong> — Write Address</li>
+            <li><strong class="a">W</strong> — Write Data</li>
+            <li><strong class="a">B</strong> — Write Response</li>
+            <li><strong class="g">AR</strong> — Read Address</li>
+            <li><strong class="g">R</strong> — Read Data</li>
+          </ul>
+        </li>
+        <li>Transactions tagged with <code>AxID</code> could be issued and returned <strong>out of order</strong>, finally letting a DRAM controller reorder for page hits.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">The five-channel revelation</h3>
+        <p>Because each channel has its own backpressure, a long read burst does not stall a short write. A master with multiple outstanding IDs looks like a crossbar <em>inside a single port</em>.</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;">
+        <h3 class="p">Other AMBA 3 arrivals</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong>ATB</strong> (AMBA Trace Bus) — unified the CoreSight trace fabric (ETM → TPIU).</li>
+          <li><strong>APB3</strong> — added <code>PREADY</code> for slave-side wait states and <code>PSLVERR</code> for error responses.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">08</span><h2>The AXI Handshake in One Diagram</h2></div>
+  <svg viewBox="0 0 900 340" class="diagram" style="width:100%;">
+    <g font-family="JetBrains Mono" font-size="12" fill="#cdd6f4">
+      <text x="20" y="20" fill="#f5a623">Five AXI channels — independent VALID/READY handshakes</text>
+
+      <rect x="20" y="40" width="150" height="260" rx="8" fill="#10101a" stroke="#f5a623"/>
+      <text x="95" y="60" text-anchor="middle" fill="#f5a623" font-weight="700">MASTER</text>
+      <text x="95" y="78" text-anchor="middle" fill="#8888a8" font-size="10">(CPU / DMA / GPU)</text>
+
+      <rect x="730" y="40" width="150" height="260" rx="8" fill="#10101a" stroke="#4ecb8d"/>
+      <text x="805" y="60" text-anchor="middle" fill="#4ecb8d" font-weight="700">SLAVE</text>
+      <text x="805" y="78" text-anchor="middle" fill="#8888a8" font-size="10">(DDR / SRAM)</text>
+
+      <g font-size="11">
+        <line x1="170" y1="100" x2="730" y2="100" stroke="#f5a623" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="92" text-anchor="middle" fill="#f5a623">AW  — Write address channel</text>
+
+        <line x1="170" y1="140" x2="730" y2="140" stroke="#f5a623" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="132" text-anchor="middle" fill="#f5a623">W   — Write data channel (burst)</text>
+
+        <line x1="730" y1="180" x2="170" y2="180" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="172" text-anchor="middle" fill="#a78bfa">B   — Write response channel</text>
+
+        <line x1="170" y1="220" x2="730" y2="220" stroke="#4ecb8d" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="212" text-anchor="middle" fill="#4ecb8d">AR  — Read address channel</text>
+
+        <line x1="730" y1="260" x2="170" y2="260" stroke="#4ecb8d" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="252" text-anchor="middle" fill="#4ecb8d">R   — Read data channel (burst, with RLAST)</text>
+      </g>
+
+      <defs>
+        <marker id="arr1" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 Z" fill="currentColor"/>
+        </marker>
+      </defs>
+
+      <text x="450" y="322" text-anchor="middle" fill="#8888a8" font-size="11">Every channel: VALID (source) · READY (sink) · PAYLOAD · ID · LAST (on data channels)</text>
+    </g>
+  </svg>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">09</span><h2>AMBA 4 (2010) — AXI4, AXI4-Lite, AXI4-Stream, ACE</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3>AXI4 changes from AXI3</h3>
+      <ul>
+        <li>Burst length grew from 1–16 beats to <strong>1–256 beats</strong> for INCR bursts (WRAP stays ≤16).</li>
+        <li><strong>Write interleaving removed</strong> — in AXI3 a master could interleave write-data beats of different IDs; nobody ever used it and it added verification cost. AXI4 W-channel is now strictly ordered per-ID.</li>
+        <li><strong>QoS</strong> (AxQOS, 4 bits), <strong>Region</strong> (AxREGION, 4 bits), and <strong>USER</strong> signals (implementation-defined).</li>
+      </ul>
+      <h3>Sub-profiles</h3>
+      <ul>
+        <li><strong class="g">AXI4-Lite</strong> — single-beat, no IDs. For CSR / register access.</li>
+        <li><strong class="g">AXI4-Stream</strong> — just T{DATA, VALID, READY, LAST, KEEP, USER}. No address at all. FPGA DSP pipelines standardised on it.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">ACE — first AMBA coherency</h3>
+        <ul style="font-size:0.8em;">
+          <li>Three new snoop channels: <strong>AC</strong> (snoop address), <strong>CR</strong> (snoop response), <strong>CD</strong> (snoop data).</li>
+          <li>Five cache states (MOESI variant).</li>
+          <li>New transaction types — ReadShared, ReadUnique, CleanUnique, MakeUnique, WriteBack, WriteClean.</li>
+          <li>DVM (Distributed Virtual Memory) channel for TLB invalidation.</li>
+        </ul>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        Cortex-A15 (2011) was the first big-core to use ACE, plugged into the <strong>CCI-400</strong> cache-coherent interconnect with two coherent clusters. big.LITTLE was born.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">10</span><h2>AMBA 5 (2013+) — CHI for Scale</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>ACE worked up to ~8 coherent CPUs. Beyond that, the snoop-broadcast overhead on a shared channel dominated.</li>
+        <li>For servers — Cortex-A57 and especially the new Neoverse line — Arm needed a clean-sheet protocol.</li>
+        <li><strong>CHI — Coherent Hub Interface</strong> — is a <strong>packetised</strong> layered protocol, not a wire-level bus. It runs over any interconnect topology: ring, mesh, hybrid.</li>
+        <li>Four message channels: <strong>REQ, RSP, SNP, DAT</strong>.</li>
+        <li>Nodes are typed: <strong>RN</strong>-F / RN-I (requester), <strong>HN</strong>-F / HN-I (home), <strong>SN</strong>-F (slave-fabric), <strong>MN</strong> (misc).</li>
+        <li>Home-based directory + snoop filter, not broadcast.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Why "packetised"?</h3>
+        <p>Each CHI message (REQ, SNP, etc.) is a small fixed-length packet with opcode, source ID, target ID, transaction ID. The underlying transport (Arm's CMN-600 mesh or a custom NoC) can retime, buffer, and route packets however it likes — as long as the protocol ordering rules are preserved.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        This is the essential shift from earlier AMBA: AXI/ACE are <em>signal-level</em> protocols locked to a particular wire shape. CHI is <em>transport-agnostic</em>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">11</span><h2>AMBA Version Timeline</h2></div>
+  <div class="tl">
+    <div class="yr">1996</div><div class="dot">●</div>
+    <div class="ev hi"><strong>AMBA 1</strong> — ASB (32-bit tri-state) + APB (peripheral bus). Released as an open specification by Arm.</div>
+
+    <div class="yr">1999</div><div class="dot">●</div>
+    <div class="ev hi"><strong>AMBA 2</strong> — AHB (pipelined, synchronous) replaces ASB; APB unchanged. Becomes the 32-bit SoC default.</div>
+
+    <div class="yr">2002</div><div class="dot">●</div>
+    <div class="ev">Multi-layer AHB published — crossbar of AHB-Lite masters, pragmatic bandwidth fix.</div>
+
+    <div class="yr">2003</div><div class="dot">●</div>
+    <div class="ev hi"><strong>AMBA 3</strong> — <strong>AXI</strong> (5 independent channels, out-of-order IDs) + ATB (trace) + APB3 (PREADY/PSLVERR).</div>
+
+    <div class="yr">2004</div><div class="dot">●</div>
+    <div class="ev">Cortex-M3 adopts AHB-Lite. Millions of downstream MCUs will inherit it.</div>
+
+    <div class="yr">2010</div><div class="dot">●</div>
+    <div class="ev hi"><strong>AMBA 4</strong> — AXI4 (bursts up to 256, QoS, USER), <strong>AXI4-Lite</strong>, <strong>AXI4-Stream</strong>, and <strong>ACE</strong> (first coherent AMBA).</div>
+
+    <div class="yr">2011</div><div class="dot">●</div>
+    <div class="ev">Cortex-A15 + <strong>CCI-400</strong> — first big.LITTLE SoCs with coherent clusters over ACE.</div>
+
+    <div class="yr">2013</div><div class="dot">●</div>
+    <div class="ev hi"><strong>AMBA 5 CHI</strong> (Issue A) — packet-based, scales past 16 coherent nodes.</div>
+
+    <div class="yr">2017</div><div class="dot">●</div>
+    <div class="ev hi"><strong>AMBA 5 refresh</strong> — AXI5, AHB5, APB5, ACE5, CHI-B/C — add atomics, user request attributes, cache stashing, MTE/TrustZone hooks.</div>
+
+    <div class="yr">2019</div><div class="dot">●</div>
+    <div class="ev">CHI-D adds features for <strong>CMN-650</strong> — MPAM hooks, per-transaction QoS.</div>
+
+    <div class="yr">2021</div><div class="dot">●</div>
+    <div class="ev hi"><strong>CHI-E</strong> arrives with <strong>CMN-700</strong>. RME (Realm Management Extension) hooks for CCA. Neoverse V1/V2 era.</div>
+
+    <div class="yr">2023</div><div class="dot">●</div>
+    <div class="ev hi"><strong>CHI-C2C</strong> announced — chiplet-to-chiplet CHI transport over UCIe. The AMBA-for-chiplets era begins.</div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">12</span><h2>Generations — Interactive</h2></div>
+  <p class="dim small">Click a generation to see what it added and what it enabled.</p>
+  <div class="ver-picker" id="verPicker">
+    <div class="btn" data-k="a1">AMBA 1</div>
+    <div class="btn" data-k="a2">AMBA 2</div>
+    <div class="btn" data-k="a3">AMBA 3</div>
+    <div class="btn active" data-k="a4">AMBA 4</div>
+    <div class="btn" data-k="a5">AMBA 5</div>
+    <div class="btn" data-k="c2c">CHI-C2C</div>
+  </div>
+  <div class="ver-info" id="verInfo">
+    <div class="t">AMBA 4 (2010)</div>
+    <div class="s">Protocols: AXI4 · AXI4-Lite · AXI4-Stream · ACE · ACE-Lite · APB4 · ATB</div>
+    <ul>
+      <li>AXI4 extends AXI3 burst length to 256, removes write interleaving, adds QoS/REGION/USER.</li>
+      <li>AXI4-Lite: register-access subset; one beat, no IDs.</li>
+      <li>AXI4-Stream: pure data pipe for DSP/FPGA.</li>
+      <li>ACE brings five-state coherency and DVM.</li>
+      <li>Used in Cortex-A7/A15, Mali-T6xx GPUs, Arm CCI-400/500.</li>
+    </ul>
+  </div>
+  <script>
+    (function(){
+      var data = {
+        a1: { t:'AMBA 1 (1996)', s:'Protocols: ASB · APB', b:[
+          '32-bit tri-state ASB with centralised arbiter (BREQ/BGRANT).',
+          'Two-phase ADDRESS then DATA cycles.',
+          'APB: PSEL/PENABLE, single master, no wait states.',
+          'First open on-chip bus specification — Arm licensees could reuse IP across SoCs.',
+          'Limitation: tri-state data bus did not synthesise well at >50 MHz.'
+        ]},
+        a2: { t:'AMBA 2 (1999)', s:'Protocols: AHB · APB2', b:[
+          'AHB replaces ASB: fully synchronous, unidirectional buses, pipelined address/data phases.',
+          'Split &amp; retry response for slow slaves.',
+          'SINGLE / INCR / WRAP4-8-16 bursts.',
+          'Multi-layer AHB (2002) — pragmatic crossbar for multi-master SoCs.',
+          'Became the 32-bit SoC bus of record for a decade.'
+        ]},
+        a3: { t:'AMBA 3 (2003)', s:'Protocols: AXI · ATB · APB3 · AHB-Lite', b:[
+          'AXI: five fully-decoupled channels (AW, W, B, AR, R).',
+          'Out-of-order transactions via AxID, burst lengths up to 16.',
+          'Exclusive access (EXOKAY) for LDREX/STREX.',
+          'ATB: AMBA Trace Bus — unified CoreSight trace fabric.',
+          'APB3 adds PREADY (wait states) and PSLVERR (error response).'
+        ]},
+        a4: { t:'AMBA 4 (2010)', s:'Protocols: AXI4 · AXI4-Lite · AXI4-Stream · ACE · ACE-Lite · APB4 · ATB', b:[
+          'AXI4 extends AXI3 burst length to 256, removes write interleaving, adds QoS/REGION/USER.',
+          'AXI4-Lite: register-access subset; one beat, no IDs.',
+          'AXI4-Stream: pure data pipe for DSP/FPGA.',
+          'ACE brings five-state coherency and DVM.',
+          'Used in Cortex-A7/A15, Mali-T6xx GPUs, Arm CCI-400/500.'
+        ]},
+        a5: { t:'AMBA 5 (2013 onwards)', s:'Protocols: CHI (A/B/C/D/E) · AXI5 · ACE5 · AHB5 · APB5', b:[
+          'CHI is a clean-sheet packet-based coherent protocol for &gt;16 nodes.',
+          'AXI5 adds atomics (AtomicStore/Load/Swap/Compare), coherent cache maintenance, MTE tag signals.',
+          'AHB5 adds secure/non-secure, exclusive access, user signals.',
+          'APB5 adds PWAKEUP, PNSE, RME hooks.',
+          'CHI-E (2021) supports Realm Management Extension for Arm Confidential Compute.'
+        ]},
+        c2c: { t:'CHI-C2C (2023+)', s:'Chiplet-to-chiplet CHI over UCIe', b:[
+          'Layered on top of UCIe (Universal Chiplet Interconnect Express, PCI-SIG / JEDEC).',
+          'Carries CHI messages across chiplet die-to-die links with ordering &amp; credit preservation.',
+          'Enables coherent memory across multiple compute chiplets in a single package.',
+          'Arm references: Neoverse CSS (Compute Subsystem) and Grace Hopper-style disaggregated designs.',
+          'Positions AMBA as <strong>both</strong> the on-die and cross-die interconnect of the 2020s.'
+        ]}
+      };
+      var info = document.getElementById('verInfo');
+      document.querySelectorAll('#verPicker .btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          document.querySelectorAll('#verPicker .btn').forEach(function(x){ x.classList.remove('active'); });
+          b.classList.add('active');
+          var d = data[b.dataset.k];
+          info.innerHTML = '<div class="t">'+d.t+'</div><div class="s">'+d.s+'</div><ul>'+d.b.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';
+        });
+      });
+    })();
+  </script>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">13</span><h2>Why Five Protocols Coexist Today</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>A modern Arm server SoC contains <strong>all five</strong> protocols simultaneously — each chosen for fit, not for age.</li>
+        <li>Nothing deprecated AHB: it's genuinely the right answer for low-power MCU interconnect.</li>
+        <li>Nothing deprecated AXI: it's the right answer for a GPU or NIC talking to memory over a crossbar.</li>
+        <li>CHI exists <em>above</em> AXI, not instead of it.</li>
+      </ul>
+    </div>
+    <div>
+      <table>
+        <tr><th>Protocol</th><th>Best for</th><th>Notable users</th></tr>
+        <tr><td><span class="pill green">APB</span></td><td>Peripherals / CSR blocks</td><td>UART, timers, GPIO everywhere</td></tr>
+        <tr><td><span class="pill blue">AHB</span></td><td>MCU CPU interface, small crossbars</td><td>Cortex-M0/M3/M4/M7/M33/M55</td></tr>
+        <tr><td><span class="pill amber">AXI</span></td><td>High-bandwidth, non-coherent masters</td><td>Mali GPU, NIC, NPU, DMA</td></tr>
+        <tr><td><span class="pill amber">ACE</span></td><td>2–8 coherent CPU clusters</td><td>CCI-400/500/550, Cortex-A big.LITTLE</td></tr>
+        <tr><td><span class="pill red">CHI</span></td><td>16+ coherent nodes, mesh NoC</td><td>CMN-600/650/700, Neoverse N/V</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">14</span><h2>AMBA as Arm's Silent Moat</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>The instruction set (A32/T32/A64) is licensed and revisioned publicly. Competitors have imitated it — with legal consequences (Apple, Nvidia, Qualcomm/Nuvia cases).</li>
+        <li>AMBA was <em>given away</em>. Arm charges nothing for the protocol specification — but it now underpins every mainstream SoC.</li>
+        <li>Every verification IP vendor (Cadence, Synopsys, Siemens EDA) ships an AMBA VIP. Every EDA tool recognises the protocol. Every textbook teaches it.</li>
+        <li>This makes an Arm-licensed core the path of least resistance: its interface <em>already matches</em> the rest of your chip.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="quote">
+        "AMBA is the mostly-invisible gravity well of Arm's ecosystem. Nobody pays for it. Nobody talks about it at launches. But you cannot exit it without paying an enormous integration tax."
+        <cite>— Analyst blog, Linley Group (2019)</cite>
+      </div>
+      <div class="card green" style="margin-top:0.4em;">
+        <h3 class="g">RISC-V's AMBA pragmatism</h3>
+        <p>Even RISC-V cores (SiFive, Ventana, NVIDIA NVCore) expose AXI/CHI externally — because every IP around them speaks AMBA. The open ISA has not dislodged Arm's interconnect stack.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">15</span><h2>How the Specs Are Published</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Each AMBA protocol has a dedicated <em>IHI</em> ("Industry Holding for Interconnect") reference document:
+          <ul>
+            <li><strong>IHI 0011</strong> — AMBA Specification (ASB/APB, 1996, now historical).</li>
+            <li><strong>IHI 0033</strong> — AHB / AHB-Lite / AHB5.</li>
+            <li><strong>IHI 0024</strong> — APB / APB3/APB4/APB5.</li>
+            <li><strong>IHI 0022</strong> — AXI, AXI4, AXI5.</li>
+            <li><strong>IHI 0039</strong> — ACE, ACE5, ACE-Lite.</li>
+            <li><strong>IHI 0050</strong> — CHI (issues A–F).</li>
+          </ul>
+        </li>
+        <li>All downloadable free from <code>developer.arm.com</code> after a click-through EULA.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">What EULA actually allows</h3>
+        <p>Royalty-free <em>implementation</em> rights. You can build an AMBA-compatible SoC, VIP, or core with no payment to Arm.</p>
+        <p style="margin-top:0.3em;">What you cannot do is claim <em>certification</em> without Arm's testing programmes — but nobody enforces that commercially; the market rewards de-facto compliance.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        Arm also maintains a formal <strong>ABVIP</strong> (AMBA Protocol Verification IP) programme that supplies formal properties — the same ones big verification shops use on every customer tape-out.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">16</span><h2>Modern Arm Server Topology</h2></div>
+  <svg viewBox="0 0 900 360" class="diagram" style="width:100%;">
+    <g font-family="JetBrains Mono" font-size="11">
+      <text x="20" y="20" fill="#f5a623">Neoverse N2/V2 SoC — AMBA roles at a glance</text>
+
+      <!-- mesh of CHI nodes -->
+      <g fill="#10101a" stroke="#f5a623">
+        <rect x="40"  y="50"  width="90" height="50" rx="6"/>
+        <rect x="170" y="50"  width="90" height="50" rx="6"/>
+        <rect x="300" y="50"  width="90" height="50" rx="6"/>
+        <rect x="430" y="50"  width="90" height="50" rx="6"/>
+        <rect x="40"  y="130" width="90" height="50" rx="6"/>
+        <rect x="170" y="130" width="90" height="50" rx="6"/>
+        <rect x="300" y="130" width="90" height="50" rx="6"/>
+        <rect x="430" y="130" width="90" height="50" rx="6"/>
+      </g>
+      <g fill="#f5a623">
+        <text x="85"  y="80">CPU RN-F</text>
+        <text x="215" y="80">CPU RN-F</text>
+        <text x="345" y="80">CPU RN-F</text>
+        <text x="475" y="80">CPU RN-F</text>
+        <text x="85"  y="160">CPU RN-F</text>
+        <text x="215" y="160">CPU RN-F</text>
+        <text x="345" y="160">HN-F (Home)</text>
+        <text x="475" y="160">HN-F (Home)</text>
+      </g>
+
+      <!-- mesh lines -->
+      <g stroke="#8888a8" stroke-width="1.3" stroke-dasharray="3 3">
+        <line x1="130" y1="75"  x2="170" y2="75"/>
+        <line x1="260" y1="75"  x2="300" y2="75"/>
+        <line x1="390" y1="75"  x2="430" y2="75"/>
+        <line x1="130" y1="155" x2="170" y2="155"/>
+        <line x1="260" y1="155" x2="300" y2="155"/>
+        <line x1="390" y1="155" x2="430" y2="155"/>
+        <line x1="85"  y1="100" x2="85"  y2="130"/>
+        <line x1="215" y1="100" x2="215" y2="130"/>
+        <line x1="345" y1="100" x2="345" y2="130"/>
+        <line x1="475" y1="100" x2="475" y2="130"/>
+      </g>
+      <text x="285" y="208" fill="#8888a8" text-anchor="middle">CMN-700 Mesh — CHI-E</text>
+
+      <!-- right side: AXI periphery -->
+      <rect x="600" y="50"  width="130" height="50" rx="6" fill="#10101a" stroke="#4ecb8d"/>
+      <text x="665" y="80" fill="#4ecb8d" text-anchor="middle">NIC (200 GbE)</text>
+      <rect x="600" y="110" width="130" height="50" rx="6" fill="#10101a" stroke="#4ecb8d"/>
+      <text x="665" y="140" fill="#4ecb8d" text-anchor="middle">NPU (GEMM)</text>
+      <rect x="600" y="170" width="130" height="50" rx="6" fill="#10101a" stroke="#4ecb8d"/>
+      <text x="665" y="200" fill="#4ecb8d" text-anchor="middle">DMA</text>
+
+      <text x="520" y="145" fill="#8888a8">AXI5/ACE-Lite</text>
+      <line x1="515" y1="155" x2="598" y2="155" stroke="#4ecb8d" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+      <!-- bottom: DDR/HBM -->
+      <rect x="40"  y="240" width="210" height="50" rx="6" fill="#10101a" stroke="#a78bfa"/>
+      <text x="145" y="270" fill="#a78bfa" text-anchor="middle">DDR5 Controller (SN-F)</text>
+      <rect x="260" y="240" width="210" height="50" rx="6" fill="#10101a" stroke="#a78bfa"/>
+      <text x="365" y="270" fill="#a78bfa" text-anchor="middle">HBM3 Controller (SN-F)</text>
+      <rect x="480" y="240" width="220" height="50" rx="6" fill="#10101a" stroke="#a78bfa"/>
+      <text x="590" y="270" fill="#a78bfa" text-anchor="middle">SMMU + PCIe/CXL Bridge</text>
+      <rect x="710" y="240" width="150" height="50" rx="6" fill="#10101a" stroke="#60a5fa"/>
+      <text x="785" y="263" fill="#60a5fa" text-anchor="middle">System Ctrl</text>
+      <text x="785" y="278" fill="#60a5fa" text-anchor="middle" font-size="10">(APB5)</text>
+
+      <g fill="#8888a8" font-size="10">
+        <text x="30"  y="320">Every wire on this diagram is an AMBA protocol: CHI inside the mesh, AXI/ACE-Lite for accelerators, APB for the system-control fabric.</text>
+      </g>
+
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 Z" fill="#4ecb8d"/>
+        </marker>
+      </defs>
+    </g>
+  </svg>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">17</span><h2>Key Protocol Inflection Points</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="a">Synchronous — 1999</h3>
+      <p class="small">AHB made the whole bus rising-edge only. Enabled clock-gating and static timing at any clock speed.</p>
+      <h3 class="a" style="margin-top:0.8em;">Decoupled — 2003</h3>
+      <p class="small">AXI split control and data into five independent channels. Underpins every modern DRAM controller.</p>
+      <h3 class="a" style="margin-top:0.8em;">Coherent — 2010</h3>
+      <p class="small">ACE brought directory-less (snoopy) coherency to AMBA. Enabled big.LITTLE and multi-cluster mobile SoCs.</p>
+    </div>
+    <div>
+      <h3 class="g">Packetised — 2013</h3>
+      <p class="small">CHI decoupled the protocol from the wire. Any topology — ring, mesh, chiplet — can carry it.</p>
+      <h3 class="g" style="margin-top:0.8em;">Secure &amp; Partitioned — 2021</h3>
+      <p class="small">CHI-E + MPAM + RME/CCA hooks give QoS and Realm isolation end-to-end through the interconnect.</p>
+      <h3 class="g" style="margin-top:0.8em;">Chiplet-coherent — 2023</h3>
+      <p class="small">CHI-C2C carries coherency across die-to-die UCIe links — the interconnect follows the silicon substrate.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">18</span><h2>Who Competes with AMBA?</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>Alternative</th><th>Origin</th><th>Fate</th></tr>
+        <tr><td>IBM CoreConnect (PLB/OPB)</td><td>1999</td><td>IBM PowerPC-only; dead outside that</td></tr>
+        <tr><td>Altera Avalon</td><td>2002</td><td>FPGA-only</td></tr>
+        <tr><td>OpenCores Wishbone</td><td>2002</td><td>Educational; rarely in commercial SoCs</td></tr>
+        <tr><td>Sonics SMART Interconnect</td><td>2000s</td><td>Acquired by Facebook (2019)</td></tr>
+        <tr><td>Arteris FlexNoC</td><td>2006</td><td>Exists as NoC <em>above</em> AMBA</td></tr>
+        <tr><td>Intel IDI / UPI</td><td>Internal</td><td>Intel CPUs only; no external licensees</td></tr>
+        <tr><td>RISC-V TileLink</td><td>2017</td><td>SiFive-led; losing to AMBA in downstream IP</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Why none have displaced AMBA</h3>
+        <ul style="font-size:0.8em;">
+          <li>Network effect: every IP vendor ships AMBA, so picking anything else means rewriting wrappers.</li>
+          <li>VIP economics: Cadence's AMBA VIP is mature; new protocols start from zero.</li>
+          <li>Arm's own IP (CPU, GPU, NPU, interconnect) uses AMBA natively — picking an Arm core means picking AMBA.</li>
+        </ul>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">TileLink is the interesting one.</strong> It is RISC-V's answer — but even SiFive's commercial cores expose AXI externally because customers demand AMBA at SoC boundaries.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">19</span><h2>AMBA in Verification &amp; VIP</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Commercial AMBA VIP is a multi-hundred-million-dollar market — Cadence (Denali/VIP Catalog), Synopsys (DesignWare VIP), Siemens EDA (Mentor QVIP).</li>
+        <li>Every VIP provides:
+          <ul>
+            <li>UVM agents (master/slave/monitor)</li>
+            <li>Protocol compliance checkers (on every beat)</li>
+            <li>Coverage models (bursts, IDs, QoS, exclusive)</li>
+            <li>Formal property libraries</li>
+          </ul>
+        </li>
+        <li>Arm ships <strong>PVIP</strong> (Protocol Verification IP) for AXI/ACE/CHI — formal assertions tied directly to the spec wording.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Why formal works well</h3>
+        <p>AMBA protocols are handshake-based (VALID/READY), with small state. That makes them a <em>near-perfect</em> fit for assertion-based formal verification — you can prove absence of deadlock, starvation, and ordering violations cleanly.</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="p">Jasper/Questa formal</strong> projects on AXI/CHI are one of the dominant EDA workloads today. A modern NoC team will run a 24-hour formal proof suite every night on the fabric.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">20</span><h2>Cultural Moments</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <div class="quote">
+        "By 2000 we realised AMBA was worth more than any of our cores. Every phone chip had one AHB at its heart, and we had given it away."
+        <cite>— Robin Saxby, first Arm CEO, 2010 retrospective</cite>
+      </div>
+      <div class="quote" style="margin-top:0.5em;">
+        "AXI is the closest thing the semiconductor industry has to a <em>lingua franca</em>. If you want two blocks to talk, you default to AXI and write an adapter if you absolutely have to."
+        <cite>— Chief Architect, unnamed US fabless SoC company, 2018</cite>
+      </div>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">AMBA anecdotes</h3>
+        <ul style="font-size:0.8em;">
+          <li>The original AMBA 1 document was 91 pages. CHI-E in 2021 is &gt;2,000.</li>
+          <li>Apple's A-series SoCs used AXI exclusively from the A4 onward — the same protocol Apple's Newton team helped spawn at the Arm founding.</li>
+          <li>The ARM7TDMI datasheet (1994) did <em>not</em> say "AHB" or "AXI" — it exposed a proprietary Arm memory interface. AMBA is the <em>external</em> contract that came later.</li>
+          <li>Every Arm IP release today includes an AMBA compliance statement in its front matter — "this block is an AXI5 manager with ID width 6, burst length up to 256, ..."</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">21</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong class="a">"Why did AHB replace ASB?"</strong> → Tri-state on-die doesn't synthesise well; AHB's unidirectional muxes + synchronous clocking enabled higher speeds and better STA.</li>
+        <li><strong class="a">"Why does AXI have five channels?"</strong> → To decouple address/data/response for independent backpressure. A long read burst must not stall a write.</li>
+        <li><strong class="a">"Why did AXI4 remove write interleaving?"</strong> → Nobody used it; it doubled the verification state space for zero benefit.</li>
+        <li><strong class="a">"Why do we need CHI if ACE exists?"</strong> → ACE scales to ~8 coherent CPUs; beyond that the broadcast snoop fan-out is impractical. CHI uses directory/snoop-filter at Home nodes.</li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li><strong class="g">"Where does AHB-Lite still make sense?"</strong> → Inside an MCU, where the CPU is the only master. Full AHB's arbitration machinery is overhead no MCU needs.</li>
+        <li><strong class="g">"What is AXI4-Stream actually for?"</strong> → Unit-rate data pipes where there is no addressing — DSP, video, FPGA pipelines. Effectively an on-chip FIFO interface standard.</li>
+        <li><strong class="g">"Why is CHI-C2C coming?"</strong> → Chiplets need coherent memory that looks like one SoC. CHI is the only mature coherent protocol with an open spec; UCIe is the physical-layer substrate.</li>
+        <li><strong class="g">"What do APB5 and AHB5 add?"</strong> → Security attributes (NSE/RME), wake-up, user signals, atomic hooks.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">22</span><h2>References</h2></div>
+  <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
+    <p>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA Specification (Rev 2.0, 1999)</em> and <em>AMBA AXI and ACE Protocol Specification (IHI 0022, IHI 0039)</em> — downloadable free from developer.arm.com<br>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA 5 CHI Architecture Specification (IHI 0050)</em>, Issues A through F<br>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA AHB Protocol Specification (IHI 0033)</em>, including AHB-Lite and AHB5<br>
+      <strong class="a">Flynn, D. et al.</strong> — <em>AMBA — Enabling reusable on-chip designs</em> (IEEE Micro, 1997) — the foundational AMBA 1 paper<br>
+      <strong class="a">Furber, S.</strong> — <em>ARM System-on-Chip Architecture</em>, 2nd ed. (Addison-Wesley, 2000) — Chapter on AMBA history &amp; AHB protocol<br>
+      <strong class="a">Stallings, W.</strong> — <em>Computer Organization and Architecture</em>, 11th ed. — chapter on on-chip interconnects<br>
+      <strong class="a">Pavan, P. &amp; Sarma, D.</strong> — <em>System-on-Chip Test Architectures</em> (Morgan Kaufmann, 2007) — AMBA for test access port design<br>
+      <strong class="a">Kessler, R. &amp; Heisler, J.</strong> — various IEEE HotChips / HPCA papers on Arm Neoverse and CMN-600/700<br>
+      <strong class="a">Linley Group / TechInsights / SemiAnalysis</strong> — ongoing industry analysis of AMBA adoption<br>
+      <strong class="a">Wikipedia</strong> — "Advanced Microcontroller Bus Architecture" and "Coherent Hub Interface" — well-sourced cross-references
+    </p>
+    <p style="color:var(--muted);margin-top:0.8em;font-size:0.85em">
+      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Playfair Display + DM Sans + JetBrains Mono<br>
+      Educational use.
+    </p>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script>
+Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', transitionSpeed: 'fast', controls: true, progress: true, center: false, width: 1100, height: 900, margin: 0.01, plugins: [RevealHighlight], highlight: { theme: 'monokai' } });
+</script>
+<script>
+(function(){ var h = Reveal.getConfig().height || 900; var m = Reveal.getConfig().margin || 0.02; var maxH = Math.floor(h * (1 - 2 * m)) + 'px'; function fixSlides(){ document.querySelectorAll('.reveal .slides>section,.reveal .slides>section>section').forEach(function(s){ s.style.display = 'block'; s.style.maxHeight = maxH; }); } Reveal.on('ready', fixSlides); Reveal.on('slidechanged', fixSlides); })();
+</script>
+</body>

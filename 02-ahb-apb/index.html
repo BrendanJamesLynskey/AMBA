@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AHB &amp; APB — the Original AMBA Protocols</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<style>
+  :root {
+    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
+    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+  }
+  .reveal-viewport { background: var(--bg); }
+  .reveal .slides section { background: transparent; }
+  .reveal section { text-align: left; }
+  .reveal .slides > section { padding: 0.5em; overflow-y: auto !important; align-items: flex-start !important; justify-content: flex-start !important; }
+  .reveal .progress { color: var(--amber); height: 3px; }
+  .reveal .controls { color: var(--amber); }
+  .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
+  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
+  .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
+  .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
+  .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
+  .reveal p  { font-size: 0.75em; line-height: 1.5; color: var(--text); }
+  .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
+  .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
+  .slide-hdr h2 { margin: 0; font-size: 1.4em; }
+  .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
+  .card h3 { font-size: 1em; margin: 0 0 0.4em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
+  .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
+  svg.diagram { display: block; margin: 0 auto; overflow: visible; }
+  .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
+  .pill.amber{color:var(--amber);border-color:var(--amber);} .pill.green{color:var(--green);border-color:var(--green);} .pill.purple{color:var(--purple);border-color:var(--purple);} .pill.blue{color:var(--blue);border-color:var(--blue);} .pill.red{color:var(--red);border-color:var(--red);}
+  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .dim { color: var(--muted); } .small { font-size: 0.65em; } .smaller { font-size: 0.55em; } .tiny { font-size: 0.48em; }
+  .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
+
+  /* Waveform styling */
+  .wave { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; color: #cdd6f4; }
+  .wave .sig { color: var(--amber); }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section class="title-slide" data-background-color="#0a0a0f">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 02</div>
+  <h1>AHB &amp; APB</h1>
+  <div class="subtitle">The Original AMBA Protocols · Still Everywhere Inside Your MCU</div>
+  <div style="width:60px;height:3px;background:var(--amber);margin-bottom:1.4em;"></div>
+  <div class="meta">AHB · AHB-Lite · AHB5 · APB2/3/4/5 · Multi-Layer AHB · HREADY · PSEL/PENABLE</div>
+  <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">02</span><h2>Why AHB &amp; APB Still Matter</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Every Cortex-M MCU you touch — STM32, nRF52, LPC, SAM, RP2040 — uses <strong>AHB-Lite</strong> for the CPU's instruction &amp; data buses and <strong>APB</strong> for its register-mapped peripherals.</li>
+        <li>Cortex-M55 and M85, released in 2020 and 2022, are <strong>AHB5-Lite</strong> at the core. AHB has outlived AXI by now: it's the low-power bus of record.</li>
+        <li>An AHB transaction is <em>one</em> address phase and <em>one</em> data phase. It is the easiest high-speed bus to reason about — especially useful in interviews.</li>
+        <li>APB is so simple that a whole UART can live in fewer than 200 lines of Verilog.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Rule of thumb</h3>
+        <p>Use <strong>AHB</strong> when you need burst bandwidth but only one or two masters. Use <strong>APB</strong> for every register-mapped peripheral. Use <strong>AXI</strong> when you cross into a high-performance, high-latency, out-of-order world.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">03</span><h2>AHB — Signals</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <pre><code>// Address phase (driven by master)
+HCLK        // single clock
+HRESETn     // active-low reset
+HADDR [31:0]
+HTRANS[1:0] // 00 IDLE, 01 BUSY,
+            // 10 NONSEQ, 11 SEQ
+HWRITE
+HSIZE [2:0] // 001 halfword, 010 word, 011 dword…
+HBURST[2:0] // SINGLE, INCR, WRAP4/8/16, INCR4/8/16
+HPROT [3:0] // cacheable, bufferable, privileged, D/I
+HMASTLOCK
+
+// Data phase (driven by master/slave)
+HWDATA[31:0]  // master → slave
+HRDATA[31:0]  // slave  → master
+HREADY        // slave: xfer complete
+HRESP [1:0]   // OKAY, ERROR, RETRY, SPLIT
+HSEL_x        // per-slave, decoded from HADDR</code></pre>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Two phases, pipelined</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong>Address phase</strong> of transfer <em>N+1</em> overlaps the <strong>data phase</strong> of transfer <em>N</em>.</li>
+          <li>New address every cycle unless <code>HREADY</code> is low.</li>
+          <li>HREADY is the <em>one and only</em> backpressure signal — it gates the whole bus.</li>
+        </ul>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        HTRANS encodes what the <em>current address</em> means: is it the start of a new transfer (NONSEQ), a continuation of a burst (SEQ), a break in an otherwise ongoing burst (BUSY), or no transfer at all (IDLE)?
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">04</span><h2>AHB — The Pipelined Handshake</h2></div>
+  <svg viewBox="0 0 900 260" class="diagram" style="width:100%;">
+    <g font-family="JetBrains Mono" font-size="11" fill="#cdd6f4">
+      <text x="20" y="20" fill="#f5a623">Two consecutive reads — address phase of N+1 overlaps data phase of N</text>
+
+      <!-- Clock row -->
+      <text x="10" y="60" fill="#f5a623">HCLK</text>
+      <g stroke="#f5a623" fill="none" stroke-width="1.4">
+        <polyline points="70,70 90,70 90,50 130,50 130,70 170,70 170,50 210,50 210,70 250,70 250,50 290,50 290,70 330,70 330,50 370,50 370,70 410,70 410,50 450,50 450,70"/>
+      </g>
+
+      <text x="10" y="100" fill="#f5a623">HADDR</text>
+      <g font-size="10">
+        <rect x="90"  y="85" width="80" height="22" fill="#10101a" stroke="#f5a623"/>
+        <text x="130" y="101" text-anchor="middle" fill="#f5a623">A0</text>
+        <rect x="170" y="85" width="80" height="22" fill="#10101a" stroke="#f5a623"/>
+        <text x="210" y="101" text-anchor="middle" fill="#f5a623">A1</text>
+        <rect x="250" y="85" width="80" height="22" fill="#10101a" stroke="#f5a623"/>
+        <text x="290" y="101" text-anchor="middle" fill="#f5a623">A2</text>
+      </g>
+
+      <text x="10" y="140" fill="#4ecb8d">HTRANS</text>
+      <g font-size="10" fill="#4ecb8d">
+        <text x="130" y="140" text-anchor="middle">NONSEQ</text>
+        <text x="210" y="140" text-anchor="middle">SEQ</text>
+        <text x="290" y="140" text-anchor="middle">SEQ</text>
+      </g>
+
+      <text x="10" y="180" fill="#a78bfa">HREADY</text>
+      <g stroke="#a78bfa" stroke-width="1.5" fill="none">
+        <polyline points="70,188 410,188"/>
+      </g>
+      <text x="470" y="190" fill="#a78bfa">(high throughout)</text>
+
+      <text x="10" y="220" fill="#60a5fa">HRDATA</text>
+      <g font-size="10" fill="#60a5fa">
+        <rect x="170" y="205" width="80" height="22" fill="#10101a" stroke="#60a5fa"/>
+        <text x="210" y="221" text-anchor="middle">D0</text>
+        <rect x="250" y="205" width="80" height="22" fill="#10101a" stroke="#60a5fa"/>
+        <text x="290" y="221" text-anchor="middle">D1</text>
+        <rect x="330" y="205" width="80" height="22" fill="#10101a" stroke="#60a5fa"/>
+        <text x="370" y="221" text-anchor="middle">D2</text>
+      </g>
+
+      <text x="560" y="100" fill="#8888a8" font-size="11">Rule:</text>
+      <text x="560" y="120" fill="#8888a8" font-size="10">HADDR latched at rising edge when HREADY=1</text>
+      <text x="560" y="140" fill="#8888a8" font-size="10">HRDATA valid one cycle later when HREADY=1</text>
+      <text x="560" y="160" fill="#8888a8" font-size="10">Slave can stretch phases by holding HREADY low</text>
+    </g>
+  </svg>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">05</span><h2>AHB — Wait States &amp; Backpressure</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Slave drives <code>HREADY</code> low to extend the current data phase — and by the pipelining rule, that <em>also</em> extends the address phase of the next transfer.</li>
+        <li>The selected slave drives <code>HREADYOUT</code>; a global mux ORs all slaves and the bus's overall <code>HREADY</code> comes back to every master.</li>
+        <li>Idle slaves must drive <code>HREADYOUT = 1</code>; only the addressed slave may pull it low.</li>
+        <li>In AHB-Lite <code>HREADY = HREADYOUT</code> of the selected slave (no arbitration).</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Zero-wait-state slave</h3>
+        <p>If a slave can always complete a data phase in one cycle, it simply ties <code>HREADYOUT</code> high — and the pipelined bus runs at peak.</p>
+      </div>
+      <div class="card green" style="margin-top:0.3em;">
+        <h3 class="g">Slow slave</h3>
+        <p>Flash or external RAM drops <code>HREADYOUT</code> until its own timing is met. The master sees the whole bus stall — an intentional design point for MCU-class systems where worst-case stalls are rare.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">06</span><h2>AHB — Burst Types</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>HBURST</th><th>Name</th><th>Length</th><th>Address step</th></tr>
+        <tr><td>000</td><td>SINGLE</td><td>1</td><td>—</td></tr>
+        <tr><td>001</td><td>INCR</td><td>undefined</td><td>by HSIZE</td></tr>
+        <tr><td>010</td><td>WRAP4</td><td>4</td><td>wraps at 4·HSIZE</td></tr>
+        <tr><td>011</td><td>INCR4</td><td>4</td><td>by HSIZE</td></tr>
+        <tr><td>100</td><td>WRAP8</td><td>8</td><td>wraps at 8·HSIZE</td></tr>
+        <tr><td>101</td><td>INCR8</td><td>8</td><td>by HSIZE</td></tr>
+        <tr><td>110</td><td>WRAP16</td><td>16</td><td>wraps at 16·HSIZE</td></tr>
+        <tr><td>111</td><td>INCR16</td><td>16</td><td>by HSIZE</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card blue">
+        <h3 class="b">Why WRAP bursts?</h3>
+        <p>Cache line fills. A cache-line miss wants the critical word first, then the remaining words in wrap-around order — so the CPU gets data it can use on the first beat.</p>
+        <p style="margin-top:0.3em;"><code>WRAP4</code> at address 0x08 with HSIZE=word gives 0x08 → 0x0C → 0x00 → 0x04.</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        Undefined-length <code>INCR</code> is useful when the master doesn't know in advance how long the burst will be (e.g. DMA serving a FIFO) — it simply starts with NONSEQ, continues with SEQ, and ends by issuing IDLE or a new NONSEQ on a different address.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">07</span><h2>AHB — Response Types</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>HRESP[1:0]</th><th>Name</th><th>Meaning</th></tr>
+        <tr><td>00</td><td>OKAY</td><td>Normal success</td></tr>
+        <tr><td>01</td><td>ERROR</td><td>Transfer failed (bus error)</td></tr>
+        <tr><td>10</td><td>RETRY</td><td>Master must retry later (AHB only)</td></tr>
+        <tr><td>11</td><td>SPLIT</td><td>Slave will release bus &amp; raise HSPLITx(n) when ready</td></tr>
+      </table>
+      <p class="small" style="margin-top:0.4em;">AHB-Lite has only OKAY and ERROR — the RETRY / SPLIT machinery was removed as part of the simplification.</p>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">SPLIT — the clever bit of AHB</h3>
+        <p>A slow slave (e.g. a memory controller waiting on an off-chip burst) could respond SPLIT. The arbiter would <strong>remove that master from arbitration</strong> until the slave asserted <code>HSPLITx[n]</code> for that master number — like a credit-return.</p>
+        <p style="margin-top:0.3em;">This let <em>other masters</em> continue using the bus during the long latency. Conceptually close to AXI's out-of-order IDs — the same idea, older implementation.</p>
+      </div>
+      <div class="card red" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="r">Why SPLIT died:</strong> verifying it was painful, arbiters needed per-master SPLIT queues, and AXI subsumed the use case. AHB-Lite kept everything else but dropped SPLIT.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">08</span><h2>AHB — Arbitration &amp; Multi-Master</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>In full AHB, up to 16 masters share the bus via a central <strong>arbiter</strong>.</li>
+        <li>Per-master signals: <code>HBUSREQx</code>, <code>HLOCKx</code> (atomic lock), <code>HGRANTx</code>.</li>
+        <li>Arbiter drives <code>HMASTER[3:0]</code> so slaves can identify who's talking (important for SPLIT).</li>
+        <li>Policy is implementation-defined — typically round-robin, sometimes fixed priority for real-time masters.</li>
+        <li>Masters win the grant one <em>transfer</em> at a time (or one burst at a time if HMASTLOCK asserted).</li>
+      </ul>
+    </div>
+    <div>
+      <svg viewBox="0 0 360 240" style="width:100%;">
+        <rect x="6" y="6" width="348" height="228" rx="8" fill="#10101a" stroke="#2a2a3a"/>
+        <text x="180" y="28" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">Full AHB with 3 masters</text>
+
+        <rect x="20" y="50" width="80" height="32" rx="5" fill="#181824" stroke="#f5a623"/>
+        <text x="60" y="70" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">CPU</text>
+        <rect x="20" y="90" width="80" height="32" rx="5" fill="#181824" stroke="#f5a623"/>
+        <text x="60" y="110" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">DMA</text>
+        <rect x="20" y="130" width="80" height="32" rx="5" fill="#181824" stroke="#f5a623"/>
+        <text x="60" y="150" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">USB</text>
+
+        <rect x="140" y="50" width="80" height="112" rx="5" fill="#181824" stroke="#4ecb8d"/>
+        <text x="180" y="104" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Arbiter +</text>
+        <text x="180" y="118" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Address Mux</text>
+
+        <rect x="260" y="50" width="80" height="32" rx="5" fill="#181824" stroke="#a78bfa"/>
+        <text x="300" y="70" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">SRAM</text>
+        <rect x="260" y="90" width="80" height="32" rx="5" fill="#181824" stroke="#a78bfa"/>
+        <text x="300" y="110" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">ROM</text>
+        <rect x="260" y="130" width="80" height="32" rx="5" fill="#181824" stroke="#a78bfa"/>
+        <text x="300" y="150" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">APB BR</text>
+
+        <line x1="100" y1="66"  x2="140" y2="66"  stroke="#8888a8"/>
+        <line x1="100" y1="106" x2="140" y2="106" stroke="#8888a8"/>
+        <line x1="100" y1="146" x2="140" y2="146" stroke="#8888a8"/>
+        <line x1="220" y1="66"  x2="260" y2="66"  stroke="#8888a8"/>
+        <line x1="220" y1="106" x2="260" y2="106" stroke="#8888a8"/>
+        <line x1="220" y1="146" x2="260" y2="146" stroke="#8888a8"/>
+
+        <text x="180" y="205" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">Round-robin arbiter grants per transfer</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">09</span><h2>AHB-Lite (2006) — The Subset that Won</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Introduced alongside Cortex-M3 in 2004 and formalised in the 2006 AHB-Lite addendum.</li>
+        <li><strong>Exactly one master.</strong> No arbitration signals, no HMASTER, no HBUSREQ.</li>
+        <li>No RETRY / SPLIT — only OKAY and ERROR.</li>
+        <li>Perfectly matches an MCU CPU: the Cortex-M has one instruction port and one data port, each an AHB-Lite master talking to a bus matrix.</li>
+      </ul>
+      <p class="small" style="margin-top:0.6em;">For multi-master MCU designs, Arm published <strong>multi-layer AHB</strong> (2002) — a simple interconnect of AHB-Lite masters crossbarred onto AHB slaves. No shared single-master view; each master has its own port into the fabric.</p>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Why AHB-Lite succeeded</h3>
+        <ul style="font-size:0.8em;">
+          <li>Removing arbitration cut ~40% of AHB's verification surface.</li>
+          <li>MCUs are single-threaded — the CPU is usually the only master for minutes at a time.</li>
+          <li>When multi-master is really needed, a multi-layer bus matrix gives deterministic bandwidth instead of arbitration jitter.</li>
+        </ul>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">Cortex-M ports:</strong> I-Code (fetch via AHB-Lite to flash), D-Code (constant loads to flash), System (everything else). The "bus matrix" inside the MCU decodes HADDR ranges and routes to SRAM / ROM / APB bridge / DMA.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">10</span><h2>AHB5 (2015) — Security, Atomics, &amp; More</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Key additions over AHB-Lite</h3>
+      <ul>
+        <li><strong>HNONSEC</strong> — 1 bit: 0 = Secure, 1 = Non-Secure. Aligns AHB with TrustZone for Armv8-M and Armv8-A.</li>
+        <li><strong>HEXCL / HEXOKAY</strong> — exclusive access support, equivalent of AXI's LDREX/STREX pair.</li>
+        <li><strong>HMASTER extended</strong> to help the PPC / bus filter identify the originating master for security checks.</li>
+        <li><strong>HAUSER / HWUSER / HRUSER</strong> — user sideband signals for implementation-specific attributes.</li>
+        <li>Optional <strong>multi-copy atomicity</strong> (MCA) compliance — a system-level guarantee that all observers see writes in the same order.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Why AHB needed security</h3>
+        <p>When TrustZone for Armv8-M arrived in 2016 (Cortex-M23, M33), the core internally produced Secure/Non-Secure transactions — and that security attribute had to propagate through the AHB fabric to the MPU / bus matrix / APB bridge.</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        An AHB5 SoC uses <strong>HNONSEC</strong> to gate which peripherals a Non-Secure master can reach — the same "attribution-follows-the-transaction" idea you get in AXI4's AxPROT[1].
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">11</span><h2>APB — The Peripheral Bus</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <pre><code>PCLK                // single clock
+PRESETn             // active-low reset
+PADDR [31:0]
+PSEL_x              // per-slave select
+PENABLE             // two-phase indicator
+PWRITE
+PWDATA[31:0]
+PRDATA[31:0]
+PREADY              // (APB3+) slave ack
+PSLVERR             // (APB3+) error
+PPROT [2:0]         // (APB4+) secure/priv/data
+PSTRB [3:0]         // (APB4+) byte strobes
+PNSE / PWAKEUP      // (APB5) security / wake</code></pre>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Two-phase handshake</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong>SETUP</strong>: PSEL=1, PENABLE=0, PADDR + PWRITE + PWDATA valid.</li>
+          <li><strong>ACCESS</strong>: PSEL=1, PENABLE=1. In APB3+ slave must drive PREADY=1 to complete, or 0 to stretch.</li>
+          <li>Transaction ends; go back to IDLE (PSEL=0).</li>
+        </ul>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        Minimum transaction = 2 cycles. No bursts. No concurrency. It's not <em>supposed</em> to be fast — it's supposed to be tiny.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">12</span><h2>APB — Waveform</h2></div>
+  <svg viewBox="0 0 900 300" class="diagram" style="width:100%;">
+    <g font-family="JetBrains Mono" font-size="11" fill="#cdd6f4">
+      <text x="20" y="20" fill="#f5a623">APB3 write followed by APB3 read — always two phases (SETUP, ACCESS)</text>
+
+      <text x="10" y="60" fill="#f5a623">PCLK</text>
+      <g stroke="#f5a623" fill="none" stroke-width="1.4">
+        <polyline points="70,70 90,70 90,50 130,50 130,70 170,70 170,50 210,50 210,70 250,70 250,50 290,50 290,70 330,70 330,50 370,50 370,70 410,70 410,50 450,50 450,70 490,70"/>
+      </g>
+
+      <text x="10" y="100" fill="#4ecb8d">PSEL_x</text>
+      <g stroke="#4ecb8d" fill="none" stroke-width="1.5">
+        <polyline points="70,108 90,108 90,92 330,92 330,108 370,108 370,92 450,92 450,108 490,108"/>
+      </g>
+
+      <text x="10" y="140" fill="#a78bfa">PENABLE</text>
+      <g stroke="#a78bfa" fill="none" stroke-width="1.5">
+        <polyline points="70,148 130,148 130,132 170,132 170,148 210,148 210,148 370,148 370,132 410,132 410,148 490,148"/>
+      </g>
+
+      <text x="10" y="180" fill="#60a5fa">PWRITE</text>
+      <g stroke="#60a5fa" fill="none" stroke-width="1.5">
+        <polyline points="70,188 90,188 90,172 210,172 210,188 370,188 490,188"/>
+      </g>
+
+      <text x="10" y="220" fill="#f5a623">PADDR</text>
+      <rect x="90"  y="205" width="120" height="22" fill="#10101a" stroke="#f5a623"/>
+      <text x="150" y="221" text-anchor="middle" fill="#f5a623" font-size="10">addr W</text>
+      <rect x="330" y="205" width="120" height="22" fill="#10101a" stroke="#f5a623"/>
+      <text x="390" y="221" text-anchor="middle" fill="#f5a623" font-size="10">addr R</text>
+
+      <text x="10" y="260" fill="#f87171">PREADY</text>
+      <g stroke="#f87171" fill="none" stroke-width="1.5">
+        <polyline points="70,268 170,268 170,252 210,252 210,268 410,268 410,252 450,252 450,268 490,268"/>
+      </g>
+
+      <text x="130" y="290" fill="#8888a8" font-size="10">SETUP</text>
+      <text x="170" y="290" fill="#8888a8" font-size="10">ACCESS</text>
+      <text x="370" y="290" fill="#8888a8" font-size="10">SETUP</text>
+      <text x="410" y="290" fill="#8888a8" font-size="10">ACCESS</text>
+
+      <text x="560" y="60" fill="#8888a8" font-size="11">Phase rules:</text>
+      <text x="560" y="80" fill="#8888a8" font-size="10">SETUP:   PSEL=1, PENABLE=0 — 1 cycle</text>
+      <text x="560" y="100" fill="#8888a8" font-size="10">ACCESS:  PSEL=1, PENABLE=1 — 1 or more cycles</text>
+      <text x="560" y="120" fill="#8888a8" font-size="10">Slave holds PREADY low to stretch ACCESS.</text>
+      <text x="560" y="140" fill="#8888a8" font-size="10">After PREADY=1 high on ACCESS, return to IDLE.</text>
+    </g>
+  </svg>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">13</span><h2>APB Evolution — APB2/3/4/5</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>Version</th><th>Year</th><th>Added signals / features</th></tr>
+        <tr><td>APB2</td><td>1996</td><td>Baseline. PSEL/PENABLE/PWRITE/PADDR/P{W,R}DATA. Slaves had to complete in 1 cycle.</td></tr>
+        <tr><td>APB3</td><td>2003</td><td><strong>PREADY</strong> (wait states), <strong>PSLVERR</strong> (error response).</td></tr>
+        <tr><td>APB4</td><td>2010</td><td><strong>PPROT[2:0]</strong> (data/inst, privileged, secure). <strong>PSTRB[3:0]</strong> (byte strobes).</td></tr>
+        <tr><td>APB5</td><td>2015</td><td><strong>PWAKEUP</strong> (low-power wake), <strong>PNSE</strong> (RME Non-secure-extended), user signals, <strong>PPROT[2]=NS</strong> harmonised.</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">APB's killer feature — lack of features</h3>
+        <p>A UART with 8 registers at 100 kHz doesn't need burst transfers, out-of-order IDs, or cache coherency. It needs a clocked 32-bit interface with byte-strobed writes and an ack.</p>
+        <p style="margin-top:0.3em;">APB4 gives you exactly that in ~10 signals. It's the reason every SoC has at most <em>one</em> APB master (an AHB-to-APB bridge) but can have <em>hundreds</em> of APB slaves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">14</span><h2>AHB-to-APB Bridge</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>The canonical boundary between the fast AHB system bus and the slow APB peripheral bus is an AHB-to-APB bridge.</li>
+        <li>Responsibilities of the bridge:
+          <ul>
+            <li>Accept AHB transactions; hold HREADY low until the APB side completes.</li>
+            <li>Drive PSEL / PENABLE according to the two-phase APB protocol.</li>
+            <li>Translate HSIZE / HWRITE / HPROT into PSTRB / PWRITE / PPROT.</li>
+            <li>Map AHB address ranges to PSELx lines (one PSEL per peripheral).</li>
+            <li>Return PSLVERR → HRESP=ERROR cleanly.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Clock domain crossing</h3>
+        <p>Many bridges also perform a clock-domain crossing — AHB at CPU speed (e.g. 200 MHz), APB at a slow peripheral clock (e.g. 25 MHz).</p>
+        <p style="margin-top:0.3em;">The bridge buffers one AHB request at a time, synchronises it across to PCLK, runs the APB transaction, and synchronises the result back. No address pipelining across the bridge.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        Every STM32 has two or three APB buses — <em>APB1</em> (slow, many low-speed peripherals) and <em>APB2</em> (faster, for ADC and GPIO) — each fed by its own AHB-to-APB bridge.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">15</span><h2>Multi-Layer AHB</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>For MCU-class systems that need 2–4 masters (CPU + DMA + USB, say) without the complexity of AXI.</li>
+        <li>Each master has its own AHB-Lite port into the fabric — no shared address bus.</li>
+        <li>The matrix contains one per-slave arbiter; decoding per-master routes each request to its target slave.</li>
+        <li>If two masters target <em>different</em> slaves, they run concurrently with full bandwidth. If they target the <em>same</em> slave, the per-slave arbiter (round-robin or fixed) picks a winner.</li>
+      </ul>
+    </div>
+    <div>
+      <svg viewBox="0 0 360 260" style="width:100%;">
+        <rect x="6" y="6" width="348" height="248" rx="8" fill="#10101a" stroke="#2a2a3a"/>
+        <text x="180" y="26" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">Multi-layer AHB (3×3)</text>
+
+        <rect x="20" y="50" width="80" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
+        <text x="60" y="70" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">CPU-M</text>
+        <rect x="20" y="90" width="80" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
+        <text x="60" y="110" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">DMA-M</text>
+        <rect x="20" y="130" width="80" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
+        <text x="60" y="150" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">USB-M</text>
+
+        <rect x="140" y="40" width="80" height="160" rx="6" fill="#0e0e18" stroke="#4ecb8d"/>
+        <text x="180" y="70" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Interconnect</text>
+        <text x="180" y="90" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">3 masters × 3</text>
+        <text x="180" y="110" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">slaves, per-slave</text>
+        <text x="180" y="130" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">arbiter</text>
+
+        <rect x="260" y="50" width="80" height="30" rx="4" fill="#181824" stroke="#a78bfa"/>
+        <text x="300" y="70" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">SRAM</text>
+        <rect x="260" y="90" width="80" height="30" rx="4" fill="#181824" stroke="#a78bfa"/>
+        <text x="300" y="110" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">Flash</text>
+        <rect x="260" y="130" width="80" height="30" rx="4" fill="#181824" stroke="#a78bfa"/>
+        <text x="300" y="150" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">APB BR</text>
+
+        <g stroke="#8888a8">
+          <line x1="100" y1="65"  x2="140" y2="65"/>
+          <line x1="100" y1="105" x2="140" y2="105"/>
+          <line x1="100" y1="145" x2="140" y2="145"/>
+          <line x1="220" y1="65"  x2="260" y2="65"/>
+          <line x1="220" y1="105" x2="260" y2="105"/>
+          <line x1="220" y1="145" x2="260" y2="145"/>
+        </g>
+        <text x="180" y="230" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">Parallelism where paths don't collide</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">16</span><h2>Minimal AHB-Lite Slave in 30 lines</h2></div>
+  <pre><code class="language-verilog">module ahb_lite_sram #(parameter ADDR_W = 12) (
+  input  logic            HCLK,
+  input  logic            HRESETn,
+  input  logic            HSEL,
+  input  logic [31:0]     HADDR,
+  input  logic [1:0]      HTRANS,
+  input  logic            HWRITE,
+  input  logic [2:0]      HSIZE,
+  input  logic [31:0]     HWDATA,
+  output logic [31:0]     HRDATA,
+  output logic            HREADYOUT,
+  output logic [1:0]      HRESP
+);
+  logic [31:0] mem [0:(1&lt;&lt;ADDR_W)-1];
+  logic [ADDR_W-1:0] addr_q;
+  logic write_q, sel_q;
+
+  // Sample address phase
+  always_ff @(posedge HCLK or negedge HRESETn)
+    if (!HRESETn) {sel_q, write_q, addr_q} &lt;= '0;
+    else if (HREADYOUT) begin
+      sel_q   &lt;= HSEL &amp;&amp; HTRANS[1];          // NONSEQ or SEQ
+      write_q &lt;= HWRITE;
+      addr_q  &lt;= HADDR[ADDR_W+1:2];           // word addr
+    end
+
+  // Data phase
+  always_ff @(posedge HCLK)
+    if (sel_q &amp;&amp; write_q) mem[addr_q] &lt;= HWDATA;
+
+  assign HRDATA     = sel_q &amp;&amp; !write_q ? mem[addr_q] : '0;
+  assign HREADYOUT  = 1'b1;   // zero-wait-state slave
+  assign HRESP      = 2'b00;  // OKAY
+endmodule</code></pre>
+  <p class="small dim" style="margin-top:0.2em;">Single-port SRAM, zero wait states, OKAY only. Real peripherals add HSIZE handling, PROT checks, and byte strobes.</p>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">17</span><h2>Common AHB / APB Pitfalls</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="r">Pitfall: forgetting HTRANS gating</h3>
+      <p class="small">A slave that latches HADDR unconditionally will misfire on IDLE / BUSY cycles. Always gate on <code>HSEL &amp;&amp; HTRANS[1] &amp;&amp; HREADY</code>.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: HREADYOUT during idle</h3>
+      <p class="small">Idle slaves must drive <code>HREADYOUT = 1</code>; if a slave tristates or drives 0, the whole bus hangs.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: ERROR response timing</h3>
+      <p class="small">AHB mandates a two-cycle ERROR: in the <em>first</em> data cycle drive HRESP=ERROR with HREADY=0, and in the <em>second</em> drive HRESP=ERROR with HREADY=1. Miss this and the master's fault-handler behaves incorrectly.</p>
+    </div>
+    <div>
+      <h3 class="r">Pitfall: APB without PREADY timeout</h3>
+      <p class="small">If an APB slave misbehaves and never asserts PREADY, the bridge — and thus the whole AHB above it — stalls indefinitely. Most bridges implement a watchdog that forces PSLVERR on timeout.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: Mixed HSIZE on the same burst</h3>
+      <p class="small">All beats in an AHB burst must share HSIZE. A half-word + word burst is protocol-illegal — split into two bursts instead.</p>
+
+      <h3 class="r" style="margin-top:0.6em;">Pitfall: WRAP across 1 KB boundary</h3>
+      <p class="small">AHB forbids a burst from crossing a 1 KB boundary. Masters must split longer transfers. Slaves should assert ERROR if they see one anyway.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">18</span><h2>AHB vs AXI — When Each Wins</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <table>
+        <tr><th>Dimension</th><th>AHB-Lite</th><th>AXI4</th></tr>
+        <tr><td>Channels</td><td>1 (address+data shared phases)</td><td>5 independent</td></tr>
+        <tr><td>Out-of-order</td><td>No</td><td>Yes, via AxID</td></tr>
+        <tr><td>Outstanding transactions</td><td>1</td><td>Many (implementation limit)</td></tr>
+        <tr><td>Burst length</td><td>≤16</td><td>≤256</td></tr>
+        <tr><td>Typical area</td><td>Very small</td><td>Larger</td></tr>
+        <tr><td>Power</td><td>Easy to clock-gate</td><td>Needs more care</td></tr>
+        <tr><td>Good for</td><td>MCUs, register mgmt</td><td>High-BW masters</td></tr>
+      </table>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">The pragmatic answer</h3>
+        <p>Use AHB-Lite where the source traffic is <em>bursty but low-latency</em> (MCU CPU misses to TCM). Use AXI where the source is <em>high-throughput and latency-tolerant</em> (DMA, GPU, NIC, NPU).</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">Modern MCU reality:</strong> Cortex-M55 has an AXI5 master port <em>and</em> an AHB5-Lite port. The AXI5 port fetches from cache-coherent memory; the AHB5-Lite port talks to TCM and the PPB. One core, two AMBA protocols.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">19</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong class="a">"Why is AHB pipelined?"</strong> → To double utilisation of the data bus. Address phase <em>N+1</em> overlaps data phase <em>N</em> so the bus never idles between transfers.</li>
+        <li><strong class="a">"What does HREADY actually do?"</strong> → It's the single backpressure signal. Gated by the selected slave, it stretches both address and data phases simultaneously.</li>
+        <li><strong class="a">"When would you use WRAP4 vs INCR4?"</strong> → WRAP4 for cache-line fills (critical-word-first); INCR4 for linear streaming.</li>
+        <li><strong class="a">"Why did AHB-Lite drop SPLIT/RETRY?"</strong> → Single-master use case made them unnecessary; the verification cost wasn't worth it.</li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li><strong class="g">"Why two phases on APB?"</strong> → Deterministic slave design — one cycle to set up, one cycle to access. Lets you write tiny slaves without FSMs.</li>
+        <li><strong class="g">"When do you choose APB over AHB?"</strong> → When the peripheral's traffic rate is far below the CPU clock (UART, GPIO, timer) — use APB and save area/power.</li>
+        <li><strong class="g">"What does HNONSEC buy you in AHB5?"</strong> → Security-attribute propagation — the same TrustZone contract as AXI4's AxPROT[1], so a Non-Secure transaction can be blocked at the bus matrix.</li>
+        <li><strong class="g">"Why does the STM32 have APB1 and APB2?"</strong> → Two clock domains — APB1 slow (HCLK/4), APB2 faster (HCLK/2). Each has its own bridge.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">20</span><h2>References</h2></div>
+  <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
+    <p>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA AHB Protocol Specification (IHI 0033)</em> — includes AHB, AHB-Lite, and AHB5<br>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA APB Protocol Specification (IHI 0024)</em> — APB, APB3, APB4, APB5<br>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA Multi-Layer AHB Overview (ARM IHI 0048)</em><br>
+      <strong class="a">Arm Ltd.</strong> — <em>Cortex-M3 Technical Reference Manual</em> — how the CPU presents its AHB-Lite ports<br>
+      <strong class="a">Yiu, J.</strong> — <em>The Definitive Guide to ARM Cortex-M3/M4 Processors</em> — chapters on bus interface and memory system<br>
+      <strong class="a">Flynn, D. &amp; Luke, S.</strong> — <em>AMBA AHB — enabling bus-based SoC design</em> (IEEE Micro, 1997)<br>
+      <strong class="a">Ashenden, P.</strong> — <em>The Designer's Guide to VHDL</em> &amp; <em>Digital Design Using VHDL</em> — example AHB-Lite / APB slave implementations<br>
+      <strong class="a">STMicroelectronics</strong> — <em>STM32F4 Reference Manual (RM0090)</em> — canonical example of AHB / APB1 / APB2 hierarchy<br>
+      <strong class="a">ARM DUI 0552A</strong> — <em>Cortex-M MCU system-bus design guide</em> — multi-layer AHB examples
+    </p>
+    <p style="color:var(--muted);margin-top:0.8em;font-size:0.85em">
+      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Playfair Display + DM Sans + JetBrains Mono<br>
+      Educational use.
+    </p>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script>
+Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', transitionSpeed: 'fast', controls: true, progress: true, center: false, width: 1100, height: 900, margin: 0.01, plugins: [RevealHighlight], highlight: { theme: 'monokai' } });
+</script>
+<script>
+(function(){ var h = Reveal.getConfig().height || 900; var m = Reveal.getConfig().margin || 0.02; var maxH = Math.floor(h * (1 - 2 * m)) + 'px'; function fixSlides(){ document.querySelectorAll('.reveal .slides>section,.reveal .slides>section>section').forEach(function(s){ s.style.display = 'block'; s.style.maxHeight = maxH; }); } Reveal.on('ready', fixSlides); Reveal.on('slidechanged', fixSlides); })();
+</script>
+</body>

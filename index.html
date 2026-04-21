@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arm AMBA — Presentation Series</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:      #0a0a0f;
+    --surface: #131318;
+    --border:  #23232a;
+    --text:    #d4d4d8;
+    --text2:   #a1a1aa;
+    --dim:     #71717a;
+    --accent:  #f59e0b;
+    --green:   #10b981;
+    --purple:  #8b5cf6;
+    --blue:    #60a5fa;
+    --red:     #ef4444;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { color: #93c5fd; }
+
+  .container { max-width: 920px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+
+  header { text-align: center; margin-bottom: 3.5rem; }
+  header .icon { font-size: 3rem; margin-bottom: 0.5rem; }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 2.8rem;
+    letter-spacing: -0.02em;
+    color: #fafafa;
+    margin-bottom: 0.3rem;
+  }
+  header .subtitle {
+    font-size: 1.05rem;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  header p { color: var(--text2); max-width: 660px; margin: 0 auto; font-size: 0.95rem; }
+
+  .grid { display: flex; flex-direction: column; gap: 1rem; }
+
+  .card {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+    gap: 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { border-color: rgba(245,158,11,.3); box-shadow: 0 0 20px rgba(245,158,11,.06); }
+  .card.active { border-color: rgba(245,158,11,.35); }
+  .card.active:hover { box-shadow: 0 0 25px rgba(245,158,11,.1); }
+
+  .card .num {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: var(--accent);
+    text-align: center;
+    line-height: 1;
+  }
+
+  .card .info h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #fafafa;
+    margin-bottom: 0.2rem;
+  }
+  .card .info p {
+    font-size: 0.82rem;
+    color: var(--dim);
+    line-height: 1.4;
+  }
+
+  .card .action { text-align: right; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+
+  .btn {
+    display: inline-block;
+    padding: 0.45em 1.3em;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-launch {
+    background: var(--accent);
+    color: #0a0a0f;
+  }
+  .btn-launch:hover { background: #fbbf24; color: #0a0a0f; }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25em 0.8em;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .badge-complete { background: rgba(16,185,129,.12); color: var(--green); border: 1px solid rgba(16,185,129,.25); }
+
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--dim);
+  }
+  footer a { color: var(--dim); }
+  footer a:hover { color: var(--text2); }
+
+  @media (max-width: 600px) {
+    .card { grid-template-columns: 40px 1fr; gap: 0.8rem; }
+    .card .action { grid-column: 1 / -1; text-align: left; }
+    header h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="icon">⇄</div>
+  <h1>Arm AMBA Presentation Series</h1>
+  <div class="subtitle">ASB · AHB · APB · AXI · ACE · CHI · Chiplets &amp; Beyond</div>
+  <p>Interactive slide decks covering Arm's <strong>Advanced Microcontroller Bus Architecture</strong> — from the 1996 release of AMBA 1 through the AXI workhorse, ACE and CHI coherency, and what comes next for chiplets, confidential compute, and AI accelerators. Designed as interview preparation for SoC and silicon engineers. Click any presentation below to launch it.</p>
+</header>
+
+<div class="grid">
+
+  <div class="card active">
+    <div class="num">01</div>
+    <div class="info">
+      <h2>History of AMBA — 1996 → 2024</h2>
+      <p>AMBA 1 (ASB/APB) · AMBA 2 (AHB) · AMBA 3 (AXI/ATB) · AMBA 4 (AXI4/ACE/QoS) · AMBA 5 (CHI/AXI5/AHB5) · CHI-C2C for chiplets</p>
+    </div>
+    <div class="action">
+      <span class="badge badge-complete">22 slides</span>
+      <a href="01-history-of-amba/" class="btn btn-launch">▶ Launch</a>
+    </div>
+  </div>
+
+  <div class="card active">
+    <div class="num">02</div>
+    <div class="info">
+      <h2>AHB &amp; APB — the Original Protocols</h2>
+      <p>AHB phases · HREADY backpressure · Bursts · AHB-Lite · AHB5 · Multi-layer AHB · APB2/3/4/5 · PSLVERR · PPROT · PWAKEUP</p>
+    </div>
+    <div class="action">
+      <span class="badge badge-complete">20 slides</span>
+      <a href="02-ahb-apb/" class="btn btn-launch">▶ Launch</a>
+    </div>
+  </div>
+
+  <div class="card active">
+    <div class="num">03</div>
+    <div class="info">
+      <h2>AXI Deep Dive — Channels, Bursts &amp; Ordering</h2>
+      <p>5 channels · VALID/READY handshake · FIXED/INCR/WRAP bursts · IDs · Out-of-order · Exclusive access · QoS · AXI4-Lite · AXI4-Stream</p>
+    </div>
+    <div class="action">
+      <span class="badge badge-complete">22 slides</span>
+      <a href="03-axi-deep-dive/" class="btn btn-launch">▶ Launch</a>
+    </div>
+  </div>
+
+  <div class="card active">
+    <div class="num">04</div>
+    <div class="info">
+      <h2>ACE &amp; ACE-Lite — Coherency over AXI</h2>
+      <p>AC/CR/CD snoop channels · UniqueClean / UniqueDirty / SharedClean / SharedDirty / Invalid · ReadShared · DVM · CCI-400/500/550</p>
+    </div>
+    <div class="action">
+      <span class="badge badge-complete">20 slides</span>
+      <a href="04-ace-coherency/" class="btn btn-launch">▶ Launch</a>
+    </div>
+  </div>
+
+  <div class="card active">
+    <div class="num">05</div>
+    <div class="info">
+      <h2>CHI — Scalable Multi-Cluster Coherency</h2>
+      <p>Packet-based protocol · REQ/RSP/SNP/DAT · RN-F/HN-F/SN-F nodes · Home snoops · DMT/DCT · Mesh topologies · CMN-600/650/700</p>
+    </div>
+    <div class="action">
+      <span class="badge badge-complete">20 slides</span>
+      <a href="05-chi-scalable-coherency/" class="btn btn-launch">▶ Launch</a>
+    </div>
+  </div>
+
+  <div class="card active">
+    <div class="num">06</div>
+    <div class="info">
+      <h2>Future of AMBA — Chiplets, CXL, AI &amp; CCA</h2>
+      <p>CHI-C2C over UCIe · MPAM · Realm Management Extension · CXL.mem coexistence · NPU / HBM paths · AMBA-over-PCIe · Formal verification</p>
+    </div>
+    <div class="action">
+      <span class="badge badge-complete">20 slides</span>
+      <a href="06-future-of-amba/" class="btn btn-launch">▶ Launch</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Part of the <a href="https://github.com/BrendanJamesLynskey/Hardware">Hardware</a> portfolio · Built with <a href="https://revealjs.com">Reveal.js</a> · Playfair Display + DM Sans + JetBrains Mono</p>
+  <p style="margin-top:0.4rem;">Educational use. Source on <a href="https://github.com/BrendanJamesLynskey/AMBA">GitHub</a>.</p>
+</footer>
+
+</div>
+</body>
+</html>

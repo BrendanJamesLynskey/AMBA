@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Future of AMBA — Chiplets, CXL, AI &amp; CCA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<style>
+  :root {
+    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
+    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+  }
+  .reveal-viewport { background: var(--bg); }
+  .reveal .slides section { background: transparent; }
+  .reveal section { text-align: left; }
+  .reveal .slides > section { padding: 0.5em; overflow-y: auto !important; align-items: flex-start !important; justify-content: flex-start !important; }
+  .reveal .progress { color: var(--amber); height: 3px; }
+  .reveal .controls { color: var(--amber); }
+  .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
+  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
+  .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
+  .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
+  .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
+  .reveal p  { font-size: 0.75em; line-height: 1.5; color: var(--text); }
+  .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
+  .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
+  .slide-hdr h2 { margin: 0; font-size: 1.4em; }
+  .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
+  .card h3 { font-size: 1em; margin: 0 0 0.4em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
+  .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
+  svg.diagram { display: block; margin: 0 auto; overflow: visible; }
+  .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
+  .pill.amber{color:var(--amber);border-color:var(--amber);} .pill.green{color:var(--green);border-color:var(--green);} .pill.purple{color:var(--purple);border-color:var(--purple);} .pill.blue{color:var(--blue);border-color:var(--blue);} .pill.red{color:var(--red);border-color:var(--red);}
+  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .dim { color: var(--muted); } .small { font-size: 0.65em; } .smaller { font-size: 0.55em; } .tiny { font-size: 0.48em; }
+  .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
+
+  .trend { border: 1px solid var(--border); border-radius: 8px; padding: 0.7em 0.9em; margin: 0.3em 0; background: var(--bg2); }
+  .trend h3 { font-family: 'Playfair Display', serif; font-size: 1em; color: var(--amber); margin: 0 0 0.3em; }
+  .trend p  { font-size: 0.75em; margin: 0; color: #cdd6f4; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section class="title-slide" data-background-color="#0a0a0f">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 06</div>
+  <h1>The Future of AMBA</h1>
+  <div class="subtitle">Chiplets · CXL Coexistence · AI Accelerators · Confidential Compute</div>
+  <div style="width:60px;height:3px;background:var(--amber);margin-bottom:1.4em;"></div>
+  <div class="meta">CHI-C2C · UCIe · MPAM · RME / CCA · CXL.mem · AI / NPU / HBM · Formal verification</div>
+  <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">02</span><h2>The Macro Picture — Where AMBA is Going</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>AMBA's trajectory over the past 5 years is no longer about new <em>protocols</em> — it's about new <em>contexts</em>:
+          <ul>
+            <li>Interconnect crosses die boundaries (chiplets).</li>
+            <li>Shared memory with non-Arm actors (CXL / accelerators).</li>
+            <li>Hard partitioning and confidentiality (MPAM / RME).</li>
+            <li>Pulling formal verification into the protocol spec itself.</li>
+          </ul>
+        </li>
+        <li>Each trend creates new AMBA 5 revisions — no clean-sheet AMBA 6 yet.</li>
+        <li>The instruction-set side (Armv9) and the interconnect side (CHI-E/F) co-evolve: features like Realms require end-to-end attribute propagation.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">The four forces</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong class="a">Disaggregation</strong> — the SoC becomes multiple chiplets with coherent memory.</li>
+          <li><strong class="g">Heterogeneity</strong> — CPUs, NPUs, GPUs, and DSAs all need a coherent memory fabric.</li>
+          <li><strong class="p">Security</strong> — RME / CCA adds a fourth security state on every transaction.</li>
+          <li><strong class="b">Partitioning</strong> — MPAM makes the interconnect a managed shared resource.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">03</span><h2>Chiplets — the Problem Statement</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Reticle-limited dies (~800 mm²) cap the number of cores on a single piece of silicon.</li>
+        <li>Yields fall rapidly beyond 400 mm². A 72-core monolithic Neoverse V2 would be uneconomic.</li>
+        <li>Answer: multiple smaller <em>chiplets</em> (compute, I/O, memory) assembled on an interposer or packaging substrate.</li>
+        <li>But chiplet-to-chiplet links are nothing like on-die wires:
+          <ul>
+            <li>10–50× the energy per bit (2–5 pJ vs 0.1 pJ).</li>
+            <li>2–4× the latency (ns vs sub-ns).</li>
+            <li>Link errors and retry needed (BER 1e-12 not 1e-18).</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">UCIe — the standard pipe</h3>
+        <p><strong>Universal Chiplet Interconnect Express (UCIe)</strong> — open spec (PCI-SIG + JEDEC + Arm + Intel + AMD + TSMC + ASE + Samsung) defines:</p>
+        <ul style="font-size:0.8em;">
+          <li>Standard (2D) and Advanced (2.5D/3D) packages</li>
+          <li>Link speeds 4–32 GT/s per lane</li>
+          <li>Lanes ~1 TB/s per mm of die edge</li>
+          <li>Protocol layer pluggable: PCIe, CXL, <em>or</em> CHI</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">04</span><h2>CHI-C2C — Coherency over Chiplets</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Arm's answer to chiplet coherency is <strong>CHI-C2C</strong> (Chip-to-Chip) — introduced in <em>AMBA 5 CHI Issue F</em> (2023+).</li>
+        <li>Preserves CHI's protocol-layer semantics across a UCIe or equivalent physical link.</li>
+        <li>Adds:
+          <ul>
+            <li>Link-layer retry &amp; CRC (for lossy physical links)</li>
+            <li>Credit-aware C2C flow control</li>
+            <li>Time-stamped ordering domains so a coherency domain can span chiplets</li>
+            <li>Encryption and integrity for inter-chiplet traffic (important for CCA)</li>
+          </ul>
+        </li>
+        <li>Lets a single coherent memory system span multiple compute chiplets and multiple memory chiplets.</li>
+      </ul>
+    </div>
+    <div>
+      <svg viewBox="0 0 340 260" style="width:100%;">
+        <rect x="10" y="10" width="320" height="240" rx="8" fill="#10101a" stroke="#2a2a3a"/>
+        <text x="170" y="28" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">Multi-chiplet coherent SoC</text>
+
+        <rect x="20"  y="50"  width="140" height="80" rx="6" fill="none" stroke="#f5a623" stroke-dasharray="4 3"/>
+        <text x="90" y="66" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">Compute chiplet 0</text>
+        <text x="90" y="92" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">16 × Neoverse V2</text>
+        <text x="90" y="108" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">CMN-700 mesh</text>
+
+        <rect x="180" y="50"  width="140" height="80" rx="6" fill="none" stroke="#f5a623" stroke-dasharray="4 3"/>
+        <text x="250" y="66" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">Compute chiplet 1</text>
+        <text x="250" y="92" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">16 × Neoverse V2</text>
+        <text x="250" y="108" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">CMN-700 mesh</text>
+
+        <line x1="160" y1="90" x2="180" y2="90" stroke="#4ecb8d" stroke-width="2.5"/>
+        <text x="170" y="83" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="9">CHI-C2C</text>
+
+        <rect x="20"  y="160" width="140" height="70" rx="6" fill="none" stroke="#a78bfa" stroke-dasharray="4 3"/>
+        <text x="90" y="176" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">I/O chiplet</text>
+        <text x="90" y="196" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">PCIe / CXL</text>
+        <text x="90" y="212" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">Mgmt CPU</text>
+
+        <rect x="180" y="160" width="140" height="70" rx="6" fill="none" stroke="#f87171" stroke-dasharray="4 3"/>
+        <text x="250" y="176" text-anchor="middle" fill="#f87171" font-family="JetBrains Mono" font-size="10">Memory chiplet</text>
+        <text x="250" y="196" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">HBM3 stacks</text>
+        <text x="250" y="212" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">CHI SN-F</text>
+
+        <line x1="90"  y1="130" x2="90"  y2="160" stroke="#4ecb8d" stroke-width="2"/>
+        <line x1="250" y1="130" x2="250" y2="160" stroke="#4ecb8d" stroke-width="2"/>
+        <line x1="160" y1="200" x2="180" y2="200" stroke="#4ecb8d" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">05</span><h2>UCIe — What's Inside</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong>Physical layer</strong> — AFE + clock forwarding. Lane-per-mm density so a chiplet edge can host hundreds of lanes.</li>
+        <li><strong>Die-to-die adapter</strong> — CRC, scrambler, retry, link training. Provides a lossless byte stream.</li>
+        <li><strong>Protocol layer</strong> — UCIe 1.0 standardises PCIe and CXL as streaming formats. UCIe 1.1 / 2.0 add <em>streaming CHI</em> mode — mapping REQ/RSP/SNP/DAT to UCIe flits.</li>
+        <li><strong>Advanced package</strong> (TSMC CoWoS / Intel EMIB / ASE FOCoS) gives sub-mm trace lengths and very low capacitance — enabling &gt;10 TB/s between chiplets.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Why Arm cares</h3>
+        <p>Without an open chiplet standard, every customer builds a custom interposer with a proprietary protocol. With UCIe + CHI-C2C, an Arm compute chiplet can drop into <em>any</em> UCIe-compliant package and get coherent memory for free.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">NVIDIA Grace CPU</strong> uses NVLink-C2C (proprietary) today, but forecasted SoC roadmaps (MediaTek Arm server, Samsung Exynos W, etc.) target UCIe + CHI-C2C for non-Nvidia parts.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">06</span><h2>CXL — Coexistence, not Replacement</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong>CXL</strong> (Compute Express Link) is the PCIe-over-CPU-coherency protocol from the CXL Consortium. Three sub-protocols:
+          <ul>
+            <li><strong>CXL.io</strong> — basically PCIe enumeration &amp; I/O</li>
+            <li><strong>CXL.cache</strong> — device can cache host memory coherently</li>
+            <li><strong>CXL.mem</strong> — device exposes memory to host, host treats it as near-memory</li>
+          </ul>
+        </li>
+        <li>AMBA role: an <strong>HN-I</strong> node on CMN-700 bridges to PCIe/CXL controllers; a CXL.mem expander appears as an <strong>SN-F</strong>-equivalent at the bridge.</li>
+        <li>On-chip coherency stays CHI; off-package coherency (across CXL) uses CXL's own ordering + snoop protocol. The bridge translates between them.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">When CXL, when CHI-C2C?</h3>
+        <p><strong>CHI-C2C:</strong> inside a single package, Arm-Arm, minimum latency, maximum bandwidth, full coherency semantics. Think "one logical CPU made of chiplets".</p>
+        <p style="margin-top:0.3em;"><strong>CXL:</strong> between packages across a board, mixed vendors, tiered memory. Think "pooled memory and accelerators".</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        An Arm server SoC in 2025 may use <em>both</em>: CHI-C2C between its compute chiplets, CXL 3.x to external memory expanders or accelerators.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">07</span><h2>AI &amp; Accelerators — Pulling AMBA to the Edge</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>Every modern AI accelerator (NVIDIA BlueField, Graviton DL, Ampere AmpereOne, Rebellions ATOM, Groq, Tenstorrent) exposes AMBA interfaces internally:
+          <ul>
+            <li>NPU tensor core → <strong>AXI5 or CHI-compatible</strong> to the fabric</li>
+            <li>DMA engines → <strong>ACE5-Lite</strong> for coherent scatter/gather</li>
+            <li>Tensor unit micro-controller → <strong>AHB-Lite</strong> for config</li>
+          </ul>
+        </li>
+        <li>HBM3 / HBM3e controllers are SN-F nodes delivering 819 GB/s per stack — the AMBA protocol has to not be the bottleneck.</li>
+        <li>AMBA 5 cache stashing (NIC → L3) is critical for latency on real-time inference: the model weights and recent activations must land in CPU/NPU cache without cache-coherency round trips.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">AI-specific AMBA extensions</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong>Scatter-gather DMA</strong> — AXI4 INCR bursts with descriptor chains, common for KV-cache page-ins.</li>
+          <li><strong>Cache stashing targets</strong> — NPU writes results directly to the CPU cache where the next kernel will read them.</li>
+          <li><strong>MPAM PARTID</strong> — model-serving tenants get guaranteed memory bandwidth.</li>
+          <li><strong>Atomic 64-bit FP</strong> (AXI5 + Armv9) — lock-free gradient aggregation.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">08</span><h2>MPAM — Partitioning the Cloud</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong>MPAM</strong> — Memory-system Partitioning and Monitoring — is the single biggest AMBA-land innovation for hyperscalers.</li>
+        <li>Every transaction carries a <strong>PARTID</strong> + <strong>PMG</strong>; the HN-F, memory controller, SMMU, and I/O bridges all enforce per-PARTID policies.</li>
+        <li>Enforceable resources:
+          <ul>
+            <li>System Level Cache way / capacity quota</li>
+            <li>Memory bandwidth fraction</li>
+            <li>PCIe / CXL link shares</li>
+          </ul>
+        </li>
+        <li>Monitorable: miss rates, traffic, latency histograms by PARTID.</li>
+      </ul>
+      <p class="small" style="margin-top:0.4em;">Without MPAM, a noisy neighbour VM can slash a latency-critical service by 30%+. With MPAM (on CMN-650/700), QoS becomes a scheduler decision.</p>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Kubernetes &amp; MPAM</h3>
+        <p>Linux 6.x <code>resctrl</code> grew MPAM support for Arm. A container / pod can request "5% LLC, 20% mem BW" and the kernel programs the per-PARTID limits across the CMN.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">Monitoring example:</strong> AWS CloudWatch can surface per-tenant LLC miss rates on Graviton by reading MPAM counters — something not possible on x86 without Intel's CAT/MBM bolted on.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">09</span><h2>RME &amp; CCA — Confidential Compute Arm-Style</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong>Realm Management Extension (RME)</strong> — Armv9.2 — adds a 4-way security state on every memory transaction: <strong>Root / Realm / Secure / Non-Secure</strong>.</li>
+        <li>AMBA carries this via <strong>AxNSE</strong> (Non-Secure Extended) on AXI5 / ACE5 / CHI-E.</li>
+        <li>Every HN-F consults a <strong>Granule Protection Table (GPT)</strong> for each transaction — only compatible state combinations pass.</li>
+        <li>A compromised hypervisor <em>cannot</em> read Realm memory: the interconnect enforces the isolation.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">The CCA stack</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong>Hardware</strong> — Armv9 RME + CHI-E / AXI5</li>
+          <li><strong>Firmware</strong> — Realm Management Monitor (RMM) running at EL3-R; TF-A managing Root</li>
+          <li><strong>Guest OS</strong> — Linux with RSI (Realm Services Interface)</li>
+          <li><strong>Hypervisor</strong> — KVM mod to create Realms but not read them</li>
+        </ul>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="p">Comparable to:</strong> Intel TDX, AMD SEV-SNP. Arm's CCA differs in that the hardware enforcement is pushed deep into the interconnect (HN-F GPT checks), not just the CPU.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">10</span><h2>AMBA-over-PCIe &amp; Virtualised I/O</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>PCIe endpoints don't speak AMBA natively. On an Arm SoC, a PCIe endpoint is fronted by a bridge that <strong>translates PCIe TLPs into AXI5/ACE5-Lite transactions</strong>.</li>
+        <li>For CXL, an endpoint can be I/O-coherent (CXL.cache) or memory-coherent (CXL.mem). The bridge maps to ACE5-Lite or to an HN-F-like coherent gateway accordingly.</li>
+        <li>Virtualised I/O:
+          <ul>
+            <li>PCIe-SIG <strong>SR-IOV / ATS / PASID</strong> integrate with Arm's SMMU via <strong>RN-D</strong> nodes.</li>
+            <li>Every I/O transaction carries a StreamID (for SMMU translation) and a PASID (for process isolation), both AMBA sideband fields in AMBA 5.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Example — NIC on BlueField</h3>
+        <p>A NIC pipe on a BlueField DPU drives an internal AXI5 port with StreamID/PASID tagged on every packet. The SMMU resolves the translation; the CMN delivers to the correct coherent memory region; MPAM ensures tenant isolation; RME isolates Realm traffic.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">In short:</strong> the bus-level work the industry used to do on I/O fencing has migrated into AMBA's sideband fields — StreamID, PASID, PARTID, NSE.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">11</span><h2>Formal Verification Goes First-Class</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>AMBA specifications now ship with <strong>formal property libraries</strong> as a companion deliverable.</li>
+        <li>Arm's <strong>ABVIP</strong> (AMBA Protocol Verification IP) provides SystemVerilog Assertions (SVA) for every transaction type, channel interaction, and ordering rule.</li>
+        <li>Commercial EDA (Cadence Jasper, Siemens Questa, Synopsys VC Formal) consume these directly.</li>
+        <li>Outcome: a modern SoC team proves <em>protocol compliance</em> formally, and restricts simulation to system-level scenarios.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Why protocols can be formally verified at all</h3>
+        <p>AMBA protocols are built around bounded handshakes (VALID/READY) and small numbers of outstanding transactions per ID. The state space is finite per interface — perfect for model-checking.</p>
+      </div>
+      <div class="card purple" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="p">Emerging trend:</strong> AMBA 5 refreshes now include <em>machine-readable</em> versions of protocol rules — allowing direct translation to formal tool input without human interpretation.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">12</span><h2>Trends Worth Watching</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <div class="trend">
+        <h3>On-die Optical</h3>
+        <p>Silicon photonics at the chiplet edge — replacing UCIe electrical lanes with optical ones. AMBA is physical-layer-agnostic, so CHI-C2C already fits.</p>
+      </div>
+      <div class="trend">
+        <h3>CHI for accelerators (RN-I-FC)</h3>
+        <p>Future CHI revisions may introduce an "accelerator Request Node" that holds caches but declines full RN-F snooping — tradeoff for NPUs that want partial coherency.</p>
+      </div>
+      <div class="trend">
+        <h3>Near-memory compute via CXL 3.x</h3>
+        <p>CXL.mem expanders with embedded ALUs can offload aggregation. AMBA bridges need semantics for "command-at-address" transactions — may spawn AXI5+ compute-ops.</p>
+      </div>
+    </div>
+    <div>
+      <div class="trend">
+        <h3>Automotive Functional Safety</h3>
+        <p>AMBA in ISO 26262 ASIL-D systems — dual-lockstep coherency, ECC everywhere, safety-island partitions. Drives new AxUSER fields for <em>integrity tokens</em>.</p>
+      </div>
+      <div class="trend">
+        <h3>Post-quantum Security</h3>
+        <p>AMBA-level encryption of C2C links and memory traffic using PQC primitives (Kyber, Dilithium). Adds latency &amp; area to HN-F / memory controllers.</p>
+      </div>
+      <div class="trend">
+        <h3>RISC-V TileLink convergence?</h3>
+        <p>Unlikely in the short term. Commercial RISC-V cores still expose AXI5 externally because the IP ecosystem demands it. TileLink remains an internal RISC-V interconnect choice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">13</span><h2>What a 2028-class Arm SoC Might Look Like</h2></div>
+  <svg viewBox="0 0 900 360" class="diagram" style="width:100%;">
+    <g font-family="JetBrains Mono" font-size="10">
+      <text x="20" y="22" fill="#f5a623" font-size="12">Hypothetical Neoverse "V-next" reference system — 3 compute chiplets + 1 I/O + 2 memory chiplets</text>
+
+      <!-- Compute chiplets -->
+      <rect x="60"  y="50"  width="220" height="100" rx="6" fill="#10101a" stroke="#f5a623"/>
+      <text x="170" y="72" text-anchor="middle" fill="#f5a623">Compute chiplet A</text>
+      <text x="170" y="92" text-anchor="middle" fill="#8888a8">32 × V-next cores</text>
+      <text x="170" y="110" text-anchor="middle" fill="#8888a8">CMN S3 mesh, MPAM, RME</text>
+      <text x="170" y="130" text-anchor="middle" fill="#8888a8">CHI-C2C edges on 3 sides</text>
+
+      <rect x="340" y="50"  width="220" height="100" rx="6" fill="#10101a" stroke="#f5a623"/>
+      <text x="450" y="72" text-anchor="middle" fill="#f5a623">Compute chiplet B</text>
+      <text x="450" y="92" text-anchor="middle" fill="#8888a8">32 × V-next cores</text>
+      <text x="450" y="110" text-anchor="middle" fill="#8888a8">CMN S3 mesh, MPAM, RME</text>
+
+      <rect x="620" y="50"  width="220" height="100" rx="6" fill="#10101a" stroke="#f5a623"/>
+      <text x="730" y="72" text-anchor="middle" fill="#f5a623">Compute chiplet C</text>
+      <text x="730" y="92" text-anchor="middle" fill="#8888a8">32 × V-next cores</text>
+      <text x="730" y="110" text-anchor="middle" fill="#8888a8">NPU tiles, ACE5-Lite</text>
+
+      <!-- CHI-C2C links -->
+      <line x1="280" y1="100" x2="340" y2="100" stroke="#4ecb8d" stroke-width="3"/>
+      <line x1="560" y1="100" x2="620" y2="100" stroke="#4ecb8d" stroke-width="3"/>
+      <text x="310" y="95" text-anchor="middle" fill="#4ecb8d" font-size="9">CHI-C2C</text>
+      <text x="590" y="95" text-anchor="middle" fill="#4ecb8d" font-size="9">CHI-C2C</text>
+
+      <!-- Memory chiplets -->
+      <rect x="60"  y="180" width="220" height="70" rx="6" fill="#10101a" stroke="#a78bfa"/>
+      <text x="170" y="202" text-anchor="middle" fill="#a78bfa">HBM4 chiplet</text>
+      <text x="170" y="222" text-anchor="middle" fill="#8888a8">SN-F × 4 stacks = 2 TB/s</text>
+
+      <rect x="340" y="180" width="220" height="70" rx="6" fill="#10101a" stroke="#a78bfa"/>
+      <text x="450" y="202" text-anchor="middle" fill="#a78bfa">DDR5 / MCRDIMM chiplet</text>
+      <text x="450" y="222" text-anchor="middle" fill="#8888a8">12 channels, CHI SN-F</text>
+
+      <rect x="620" y="180" width="220" height="70" rx="6" fill="#10101a" stroke="#60a5fa"/>
+      <text x="730" y="202" text-anchor="middle" fill="#60a5fa">I/O chiplet</text>
+      <text x="730" y="222" text-anchor="middle" fill="#8888a8">PCIe 6.0 / CXL 3.x / NIC</text>
+
+      <g stroke="#4ecb8d" stroke-width="2">
+        <line x1="170" y1="150" x2="170" y2="180"/>
+        <line x1="450" y1="150" x2="450" y2="180"/>
+        <line x1="730" y1="150" x2="730" y2="180"/>
+      </g>
+
+      <rect x="60"  y="290" width="780" height="50" rx="6" fill="none" stroke="#f87171" stroke-dasharray="4 3"/>
+      <text x="450" y="308" text-anchor="middle" fill="#f87171">Package substrate — UCIe 2.0, silicon photonics option, standard-package lanes between chiplets</text>
+      <text x="450" y="328" text-anchor="middle" fill="#8888a8">Every chiplet-to-chiplet edge runs CHI-C2C protocol over UCIe physical lanes</text>
+    </g>
+  </svg>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">14</span><h2>Threats to AMBA's Dominance</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong>RISC-V growth:</strong> if open-cored systems become majority shipment in a market segment (MCU, FPGA soft-core, specific embedded), TileLink could displace AMBA there — but the installed AMBA IP base is enormous.</li>
+        <li><strong>CXL as a successor?</strong> CXL.cache + CXL.mem can do much of what CHI does. If CXL wins at the node level, AMBA may retreat inside each chip. But CXL is PCIe-class latency (tens of ns) vs CHI (sub-ns on-die).</li>
+        <li><strong>Apple:</strong> Apple's private interconnect (Ultra Fusion) is not AMBA. If every hyperscaler follows, Arm loses interconnect revenue — though not interconnect standardisation.</li>
+        <li><strong>Intel &amp; AMD:</strong> x86 interconnects (UPI, IF) remain closed. Not a displacement threat; a separate ecosystem.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card green">
+        <h3 class="g">Why AMBA will probably dominate through 2030</h3>
+        <ul style="font-size:0.8em;">
+          <li>Ecosystem inertia — every EDA tool, every VIP, every verification methodology is AMBA-native.</li>
+          <li>Arm's aggressive spec refreshes — new features (RME, MPAM, CHI-C2C) keep the protocol in the lead.</li>
+          <li>Open licensing — nothing stops a RISC-V company from shipping AMBA externally (many do).</li>
+          <li>Network effects on verification — new protocols are priced out by the cost of equivalent VIP maturity.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">15</span><h2>Second-Order Effects</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong>Cloud scheduling</strong> becomes interconnect-aware — MPAM + CHI observability lets schedulers optimise for cache and bandwidth footprint per tenant.</li>
+        <li><strong>OS memory managers</strong> gain new primitives: Realm creation, Realm memory zeroisation, per-Realm TLBI via CHI DVM.</li>
+        <li><strong>Fault models</strong> shift: hardware-confidential compute means kernel bugs <em>cannot</em> leak Realm data, which simplifies some security guarantees and complicates others.</li>
+        <li><strong>Debug</strong>: CoreSight (ATB — the AMBA trace bus) itself gains security attributes, since trace streams in a Realm system must not be readable across states.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">Workload influence on architecture</h3>
+        <p>LLM inference is reshaping every number in the SoC roadmap — KV cache residence times, NPU-to-memory bandwidth ratios, near-memory computation, tensor-parallel all-reduce patterns. AMBA evolves to serve these, not abstract benchmarks.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        <strong class="b">Concrete example:</strong> Arm Neoverse V3 (coming 2026) reportedly has a doubled SLC per tile to accommodate LLM KV cache working sets.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">16</span><h2>A Speculative AMBA 6?</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>There is no Arm announcement of AMBA 6. But if it arrives, it will likely unify:
+          <ul>
+            <li>CHI-C2C as first-class (no longer a CHI issue, but a distinct layer)</li>
+            <li>Optical transport (silicon photonics) as a physical-layer variant</li>
+            <li>Near-memory compute semantics (compute-at-slave operations)</li>
+            <li>Post-quantum cryptographic sidebands for C2C encryption</li>
+            <li>Deeper integration with CXL 3.x / 4.x coherency semantics</li>
+          </ul>
+        </li>
+        <li>Or, as has happened since AMBA 3, the "AMBA 5" umbrella keeps stretching indefinitely.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card purple">
+        <h3 class="p">How Arm usually versions</h3>
+        <p>AMBA 2 to AMBA 3 was a true break (ASB-era semantics → AXI channels). AMBA 3 to AMBA 4 was extension. AMBA 4 to AMBA 5 was extension of <em>scale</em> (CHI for &gt;16 nodes).</p>
+        <p style="margin-top:0.3em;">AMBA 6 — if it arrives — will probably be triggered by a similar discontinuity, likely package-level interconnect becoming as important as on-die.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">17</span><h2>What Engineers Should Learn Next</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="a">If you're a SoC architect</h3>
+      <ul>
+        <li>Read the CHI-E spec cover to cover (free download).</li>
+        <li>Study CMN-700 topology, mapping, and SLC hashing.</li>
+        <li>Build a pen-and-paper model of mesh traffic for a target workload.</li>
+      </ul>
+      <h3 class="a" style="margin-top:0.5em;">If you're a verification engineer</h3>
+      <ul>
+        <li>Get hands-on with Jasper or VC Formal on AXI/CHI protocol properties.</li>
+        <li>Run litmus tests (<code>herd7</code>) on Armv9 to understand consistency.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="g">If you're a systems engineer</h3>
+      <ul>
+        <li>Experiment with MPAM / <code>resctrl</code> on a Graviton or Ampere system.</li>
+        <li>Read the RMM (Realm Management Monitor) design docs when CCA becomes broadly available.</li>
+      </ul>
+      <h3 class="g" style="margin-top:0.5em;">If you're a chiplet / package engineer</h3>
+      <ul>
+        <li>Read UCIe 2.0 and CHI-C2C specs side-by-side.</li>
+        <li>Study Intel EMIB, TSMC CoWoS-L, ASE FOCoS packaging choices and their bandwidth/energy numbers.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">18</span><h2>The Big-Picture Summary</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li>AMBA started in 1996 as a piece of technical diplomacy — an open bus so Arm's licensees could integrate their chips.</li>
+        <li>Twenty-eight years later it is the most deployed on-chip interconnect standard in history, dwarfing every alternative.</li>
+        <li>Its 2025 evolution is being driven by <strong>four converging pressures</strong>: chiplets, AI accelerators, confidential compute, and hyperscaler partitioning.</li>
+        <li>Arm's response is layered: CHI for system-scale coherency, CHI-C2C for chiplets, MPAM for partitioning, RME for confidential state, AxUSER/PARTID for the sideband metadata the modern system needs.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="quote" style="font-style: italic; color: #ccc; padding: 0.5em 1em; border-left: 3px solid var(--blue); background: var(--bg2); border-radius: 4px; font-size: 0.8em;">
+        "The interconnect is no longer a piece of plumbing. It's where confidentiality is enforced, where tenants are isolated, where chiplets are stitched together, and where the semantics of your compute platform live. AMBA is quietly becoming the operating contract of modern silicon."
+        <cite style="display: block; font-size: 0.72em; color: var(--muted); font-style: normal; margin-top: 0.4em;">— Industry observation, 2023</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">19</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <ul>
+        <li><strong class="a">"What is CHI-C2C and why does it exist?"</strong> → A CHI transport over UCIe or equivalent die-to-die links so multiple chiplets can form one coherent memory domain. Exists because reticle-limited monolithic dies no longer scale to 100+ cores.</li>
+        <li><strong class="a">"How does CXL relate to AMBA?"</strong> → CXL is across-package; AMBA is on-package / on-die. Bridges translate CXL.mem into CHI SN-F-style access; CXL.cache into ACE5-Lite-style coherency.</li>
+        <li><strong class="a">"What's MPAM solving?"</strong> → Noisy-neighbour effects in multi-tenant systems. Per-transaction PARTID gives the interconnect fine-grained enforcement of cache / bandwidth shares.</li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li><strong class="g">"What does RME add to AMBA?"</strong> → A 4-way security state on every transaction (Root / Realm / Secure / Non-Secure) + GPT checks at the HN-F. Implements Arm Confidential Compute in hardware at interconnect level.</li>
+        <li><strong class="g">"Will RISC-V kill AMBA?"</strong> → Unlikely. RISC-V cores ship AXI5/CHI interfaces externally because the ecosystem demands it. TileLink remains an internal-only choice for some RISC-V designs.</li>
+        <li><strong class="g">"What's the next protocol discontinuity?"</strong> → Most likely package-level interconnect — optical C2C and disaggregated memory pools — triggering either an AMBA 6 or a major CHI-F+ extension.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">20</span><h2>References</h2></div>
+  <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
+    <p>
+      <strong class="a">Arm Ltd.</strong> — <em>AMBA 5 CHI Architecture Specification (IHI 0050)</em>, Issues E and F (RME, CHI-C2C)<br>
+      <strong class="a">Arm Ltd.</strong> — <em>Arm Confidential Compute Architecture (CCA) Whitepaper</em><br>
+      <strong class="a">Arm Ltd.</strong> — <em>Arm Realm Management Extension (RME) Specification</em><br>
+      <strong class="a">Arm Ltd.</strong> — <em>Arm MPAM Architecture Specification</em><br>
+      <strong class="a">UCIe Consortium</strong> — <em>UCIe 1.1 / 2.0 Specifications</em>, available at uciexpress.org<br>
+      <strong class="a">CXL Consortium</strong> — <em>Compute Express Link Specification 3.0 / 3.1</em>, available at computeexpresslink.org<br>
+      <strong class="a">Arm Ltd.</strong> — <em>Neoverse V3 / N3 announcements (2024)</em> — Arm Tech Day presentations<br>
+      <strong class="a">Biswas, A. et al.</strong> — "CMN-700 &amp; Beyond" — HotChips 34 / 35 tutorials<br>
+      <strong class="a">SemiAnalysis, Linley Group</strong> — ongoing reporting on chiplet economics and AMBA ecosystem<br>
+      <strong class="a">OpenCompute Project</strong> — <em>Chiplet Design Exchange (CDX) working group reports</em> — interoperability across UCIe and CHI-C2C<br>
+      <strong class="a">Wikipedia</strong> — "UCIe", "Compute Express Link", "Arm Confidential Compute Architecture" — well-sourced cross-references
+    </p>
+    <p style="color:var(--muted);margin-top:0.8em;font-size:0.85em">
+      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Playfair Display + DM Sans + JetBrains Mono<br>
+      Educational use.
+    </p>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script>
+Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', transitionSpeed: 'fast', controls: true, progress: true, center: false, width: 1100, height: 900, margin: 0.01, plugins: [RevealHighlight], highlight: { theme: 'monokai' } });
+</script>
+<script>
+(function(){ var h = Reveal.getConfig().height || 900; var m = Reveal.getConfig().margin || 0.02; var maxH = Math.floor(h * (1 - 2 * m)) + 'px'; function fixSlides(){ document.querySelectorAll('.reveal .slides>section,.reveal .slides>section>section').forEach(function(s){ s.style.display = 'block'; s.style.maxHeight = maxH; }); } Reveal.on('ready', fixSlides); Reveal.on('slidechanged', fixSlides); })();
+</script>
+</body>
