@@ -17,11 +17,13 @@ Designed as interview preparation for SoC, silicon, and firmware engineers who b
 | # | Topic | Slides | Status |
 |---|-------|--------|--------|
 | 01 | History of AMBA — 1996 → 2024 | 22 | ✅ Complete |
-| 02 | AHB &amp; APB — the Original Protocols | 20 | ✅ Complete |
-| 03 | AXI Deep Dive — Channels, Bursts &amp; Ordering | 22 | ✅ Complete |
-| 04 | ACE &amp; ACE-Lite — Coherency over AXI | 20 | ✅ Complete |
-| 05 | CHI — Scalable Multi-Cluster Coherency | 20 | ✅ Complete |
+| 02 | AHB &amp; APB — the Original Protocols | 21 | ✅ Complete |
+| 03 | AXI Deep Dive — Channels, Bursts &amp; Ordering | 24 | ✅ Complete |
+| 04 | ACE &amp; ACE-Lite — Coherency over AXI | 21 | ✅ Complete |
+| 05 | CHI — Scalable Multi-Cluster Coherency | 21 | ✅ Complete |
 | 06 | Future of AMBA — Chiplets, CXL, AI &amp; CCA | 20 | ✅ Complete |
+
+Each deck includes **SystemVerilog code snippets** illustrating the protocol in RTL, with explicit callouts for the cases where minimal hardware suffices — e.g. AXI4-Stream loopback as pure combinational wires, APB slaves in ~15 lines, ACE-Lite as constant tie-offs over an existing AXI4 master, and a one-register skid buffer as the re-timing primitive for every AXI channel.
 
 ---
 

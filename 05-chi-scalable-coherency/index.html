@@ -638,7 +638,73 @@ pending_txn   : outstanding request FSM ptr</code></pre>
 </section>
 
 <section data-background-color="#0a0a0f">
-  <div class="slide-hdr"><span class="tag">19</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="slide-hdr"><span class="tag">19</span><h2>Minimum-Viable CHI — and Why There Isn't One</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="a">Why CHI resists "minimal"</h3>
+      <ul>
+        <li>CHI is packet-based with 4 virtual channels + credit flow control + a directory.</li>
+        <li>The smallest <strong>compliant RN-F</strong> must: respond to every inbound SNP type, maintain per-line cache state, track outstanding TxnIDs, generate CompAck, and honour ordering domains. ~2–4 k flops before you add any actual caching.</li>
+        <li>There is no "just wires" CHI. The protocol's coherency contract forbids it.</li>
+      </ul>
+      <h3 class="g" style="margin-top:0.6em;">What <em>can</em> be minimal: an RN-I-ish bridge</h3>
+      <p class="small">A non-coherent CHI Request Node (no caches, no SNP channel participation) wrapped around an AXI4 master is the simplest agent that can plug into a CHI mesh — useful for DMA and legacy IP integration.</p>
+    </div>
+    <div>
+      <pre><code class="language-verilog">// Sketch: CHI RN-I built as a thin state-machine
+// in front of an existing AXI4 master.
+// No caches; never receives SNP on the RN-I port.
+module chi_rni_axi_bridge (
+  input  logic        clk, rstn,
+  // --- CHI RN-I ports (to interconnect) ---
+  input  logic        chi_req_credit,   // credit from XP
+  output logic        chi_req_flitv,
+  output logic [63:0] chi_req_flit,     // opcode + addr + TxnID
+  input  logic        chi_rsp_flitv,
+  input  logic [31:0] chi_rsp_flit,     // DBIDResp / Comp
+  input  logic        chi_dat_flitv,
+  input  logic [255:0] chi_dat_flit,    // DAT payload
+  // --- AXI4 slave port (to the non-coherent master) ---
+  input  logic        ARVALID, output logic ARREADY,
+  input  logic [31:0] ARADDR,
+  output logic        RVALID,  input  logic RREADY,
+  output logic [31:0] RDATA,   output logic RLAST
+  // ... AW/W/B tied off for brevity
+);
+  typedef enum logic [1:0] {IDLE, REQ, WAIT, RSP} st_t;
+  st_t st, nxt;
+  logic [7:0] txnid;
+
+  always_ff @(posedge clk or negedge rstn)
+    if (!rstn) {st, txnid} &lt;= '0;
+    else       {st, txnid} &lt;= {nxt, txnid + (st==REQ)};
+
+  always_comb begin
+    nxt = st; chi_req_flitv = 1'b0;  ARREADY = 1'b0;
+    RVALID = 1'b0; RLAST = 1'b0;
+    unique case (st)
+      IDLE: if (ARVALID)                 nxt = REQ;
+      REQ : if (chi_req_credit) begin
+              chi_req_flitv = 1'b1;      nxt = WAIT;
+            end
+      WAIT: if (chi_dat_flitv)           nxt = RSP;
+      RSP : begin RVALID = 1'b1; RLAST = 1'b1;
+              if (RREADY)                nxt = IDLE;
+            end
+    endcase
+  end
+
+  assign chi_req_flit = {8'h00 /*ReadNoSnp*/,
+                         ARADDR, txnid, 16'h0};
+  assign RDATA        = chi_dat_flit[31:0];
+endmodule</code></pre>
+      <p class="smaller dim" style="margin-top:0.2em;">A real product RN-I adds credit counters per channel, retry on RetryAck, and a proper outstanding-txn scoreboard — but this sketch fits on one page and exposes where the work is.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">20</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
       <ul>
@@ -660,7 +726,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
 </section>
 
 <section data-background-color="#0a0a0f">
-  <div class="slide-hdr"><span class="tag">20</span><h2>References</h2></div>
+  <div class="slide-hdr"><span class="tag">21</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>
       <strong class="a">Arm Ltd.</strong> — <em>AMBA 5 CHI Architecture Specification (IHI 0050)</em>, Issues A through F<br>

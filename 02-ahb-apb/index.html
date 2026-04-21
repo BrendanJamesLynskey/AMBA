@@ -642,7 +642,56 @@ endmodule</code></pre>
 </section>
 
 <section data-background-color="#0a0a0f">
-  <div class="slide-hdr"><span class="tag">19</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="slide-hdr"><span class="tag">19</span><h2>Minimal APB Slave &amp; Loopback Patterns</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="a">Minimal APB3 slave — ~15 lines</h3>
+      <pre><code class="language-verilog">module apb_loopback_reg (
+  input  logic        PCLK, PRESETn,
+  input  logic        PSEL, PENABLE, PWRITE,
+  input  logic [31:0] PADDR, PWDATA,
+  output logic [31:0] PRDATA,
+  output logic        PREADY, PSLVERR
+);
+  logic [31:0] r_q;
+  always_ff @(posedge PCLK or negedge PRESETn)
+    if (!PRESETn)                          r_q &lt;= 32'h0;
+    else if (PSEL &amp;&amp; PENABLE &amp;&amp; PWRITE)  r_q &lt;= PWDATA;
+
+  assign PRDATA  = r_q;
+  assign PREADY  = 1'b1;   // always ready (zero wait states)
+  assign PSLVERR = 1'b0;
+endmodule</code></pre>
+      <p class="smaller dim" style="margin-top:0.2em;">This really is the minimum: one flop, three combinational outputs. PREADY tied high makes every access a two-cycle SETUP/ACCESS round-trip.</p>
+    </div>
+    <div>
+      <h3 class="g">Even smaller — APB read-only status register</h3>
+      <pre><code class="language-verilog">module apb_status_ro #(parameter W = 32) (
+  input  logic        PCLK, PRESETn,
+  input  logic        PSEL, PENABLE,
+  input  logic [W-1:0] status_i,   // external live signal
+  output logic [31:0] PRDATA,
+  output logic        PREADY, PSLVERR
+);
+  assign PRDATA  = {{(32-W){1'b0}}, status_i}; // pure wires
+  assign PREADY  = 1'b1;
+  assign PSLVERR = 1'b0;
+endmodule</code></pre>
+      <div class="card amber" style="margin-top:0.3em;">
+        <h3 class="a">Loopback use cases</h3>
+        <ul style="font-size:0.8em;">
+          <li><strong>APB ping slave</strong> — the one-register version is the go-to "Is the bridge alive?" DV probe.</li>
+          <li><strong>AHB-Lite loopback</strong> — extend the 30-line slave from earlier by always returning HRDATA=HWDATA on the previous transfer. Useful for back-to-back read/write stress.</li>
+          <li><strong>Single-register AHB pipeline stage</strong> — one flop on HADDR/HTRANS/HWDATA + one flop on HRDATA is the minimum retiming cell for AHB fabric timing closure.</li>
+        </ul>
+      </div>
+      <p class="smaller dim" style="margin-top:0.3em;">For HW bring-up silicon: a mask-ROM'd APB slave often returns a fixed "MAGIC" word so the first boot-check is just <code>if (*APB_BASE == 0xDEADBEEF) go;</code></p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">20</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
       <ul>
@@ -664,7 +713,7 @@ endmodule</code></pre>
 </section>
 
 <section data-background-color="#0a0a0f">
-  <div class="slide-hdr"><span class="tag">20</span><h2>References</h2></div>
+  <div class="slide-hdr"><span class="tag">21</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>
       <strong class="a">Arm Ltd.</strong> — <em>AMBA AHB Protocol Specification (IHI 0033)</em> — includes AHB, AHB-Lite, and AHB5<br>

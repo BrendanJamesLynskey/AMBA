@@ -623,7 +623,59 @@ CRRESP[4] WasUnique     — responder was unique</code></pre>
 </section>
 
 <section data-background-color="#0a0a0f">
-  <div class="slide-hdr"><span class="tag">19</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="slide-hdr"><span class="tag">19</span><h2>Minimal ACE-Lite Master — Almost Free</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="a">The cheapest way to be "coherent"</h3>
+      <ul>
+        <li>An <strong>ACE-Lite master has no snoop channels</strong>. Physically it's just an AXI4 master with a few extra signals (<code>AxDOMAIN</code>, <code>AxSNOOP</code>, <code>AxBAR</code>).</li>
+        <li>If all you need is I/O coherency ("CPU cache sees my writes"), you can bolt ACE-Lite onto an existing AXI master by <strong>driving the new attributes to sensible constants</strong> — zero extra logic.</li>
+        <li>Interconnect (CCI) sees those constants and snoops the CPU on behalf of the master.</li>
+      </ul>
+      <div class="card green" style="margin-top:0.3em;font-size:0.72em;">
+        This is why almost every modern DMA engine gained "coherency" in one RTL afternoon — the work was on the <em>interconnect</em> side, not on the master.
+      </div>
+    </div>
+    <div>
+      <pre><code class="language-verilog">// Thin ACE-Lite wrapper around an AXI4 master.
+// No snoop channels exist on the master side.
+module acel_wrap #(parameter ID_W = 4) (
+  // existing AXI4 port (connect to your master IP)
+  output logic [ID_W-1:0] ARID,
+  output logic [31:0]     ARADDR,
+  output logic [7:0]      ARLEN,
+  output logic [2:0]      ARSIZE,
+  output logic [1:0]      ARBURST,
+  output logic            ARVALID,
+  input  logic            ARREADY,
+  // ... (the rest of AR/R/AW/W/B as usual)
+
+  // ACE-Lite extra attributes — pure combinational tie-offs
+  output logic [1:0]      ARDOMAIN,
+  output logic [3:0]      ARSNOOP,
+  output logic [1:0]      ARBAR,
+  output logic [1:0]      AWDOMAIN,
+  output logic [2:0]      AWSNOOP,
+  output logic [1:0]      AWBAR
+);
+  // I/O-coherent DMA targeting shared memory:
+  //   Outer Shareable, ReadOnce / WriteUnique,
+  //   No barriers.
+  assign ARDOMAIN = 2'b10;    // Outer Shareable
+  assign ARSNOOP  = 4'b0000;  // ReadOnce
+  assign ARBAR    = 2'b00;    // No barrier
+
+  assign AWDOMAIN = 2'b10;    // Outer Shareable
+  assign AWSNOOP  = 3'b001;   // WriteUnique
+  assign AWBAR    = 2'b00;
+endmodule</code></pre>
+      <p class="smaller dim" style="margin-top:0.2em;">Six assigns. That's it. Total new gates for coherent DMA = <strong>0</strong> — the CCI / CMN does all the work.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">20</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
       <ul>
@@ -645,7 +697,7 @@ CRRESP[4] WasUnique     — responder was unique</code></pre>
 </section>
 
 <section data-background-color="#0a0a0f">
-  <div class="slide-hdr"><span class="tag">20</span><h2>References</h2></div>
+  <div class="slide-hdr"><span class="tag">21</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>
       <strong class="a">Arm Ltd.</strong> — <em>AMBA AXI and ACE Protocol Specification (IHI 0022)</em> — contains the full ACE / ACE-Lite / ACE5 definitions<br>

@@ -720,7 +720,130 @@ WSTRB  = 8'b0000_1000
 </section>
 
 <section data-background-color="#0a0a0f">
-  <div class="slide-hdr"><span class="tag">21</span><h2>Interview-Ready Takeaways</h2></div>
+  <div class="slide-hdr"><span class="tag">21</span><h2>Minimal Hardware — SystemVerilog Sketches</h2></div>
+  <div class="cols cols-2">
+    <div>
+      <h3 class="a">AXI4-Stream loopback — literally wires</h3>
+      <p class="small">No registers at all: just pass VALID/DATA/LAST forward and READY backward. Zero latency, zero area. A perfect DV sanity-check fabric for any Stream DUT.</p>
+      <pre><code class="language-verilog">module axis_loopback #(parameter W = 64) (
+  // slave (sink-side) port
+  input  logic           s_tvalid,
+  output logic           s_tready,
+  input  logic [W-1:0]   s_tdata,
+  input  logic           s_tlast,
+  // master (source-side) port
+  output logic           m_tvalid,
+  input  logic           m_tready,
+  output logic [W-1:0]   m_tdata,
+  output logic           m_tlast
+);
+  assign m_tvalid = s_tvalid;
+  assign m_tdata  = s_tdata;
+  assign m_tlast  = s_tlast;
+  assign s_tready = m_tready;   // back-pressure pass-through
+endmodule</code></pre>
+      <p class="smaller dim">Because AXI4-Stream has no address, no ID, and no response channel, a pure combinational pass-through is legal &amp; protocol-compliant.</p>
+    </div>
+    <div>
+      <h3 class="g">Single-register pipeline stage (skid buffer)</h3>
+      <p class="small">One flop + one "skid" holding register is the minimum that re-times a VALID/READY channel without breaking the protocol's "VALID must not depend combinationally on READY" rule. Drop into any AXI channel to close timing.</p>
+      <pre><code class="language-verilog">module axi_skid #(parameter W = 32) (
+  input  logic         clk, rstn,
+  input  logic         s_valid, output logic s_ready,
+  input  logic [W-1:0] s_data,
+  output logic         m_valid, input  logic m_ready,
+  output logic [W-1:0] m_data
+);
+  logic [W-1:0] skid_q;  logic skid_v;
+
+  always_ff @(posedge clk or negedge rstn)
+    if (!rstn) {skid_v, skid_q} &lt;= '0;
+    else if (s_valid &amp;&amp; s_ready &amp;&amp; !m_ready)
+           {skid_v, skid_q} &lt;= {1'b1, s_data};
+    else if ( m_ready) skid_v &lt;= 1'b0;
+
+  assign m_valid = s_valid | skid_v;
+  assign m_data  = skid_v ? skid_q : s_data;
+  assign s_ready = !skid_v;
+endmodule</code></pre>
+      <p class="smaller dim">This 10-line cell is the backbone of every AXI crossbar, bridge, and clock-domain-crossing FIFO front-end.</p>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">22</span><h2>Minimal AXI4-Lite Slave (one register + loopback)</h2></div>
+  <div class="cols cols-6040">
+    <div>
+      <pre><code class="language-verilog">module axil_loopback_reg (
+  input  logic        ACLK, ARESETn,
+  // AW / W / B
+  input  logic        AWVALID, input logic [31:0] AWADDR,
+  output logic        AWREADY,
+  input  logic        WVALID,  input logic [31:0] WDATA,
+  input  logic [3:0]  WSTRB,   output logic WREADY,
+  output logic        BVALID,  output logic [1:0] BRESP,
+  input  logic        BREADY,
+  // AR / R
+  input  logic        ARVALID, input logic [31:0] ARADDR,
+  output logic        ARREADY,
+  output logic        RVALID,  output logic [31:0] RDATA,
+  output logic [1:0]  RRESP,   input  logic RREADY
+);
+  logic [31:0] reg_q;
+  logic aw_hs, w_hs, b_pend, ar_hs, r_pend;
+
+  // simultaneous AW+W one-beat write handshake
+  assign AWREADY =  !b_pend;
+  assign WREADY  =  !b_pend;
+  assign aw_hs   =  AWVALID &amp;&amp; AWREADY;
+  assign w_hs    =  WVALID  &amp;&amp; WREADY;
+
+  always_ff @(posedge ACLK or negedge ARESETn)
+    if (!ARESETn) {reg_q, b_pend, r_pend} &lt;= '0;
+    else begin
+      // write: byte-strobed update
+      if (aw_hs &amp;&amp; w_hs) begin
+        for (int i = 0; i &lt; 4; i++)
+          if (WSTRB[i]) reg_q[i*8 +: 8] &lt;= WDATA[i*8 +: 8];
+        b_pend &lt;= 1'b1;
+      end else if (BVALID &amp;&amp; BREADY) b_pend &lt;= 1'b0;
+
+      // read: one beat
+      if (ARVALID &amp;&amp; ARREADY) r_pend &lt;= 1'b1;
+      else if (RVALID &amp;&amp; RREADY) r_pend &lt;= 1'b0;
+    end
+
+  assign ARREADY = !r_pend;
+  assign BVALID  =  b_pend;  assign BRESP = 2'b00;
+  assign RVALID  =  r_pend;  assign RDATA = reg_q;  assign RRESP = 2'b00;
+endmodule</code></pre>
+    </div>
+    <div>
+      <div class="card amber">
+        <h3 class="a">What "minimal" gets you</h3>
+        <ul style="font-size:0.8em;">
+          <li>One 32-bit register.</li>
+          <li>One write pending flop, one read pending flop.</li>
+          <li>Byte-strobed writes (WSTRB).</li>
+          <li>Always OKAY response.</li>
+          <li>ID-less (AXI4-Lite).</li>
+          <li>No bursts, no exclusive, no QoS.</li>
+        </ul>
+      </div>
+      <div class="card green" style="margin-top:0.3em;">
+        <h3 class="g">Loopback trick</h3>
+        <p>Read returns whatever was last written — so this slave doubles as a <em>write-read loopback</em> for DV. Point any master's AXI test at it and bounce data off. No memory model needed.</p>
+      </div>
+      <div class="card blue" style="margin-top:0.3em;font-size:0.72em;">
+        For full AXI4 (with AxID, bursts, outstanding): add a small FIFO per channel, widen AWID/ARID through to BID/RID, and decode AWLEN. The <strong>minimal</strong> full-AXI4 slave is ~100 lines.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr"><span class="tag">23</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
       <ul>
@@ -742,7 +865,7 @@ WSTRB  = 8'b0000_1000
 </section>
 
 <section data-background-color="#0a0a0f">
-  <div class="slide-hdr"><span class="tag">22</span><h2>References</h2></div>
+  <div class="slide-hdr"><span class="tag">24</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>
       <strong class="a">Arm Ltd.</strong> — <em>AMBA AXI and ACE Protocol Specification (IHI 0022)</em> — AXI3, AXI4, AXI5<br>
