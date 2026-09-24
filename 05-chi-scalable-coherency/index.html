@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
 <style>
   :root {
-    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
-    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+    --amber:#f4c44d;--green:#87d5bb;--purple:#c7b9fe;--blue:#a5dcfe;--red:#fd8c79;
+    --bg:#10294a;--bg2:#143154;--bg3:#18375d;--border:#305782;--text:#ecf1f7;--muted:#8eaac7;
   }
   .reveal-viewport { background: var(--bg); }
   .reveal .slides section { background: transparent; }
@@ -23,7 +23,7 @@
   .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
   .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
   .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
   .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
   .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
   .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
@@ -31,19 +31,19 @@
   .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
   .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
   .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
-  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #dbe5ef; }
   .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
   .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
   .slide-hdr h2 { margin: 0; font-size: 1.4em; }
   .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
-  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(10,31,58,0.3); margin: 0.4em 0; }
   .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
   .card h3 { font-size: 1em; margin: 0 0 0.4em; }
-  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #bfd1e2; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
   .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
   .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
-  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
-  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #d0ddea; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #132f51; }
   .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
   svg.diagram { display: block; margin: 0 auto; overflow: visible; }
   .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
@@ -57,7 +57,7 @@
 <div class="reveal">
 <div class="slides">
 
-<section class="title-slide" data-background-color="#0a0a0f">
+<section class="title-slide" data-background-color="#10294a">
   <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 05</div>
   <h1>CHI — Coherent Hub Interface</h1>
   <div class="subtitle">Packet-Based Coherency for 128+ Nodes · The Protocol Behind Neoverse</div>
@@ -66,7 +66,7 @@
   <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">02</span><h2>Why CHI?</h2></div>
   <div class="cols cols-2">
     <div>
@@ -89,7 +89,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">03</span><h2>CHI Node Types</h2></div>
   <div class="cols cols-2">
     <div>
@@ -116,7 +116,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">04</span><h2>The Four Message Channels</h2></div>
   <div class="cols cols-2">
     <div>
@@ -135,36 +135,36 @@
     </div>
     <div>
       <svg viewBox="0 0 340 220" style="width:100%;">
-        <rect x="10" y="10" width="320" height="200" rx="8" fill="#10101a" stroke="#2a2a3a"/>
-        <text x="170" y="30" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">CHI link — 4 virtual channels</text>
+        <rect x="10" y="10" width="320" height="200" rx="8" fill="#143154" stroke="#305782"/>
+        <text x="170" y="30" text-anchor="middle" fill="#f4c44d" font-family="Playfair Display" font-weight="700" font-size="14">CHI link — 4 virtual channels</text>
 
         <g font-family="JetBrains Mono" font-size="11">
-          <rect x="20" y="55"  width="90" height="36" rx="5" fill="#181824" stroke="#f5a623"/>
-          <text x="65" y="78" text-anchor="middle" fill="#f5a623">RN-F</text>
-          <rect x="230" y="55" width="90" height="36" rx="5" fill="#181824" stroke="#4ecb8d"/>
-          <text x="275" y="78" text-anchor="middle" fill="#4ecb8d">HN-F</text>
+          <rect x="20" y="55"  width="90" height="36" rx="5" fill="#18375d" stroke="#f4c44d"/>
+          <text x="65" y="78" text-anchor="middle" fill="#f4c44d">RN-F</text>
+          <rect x="230" y="55" width="90" height="36" rx="5" fill="#18375d" stroke="#87d5bb"/>
+          <text x="275" y="78" text-anchor="middle" fill="#87d5bb">HN-F</text>
 
-          <line x1="110" y1="65"  x2="230" y2="65"  stroke="#f5a623" stroke-width="1.5"/>
-          <text x="170" y="58" text-anchor="middle" fill="#f5a623" font-size="9">REQ</text>
+          <line x1="110" y1="65"  x2="230" y2="65"  stroke="#f4c44d" stroke-width="1.5"/>
+          <text x="170" y="58" text-anchor="middle" fill="#f4c44d" font-size="9">REQ</text>
 
-          <line x1="230" y1="80"  x2="110" y2="80"  stroke="#a78bfa" stroke-width="1.5"/>
-          <text x="170" y="96" text-anchor="middle" fill="#a78bfa" font-size="9">RSP</text>
+          <line x1="230" y1="80"  x2="110" y2="80"  stroke="#c7b9fe" stroke-width="1.5"/>
+          <text x="170" y="96" text-anchor="middle" fill="#c7b9fe" font-size="9">RSP</text>
 
-          <line x1="230" y1="130" x2="110" y2="130" stroke="#60a5fa" stroke-width="1.5"/>
-          <text x="170" y="125" text-anchor="middle" fill="#60a5fa" font-size="9">SNP</text>
+          <line x1="230" y1="130" x2="110" y2="130" stroke="#a5dcfe" stroke-width="1.5"/>
+          <text x="170" y="125" text-anchor="middle" fill="#a5dcfe" font-size="9">SNP</text>
 
-          <line x1="230" y1="155" x2="110" y2="155" stroke="#f87171" stroke-width="1.5"/>
-          <text x="170" y="150" text-anchor="middle" fill="#f87171" font-size="9">DAT (HN→RN)</text>
+          <line x1="230" y1="155" x2="110" y2="155" stroke="#fd8c79" stroke-width="1.5"/>
+          <text x="170" y="150" text-anchor="middle" fill="#fd8c79" font-size="9">DAT (HN→RN)</text>
 
-          <line x1="110" y1="180" x2="230" y2="180" stroke="#f87171" stroke-width="1.5"/>
-          <text x="170" y="175" text-anchor="middle" fill="#f87171" font-size="9">DAT (RN→HN)</text>
+          <line x1="110" y1="180" x2="230" y2="180" stroke="#fd8c79" stroke-width="1.5"/>
+          <text x="170" y="175" text-anchor="middle" fill="#fd8c79" font-size="9">DAT (RN→HN)</text>
         </g>
       </svg>
     </div>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">05</span><h2>CHI Cache States</h2></div>
   <div class="cols cols-2">
     <div>
@@ -199,55 +199,55 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">06</span><h2>Mesh Topology — CMN-700</h2></div>
   <svg viewBox="0 0 900 400" class="diagram" style="width:100%;">
     <g font-family="JetBrains Mono" font-size="10">
-      <text x="20" y="22" fill="#f5a623" font-size="12">Mesh NoC — each tile holds an RN-F (CPU), HN-F (home slice), and/or SN-F (memory port)</text>
+      <text x="20" y="22" fill="#f4c44d" font-size="12">Mesh NoC — each tile holds an RN-F (CPU), HN-F (home slice), and/or SN-F (memory port)</text>
 
       <!-- Draw a 4x4 mesh -->
       <g>
         <!-- row 0 -->
-        <rect x="60"  y="50"  width="140" height="60" rx="6" fill="#10101a" stroke="#f5a623"/>
-        <text x="130" y="72" text-anchor="middle" fill="#f5a623">RN-F + HN-F</text>
-        <text x="130" y="90" text-anchor="middle" fill="#8888a8">Tile (0,0)</text>
-        <rect x="240" y="50"  width="140" height="60" rx="6" fill="#10101a" stroke="#f5a623"/>
-        <text x="310" y="72" text-anchor="middle" fill="#f5a623">RN-F + HN-F</text>
-        <rect x="420" y="50"  width="140" height="60" rx="6" fill="#10101a" stroke="#f5a623"/>
-        <text x="490" y="72" text-anchor="middle" fill="#f5a623">RN-F + HN-F</text>
-        <rect x="600" y="50"  width="140" height="60" rx="6" fill="#10101a" stroke="#a78bfa"/>
-        <text x="670" y="72" text-anchor="middle" fill="#a78bfa">SN-F (HBM)</text>
+        <rect x="60"  y="50"  width="140" height="60" rx="6" fill="#143154" stroke="#f4c44d"/>
+        <text x="130" y="72" text-anchor="middle" fill="#f4c44d">RN-F + HN-F</text>
+        <text x="130" y="90" text-anchor="middle" fill="#8eaac7">Tile (0,0)</text>
+        <rect x="240" y="50"  width="140" height="60" rx="6" fill="#143154" stroke="#f4c44d"/>
+        <text x="310" y="72" text-anchor="middle" fill="#f4c44d">RN-F + HN-F</text>
+        <rect x="420" y="50"  width="140" height="60" rx="6" fill="#143154" stroke="#f4c44d"/>
+        <text x="490" y="72" text-anchor="middle" fill="#f4c44d">RN-F + HN-F</text>
+        <rect x="600" y="50"  width="140" height="60" rx="6" fill="#143154" stroke="#c7b9fe"/>
+        <text x="670" y="72" text-anchor="middle" fill="#c7b9fe">SN-F (HBM)</text>
         <!-- row 1 -->
-        <rect x="60"  y="130" width="140" height="60" rx="6" fill="#10101a" stroke="#f5a623"/>
-        <text x="130" y="160" text-anchor="middle" fill="#f5a623">RN-F</text>
-        <rect x="240" y="130" width="140" height="60" rx="6" fill="#10101a" stroke="#4ecb8d"/>
-        <text x="310" y="160" text-anchor="middle" fill="#4ecb8d">HN-F slice</text>
-        <rect x="420" y="130" width="140" height="60" rx="6" fill="#10101a" stroke="#4ecb8d"/>
-        <text x="490" y="160" text-anchor="middle" fill="#4ecb8d">HN-F slice</text>
-        <rect x="600" y="130" width="140" height="60" rx="6" fill="#10101a" stroke="#a78bfa"/>
-        <text x="670" y="160" text-anchor="middle" fill="#a78bfa">SN-F (DDR)</text>
+        <rect x="60"  y="130" width="140" height="60" rx="6" fill="#143154" stroke="#f4c44d"/>
+        <text x="130" y="160" text-anchor="middle" fill="#f4c44d">RN-F</text>
+        <rect x="240" y="130" width="140" height="60" rx="6" fill="#143154" stroke="#87d5bb"/>
+        <text x="310" y="160" text-anchor="middle" fill="#87d5bb">HN-F slice</text>
+        <rect x="420" y="130" width="140" height="60" rx="6" fill="#143154" stroke="#87d5bb"/>
+        <text x="490" y="160" text-anchor="middle" fill="#87d5bb">HN-F slice</text>
+        <rect x="600" y="130" width="140" height="60" rx="6" fill="#143154" stroke="#c7b9fe"/>
+        <text x="670" y="160" text-anchor="middle" fill="#c7b9fe">SN-F (DDR)</text>
         <!-- row 2 -->
-        <rect x="60"  y="210" width="140" height="60" rx="6" fill="#10101a" stroke="#60a5fa"/>
-        <text x="130" y="240" text-anchor="middle" fill="#60a5fa">RN-I (NIC)</text>
-        <rect x="240" y="210" width="140" height="60" rx="6" fill="#10101a" stroke="#f5a623"/>
-        <text x="310" y="240" text-anchor="middle" fill="#f5a623">RN-F</text>
-        <rect x="420" y="210" width="140" height="60" rx="6" fill="#10101a" stroke="#f5a623"/>
-        <text x="490" y="240" text-anchor="middle" fill="#f5a623">RN-F</text>
-        <rect x="600" y="210" width="140" height="60" rx="6" fill="#10101a" stroke="#60a5fa"/>
-        <text x="670" y="240" text-anchor="middle" fill="#60a5fa">RN-D (SMMU)</text>
+        <rect x="60"  y="210" width="140" height="60" rx="6" fill="#143154" stroke="#a5dcfe"/>
+        <text x="130" y="240" text-anchor="middle" fill="#a5dcfe">RN-I (NIC)</text>
+        <rect x="240" y="210" width="140" height="60" rx="6" fill="#143154" stroke="#f4c44d"/>
+        <text x="310" y="240" text-anchor="middle" fill="#f4c44d">RN-F</text>
+        <rect x="420" y="210" width="140" height="60" rx="6" fill="#143154" stroke="#f4c44d"/>
+        <text x="490" y="240" text-anchor="middle" fill="#f4c44d">RN-F</text>
+        <rect x="600" y="210" width="140" height="60" rx="6" fill="#143154" stroke="#a5dcfe"/>
+        <text x="670" y="240" text-anchor="middle" fill="#a5dcfe">RN-D (SMMU)</text>
         <!-- row 3 -->
-        <rect x="60"  y="290" width="140" height="60" rx="6" fill="#10101a" stroke="#a78bfa"/>
-        <text x="130" y="320" text-anchor="middle" fill="#a78bfa">SN-F (DDR)</text>
-        <rect x="240" y="290" width="140" height="60" rx="6" fill="#10101a" stroke="#4ecb8d"/>
-        <text x="310" y="320" text-anchor="middle" fill="#4ecb8d">HN-I (PCIe)</text>
-        <rect x="420" y="290" width="140" height="60" rx="6" fill="#10101a" stroke="#f5a623"/>
-        <text x="490" y="320" text-anchor="middle" fill="#f5a623">RN-F</text>
-        <rect x="600" y="290" width="140" height="60" rx="6" fill="#10101a" stroke="#a78bfa"/>
-        <text x="670" y="320" text-anchor="middle" fill="#a78bfa">SN-F (HBM)</text>
+        <rect x="60"  y="290" width="140" height="60" rx="6" fill="#143154" stroke="#c7b9fe"/>
+        <text x="130" y="320" text-anchor="middle" fill="#c7b9fe">SN-F (DDR)</text>
+        <rect x="240" y="290" width="140" height="60" rx="6" fill="#143154" stroke="#87d5bb"/>
+        <text x="310" y="320" text-anchor="middle" fill="#87d5bb">HN-I (PCIe)</text>
+        <rect x="420" y="290" width="140" height="60" rx="6" fill="#143154" stroke="#f4c44d"/>
+        <text x="490" y="320" text-anchor="middle" fill="#f4c44d">RN-F</text>
+        <rect x="600" y="290" width="140" height="60" rx="6" fill="#143154" stroke="#c7b9fe"/>
+        <text x="670" y="320" text-anchor="middle" fill="#c7b9fe">SN-F (HBM)</text>
       </g>
 
       <!-- mesh links -->
-      <g stroke="#444" stroke-dasharray="3 3">
+      <g stroke="#41668f" stroke-dasharray="3 3">
         <!-- horizontal -->
         <line x1="200" y1="80"  x2="240" y2="80"/>
         <line x1="380" y1="80"  x2="420" y2="80"/>
@@ -276,48 +276,48 @@ pending_txn   : outstanding request FSM ptr</code></pre>
         <line x1="670" y1="270" x2="670" y2="290"/>
       </g>
 
-      <text x="20" y="380" fill="#8888a8">XY routing between tiles. Each tile has a Cross-Point (XP) with credit-managed CHI channels.</text>
+      <text x="20" y="380" fill="#8eaac7">XY routing between tiles. Each tile has a Cross-Point (XP) with credit-managed CHI channels.</text>
     </g>
   </svg>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">07</span><h2>Request Flow — Read Miss</h2></div>
   <svg viewBox="0 0 900 320" class="diagram" style="width:100%;">
     <g font-family="JetBrains Mono" font-size="11">
-      <text x="20" y="20" fill="#f5a623">CPU (RN-F A) misses; address hashes to HN-F@(2,2); line cached at RN-F B in UD</text>
+      <text x="20" y="20" fill="#f4c44d">CPU (RN-F A) misses; address hashes to HN-F@(2,2); line cached at RN-F B in UD</text>
 
-      <rect x="20" y="50" width="140" height="50" rx="6" fill="#10101a" stroke="#f5a623"/>
-      <text x="90" y="80" text-anchor="middle" fill="#f5a623">RN-F A</text>
+      <rect x="20" y="50" width="140" height="50" rx="6" fill="#143154" stroke="#f4c44d"/>
+      <text x="90" y="80" text-anchor="middle" fill="#f4c44d">RN-F A</text>
 
-      <rect x="380" y="50" width="140" height="200" rx="6" fill="#10101a" stroke="#4ecb8d"/>
-      <text x="450" y="75" text-anchor="middle" fill="#4ecb8d">HN-F (Home)</text>
-      <text x="450" y="92" text-anchor="middle" fill="#8888a8" font-size="10">Directory + SLC slice</text>
+      <rect x="380" y="50" width="140" height="200" rx="6" fill="#143154" stroke="#87d5bb"/>
+      <text x="450" y="75" text-anchor="middle" fill="#87d5bb">HN-F (Home)</text>
+      <text x="450" y="92" text-anchor="middle" fill="#8eaac7" font-size="10">Directory + SLC slice</text>
 
-      <rect x="740" y="50" width="140" height="50" rx="6" fill="#10101a" stroke="#f5a623"/>
-      <text x="810" y="80" text-anchor="middle" fill="#f5a623">RN-F B (UD)</text>
+      <rect x="740" y="50" width="140" height="50" rx="6" fill="#143154" stroke="#f4c44d"/>
+      <text x="810" y="80" text-anchor="middle" fill="#f4c44d">RN-F B (UD)</text>
 
-      <rect x="740" y="180" width="140" height="40" rx="6" fill="#10101a" stroke="#a78bfa"/>
-      <text x="810" y="205" text-anchor="middle" fill="#a78bfa">SN-F (DRAM)</text>
+      <rect x="740" y="180" width="140" height="40" rx="6" fill="#143154" stroke="#c7b9fe"/>
+      <text x="810" y="205" text-anchor="middle" fill="#c7b9fe">SN-F (DRAM)</text>
 
       <g font-size="10">
-        <line x1="160" y1="70" x2="380" y2="80" stroke="#f5a623" stroke-width="1.5" marker-end="url(#n1)"/>
-        <text x="270" y="65" fill="#f5a623">1. REQ ReadShared (TxnID=7)</text>
+        <line x1="160" y1="70" x2="380" y2="80" stroke="#f4c44d" stroke-width="1.5" marker-end="url(#n1)"/>
+        <text x="270" y="65" fill="#f4c44d">1. REQ ReadShared (TxnID=7)</text>
 
-        <line x1="520" y1="100" x2="740" y2="80" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#n1)"/>
-        <text x="630" y="95" fill="#a78bfa">2. SNP SnpShared → RN-F B</text>
+        <line x1="520" y1="100" x2="740" y2="80" stroke="#c7b9fe" stroke-width="1.5" marker-end="url(#n1)"/>
+        <text x="630" y="95" fill="#c7b9fe">2. SNP SnpShared → RN-F B</text>
 
-        <line x1="740" y1="100" x2="520" y2="120" stroke="#4ecb8d" stroke-width="1.5" marker-end="url(#n1)"/>
-        <text x="630" y="115" fill="#4ecb8d">3. DAT SnpRespData_I_PD (dirty passed)</text>
+        <line x1="740" y1="100" x2="520" y2="120" stroke="#87d5bb" stroke-width="1.5" marker-end="url(#n1)"/>
+        <text x="630" y="115" fill="#87d5bb">3. DAT SnpRespData_I_PD (dirty passed)</text>
 
-        <line x1="380" y1="150" x2="160" y2="100" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#n1)"/>
-        <text x="270" y="130" fill="#a78bfa">4. DAT CompData_SD (CPU A → SharedDirty)</text>
+        <line x1="380" y1="150" x2="160" y2="100" stroke="#c7b9fe" stroke-width="1.5" marker-end="url(#n1)"/>
+        <text x="270" y="130" fill="#c7b9fe">4. DAT CompData_SD (CPU A → SharedDirty)</text>
 
-        <line x1="160" y1="120" x2="380" y2="180" stroke="#f5a623" stroke-width="1.5" marker-end="url(#n1)"/>
-        <text x="270" y="175" fill="#f5a623">5. RSP CompAck</text>
+        <line x1="160" y1="120" x2="380" y2="180" stroke="#f4c44d" stroke-width="1.5" marker-end="url(#n1)"/>
+        <text x="270" y="175" fill="#f4c44d">5. RSP CompAck</text>
 
-        <line x1="520" y1="200" x2="740" y2="200" stroke="#f87171" stroke-width="1" stroke-dasharray="3 3"/>
-        <text x="630" y="195" fill="#f87171">(optional WriteBack to SN-F deferred)</text>
+        <line x1="520" y1="200" x2="740" y2="200" stroke="#fd8c79" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="630" y="195" fill="#fd8c79">(optional WriteBack to SN-F deferred)</text>
       </g>
 
       <defs>
@@ -330,7 +330,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   <p class="small dim" style="margin-top:0.3em;">The HN-F knows from its directory that only RN-F B holds the line, so it sends a <strong>single targeted snoop</strong> — not a broadcast. That's CHI's scaling trick.</p>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">08</span><h2>Snoop Response Types</h2></div>
   <div class="cols cols-2">
     <div>
@@ -357,7 +357,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">09</span><h2>DMT &amp; DCT — Data Movement Optimisations</h2></div>
   <div class="cols cols-2">
     <div>
@@ -384,7 +384,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">10</span><h2>The System Level Cache (SLC)</h2></div>
   <div class="cols cols-2">
     <div>
@@ -412,7 +412,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">11</span><h2>CHI Issue Timeline</h2></div>
   <div class="cols cols-2">
     <div>
@@ -438,7 +438,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">12</span><h2>CMN-600 / 650 / 700 — Arm's Interconnect IP</h2></div>
   <div class="cols cols-2">
     <div>
@@ -468,7 +468,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">13</span><h2>Retry &amp; Credits</h2></div>
   <div class="cols cols-2">
     <div>
@@ -491,7 +491,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">14</span><h2>DVM on CHI</h2></div>
   <div class="cols cols-2">
     <div>
@@ -520,7 +520,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">15</span><h2>MPAM — Partitioning on CHI</h2></div>
   <div class="cols cols-2">
     <div>
@@ -549,7 +549,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">16</span><h2>CHI for Realms — CCA &amp; RME</h2></div>
   <div class="cols cols-2">
     <div>
@@ -577,7 +577,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">17</span><h2>CHI vs ACE — Side by Side</h2></div>
   <div class="cols cols-2">
     <div>
@@ -607,7 +607,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">18</span><h2>Verification — Why CHI is Hard</h2></div>
   <div class="cols cols-2">
     <div>
@@ -637,7 +637,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">19</span><h2>Minimum-Viable CHI — and Why There Isn't One</h2></div>
   <div class="cols cols-2">
     <div>
@@ -703,7 +703,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">20</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
@@ -725,7 +725,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">21</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>

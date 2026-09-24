@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
 <style>
   :root {
-    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
-    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+    --amber:#f4c44d;--green:#87d5bb;--purple:#c7b9fe;--blue:#a5dcfe;--red:#fd8c79;
+    --bg:#10294a;--bg2:#143154;--bg3:#18375d;--border:#305782;--text:#ecf1f7;--muted:#8eaac7;
   }
   .reveal-viewport { background: var(--bg); }
   .reveal .slides section { background: transparent; }
@@ -23,7 +23,7 @@
   .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
   .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
   .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
   .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
   .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
   .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
@@ -31,19 +31,19 @@
   .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
   .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
   .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
-  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #dbe5ef; }
   .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
   .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
   .slide-hdr h2 { margin: 0; font-size: 1.4em; }
   .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
-  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(10,31,58,0.3); margin: 0.4em 0; }
   .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
   .card h3 { font-size: 1em; margin: 0 0 0.4em; }
-  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #bfd1e2; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
   .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
   .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
-  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
-  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #d0ddea; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #132f51; }
   .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
   svg.diagram { display: block; margin: 0 auto; overflow: visible; }
   .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
@@ -55,9 +55,9 @@
   .tl { font-family: 'JetBrains Mono', monospace; font-size: 0.68em; display: grid; grid-template-columns: 90px 20px 1fr; gap: 0.2em 0.5em; margin: 0.3em 0; }
   .tl .yr { color: var(--amber); font-weight: 700; text-align: right; padding-top: 0.35em; }
   .tl .dot { color: var(--green); text-align: center; padding-top: 0.35em; font-size: 0.9em; }
-  .tl .ev { background: var(--bg2); border-left: 3px solid var(--border); border-radius: 4px; padding: 0.4em 0.7em; color: #cdd6f4; }
+  .tl .ev { background: var(--bg2); border-left: 3px solid var(--border); border-radius: 4px; padding: 0.4em 0.7em; color: #dbe5ef; }
   .tl .ev strong { color: var(--amber); }
-  .tl .ev.hi { border-left-color: var(--amber); background: #1a0f05; }
+  .tl .ev.hi { border-left-color: var(--amber); background: #263240; }
 
   .ver-picker { display: flex; gap: 6px; margin: 0.4em 0; font-family: 'JetBrains Mono', monospace; font-size: 0.65em; flex-wrap: wrap; }
   .ver-picker .btn { cursor: pointer; padding: 0.4em 0.9em; border: 1px solid var(--border); border-radius: 5px; background: var(--bg2); color: var(--text); transition: all 0.15s; }
@@ -68,7 +68,7 @@
   .ver-info .s { color: var(--green); font-family: 'JetBrains Mono', monospace; font-size: 0.8em; margin-bottom: 0.3em; }
   .ver-info ul { margin: 0.2em 0 0 1em; font-size: 0.9em; }
 
-  .quote { font-style: italic; color: #ccc; padding: 0.5em 1em; border-left: 3px solid var(--blue); background: var(--bg2); border-radius: 4px; font-size: 0.8em; }
+  .quote { font-style: italic; color: #d0ddea; padding: 0.5em 1em; border-left: 3px solid var(--blue); background: var(--bg2); border-radius: 4px; font-size: 0.8em; }
   .quote cite { display: block; font-size: 0.72em; color: var(--muted); font-style: normal; margin-top: 0.4em; }
 </style>
 </head>
@@ -76,7 +76,7 @@
 <div class="reveal">
 <div class="slides">
 
-<section class="title-slide" data-background-color="#0a0a0f">
+<section class="title-slide" data-background-color="#10294a">
   <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 01</div>
   <h1>History of AMBA</h1>
   <div class="subtitle">From the 1996 System Bus to 2024 Chiplets · Three Decades of On-Chip Interconnect</div>
@@ -85,7 +85,7 @@
   <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">02</span><h2>Why AMBA History Matters</h2></div>
   <div class="cols cols-2">
     <div>
@@ -108,7 +108,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">03</span><h2>Prehistory — The Proprietary-Bus Era</h2></div>
   <div class="cols cols-2">
     <div>
@@ -137,7 +137,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">04</span><h2>AMBA 1 (1996) — ASB &amp; APB</h2></div>
   <div class="cols cols-2">
     <div>
@@ -157,40 +157,40 @@
     </div>
     <div>
       <svg viewBox="0 0 340 220" style="width:100%;">
-        <rect x="8" y="10" width="324" height="200" rx="8" fill="#10101a" stroke="#2a2a3a"/>
-        <text x="170" y="32" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">AMBA 1 SoC — Typical Topology</text>
+        <rect x="8" y="10" width="324" height="200" rx="8" fill="#143154" stroke="#305782"/>
+        <text x="170" y="32" text-anchor="middle" fill="#f4c44d" font-family="Playfair Display" font-weight="700" font-size="14">AMBA 1 SoC — Typical Topology</text>
 
-        <rect x="24" y="56" width="80" height="42" rx="5" fill="#181824" stroke="#f5a623"/>
-        <text x="64" y="80" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="11">ARM7</text>
+        <rect x="24" y="56" width="80" height="42" rx="5" fill="#18375d" stroke="#f4c44d"/>
+        <text x="64" y="80" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="11">ARM7</text>
 
-        <rect x="24" y="120" width="80" height="42" rx="5" fill="#181824" stroke="#60a5fa"/>
-        <text x="64" y="144" text-anchor="middle" fill="#60a5fa" font-family="JetBrains Mono" font-size="11">DSP</text>
+        <rect x="24" y="120" width="80" height="42" rx="5" fill="#18375d" stroke="#a5dcfe"/>
+        <text x="64" y="144" text-anchor="middle" fill="#a5dcfe" font-family="JetBrains Mono" font-size="11">DSP</text>
 
-        <line x1="104" y1="75" x2="170" y2="75" stroke="#f5a623" stroke-width="2"/>
-        <line x1="104" y1="140" x2="170" y2="140" stroke="#f5a623" stroke-width="2"/>
-        <text x="137" y="108" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">ASB</text>
+        <line x1="104" y1="75" x2="170" y2="75" stroke="#f4c44d" stroke-width="2"/>
+        <line x1="104" y1="140" x2="170" y2="140" stroke="#f4c44d" stroke-width="2"/>
+        <text x="137" y="108" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="10">ASB</text>
 
-        <rect x="170" y="56" width="70" height="106" rx="5" fill="#181824" stroke="#f5a623"/>
-        <text x="205" y="100" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">ASB</text>
-        <text x="205" y="115" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">Arbiter</text>
+        <rect x="170" y="56" width="70" height="106" rx="5" fill="#18375d" stroke="#f4c44d"/>
+        <text x="205" y="100" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">ASB</text>
+        <text x="205" y="115" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">Arbiter</text>
 
-        <line x1="240" y1="110" x2="280" y2="110" stroke="#4ecb8d" stroke-width="2" stroke-dasharray="2 2"/>
-        <text x="260" y="100" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">Bridge</text>
+        <line x1="240" y1="110" x2="280" y2="110" stroke="#87d5bb" stroke-width="2" stroke-dasharray="2 2"/>
+        <text x="260" y="100" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="10">Bridge</text>
 
-        <rect x="280" y="56" width="52" height="32" rx="4" fill="#10101a" stroke="#4ecb8d"/>
-        <text x="306" y="76" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">UART</text>
-        <rect x="280" y="96" width="52" height="32" rx="4" fill="#10101a" stroke="#4ecb8d"/>
-        <text x="306" y="116" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Timer</text>
-        <rect x="280" y="136" width="52" height="32" rx="4" fill="#10101a" stroke="#4ecb8d"/>
-        <text x="306" y="156" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">GPIO</text>
-        <text x="306" y="186" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">APB</text>
+        <rect x="280" y="56" width="52" height="32" rx="4" fill="#143154" stroke="#87d5bb"/>
+        <text x="306" y="76" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">UART</text>
+        <rect x="280" y="96" width="52" height="32" rx="4" fill="#143154" stroke="#87d5bb"/>
+        <text x="306" y="116" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">Timer</text>
+        <rect x="280" y="136" width="52" height="32" rx="4" fill="#143154" stroke="#87d5bb"/>
+        <text x="306" y="156" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">GPIO</text>
+        <text x="306" y="186" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="10">APB</text>
       </svg>
       <p class="smaller dim" style="margin-top:0.3em;">ASB's tri-state data bus would become its downfall — high-speed synthesis tools struggled with bidirectional nets on-die.</p>
     </div>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">05</span><h2>AMBA 2 (1999) — AHB Arrives</h2></div>
   <div class="cols cols-2">
     <div>
@@ -225,7 +225,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">06</span><h2>AMBA 2 SoCs — ARM9, ARM11, Cortex-M3</h2></div>
   <div class="cols cols-2">
     <div>
@@ -252,7 +252,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">07</span><h2>AMBA 3 (2003) — AXI Redefines the Bus</h2></div>
   <div class="cols cols-2">
     <div>
@@ -286,35 +286,35 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">08</span><h2>The AXI Handshake in One Diagram</h2></div>
   <svg viewBox="0 0 900 340" class="diagram" style="width:100%;">
-    <g font-family="JetBrains Mono" font-size="12" fill="#cdd6f4">
-      <text x="20" y="20" fill="#f5a623">Five AXI channels — independent VALID/READY handshakes</text>
+    <g font-family="JetBrains Mono" font-size="12" fill="#dbe5ef">
+      <text x="20" y="20" fill="#f4c44d">Five AXI channels — independent VALID/READY handshakes</text>
 
-      <rect x="20" y="40" width="150" height="260" rx="8" fill="#10101a" stroke="#f5a623"/>
-      <text x="95" y="60" text-anchor="middle" fill="#f5a623" font-weight="700">MASTER</text>
-      <text x="95" y="78" text-anchor="middle" fill="#8888a8" font-size="10">(CPU / DMA / GPU)</text>
+      <rect x="20" y="40" width="150" height="260" rx="8" fill="#143154" stroke="#f4c44d"/>
+      <text x="95" y="60" text-anchor="middle" fill="#f4c44d" font-weight="700">MASTER</text>
+      <text x="95" y="78" text-anchor="middle" fill="#8eaac7" font-size="10">(CPU / DMA / GPU)</text>
 
-      <rect x="730" y="40" width="150" height="260" rx="8" fill="#10101a" stroke="#4ecb8d"/>
-      <text x="805" y="60" text-anchor="middle" fill="#4ecb8d" font-weight="700">SLAVE</text>
-      <text x="805" y="78" text-anchor="middle" fill="#8888a8" font-size="10">(DDR / SRAM)</text>
+      <rect x="730" y="40" width="150" height="260" rx="8" fill="#143154" stroke="#87d5bb"/>
+      <text x="805" y="60" text-anchor="middle" fill="#87d5bb" font-weight="700">SLAVE</text>
+      <text x="805" y="78" text-anchor="middle" fill="#8eaac7" font-size="10">(DDR / SRAM)</text>
 
       <g font-size="11">
-        <line x1="170" y1="100" x2="730" y2="100" stroke="#f5a623" stroke-width="2" marker-end="url(#arr1)"/>
-        <text x="450" y="92" text-anchor="middle" fill="#f5a623">AW  — Write address channel</text>
+        <line x1="170" y1="100" x2="730" y2="100" stroke="#f4c44d" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="92" text-anchor="middle" fill="#f4c44d">AW  — Write address channel</text>
 
-        <line x1="170" y1="140" x2="730" y2="140" stroke="#f5a623" stroke-width="2" marker-end="url(#arr1)"/>
-        <text x="450" y="132" text-anchor="middle" fill="#f5a623">W   — Write data channel (burst)</text>
+        <line x1="170" y1="140" x2="730" y2="140" stroke="#f4c44d" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="132" text-anchor="middle" fill="#f4c44d">W   — Write data channel (burst)</text>
 
-        <line x1="730" y1="180" x2="170" y2="180" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr1)"/>
-        <text x="450" y="172" text-anchor="middle" fill="#a78bfa">B   — Write response channel</text>
+        <line x1="730" y1="180" x2="170" y2="180" stroke="#c7b9fe" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="172" text-anchor="middle" fill="#c7b9fe">B   — Write response channel</text>
 
-        <line x1="170" y1="220" x2="730" y2="220" stroke="#4ecb8d" stroke-width="2" marker-end="url(#arr1)"/>
-        <text x="450" y="212" text-anchor="middle" fill="#4ecb8d">AR  — Read address channel</text>
+        <line x1="170" y1="220" x2="730" y2="220" stroke="#87d5bb" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="212" text-anchor="middle" fill="#87d5bb">AR  — Read address channel</text>
 
-        <line x1="730" y1="260" x2="170" y2="260" stroke="#4ecb8d" stroke-width="2" marker-end="url(#arr1)"/>
-        <text x="450" y="252" text-anchor="middle" fill="#4ecb8d">R   — Read data channel (burst, with RLAST)</text>
+        <line x1="730" y1="260" x2="170" y2="260" stroke="#87d5bb" stroke-width="2" marker-end="url(#arr1)"/>
+        <text x="450" y="252" text-anchor="middle" fill="#87d5bb">R   — Read data channel (burst, with RLAST)</text>
       </g>
 
       <defs>
@@ -323,12 +323,12 @@ HSEL_x           // per-slave select</code></pre>
         </marker>
       </defs>
 
-      <text x="450" y="322" text-anchor="middle" fill="#8888a8" font-size="11">Every channel: VALID (source) · READY (sink) · PAYLOAD · ID · LAST (on data channels)</text>
+      <text x="450" y="322" text-anchor="middle" fill="#8eaac7" font-size="11">Every channel: VALID (source) · READY (sink) · PAYLOAD · ID · LAST (on data channels)</text>
     </g>
   </svg>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">09</span><h2>AMBA 4 (2010) — AXI4, AXI4-Lite, AXI4-Stream, ACE</h2></div>
   <div class="cols cols-2">
     <div>
@@ -361,7 +361,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">10</span><h2>AMBA 5 (2013+) — CHI for Scale</h2></div>
   <div class="cols cols-2">
     <div>
@@ -386,7 +386,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">11</span><h2>AMBA Version Timeline</h2></div>
   <div class="tl">
     <div class="yr">1996</div><div class="dot">●</div>
@@ -427,7 +427,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">12</span><h2>Generations — Interactive</h2></div>
   <p class="dim small">Click a generation to see what it added and what it enabled.</p>
   <div class="ver-picker" id="verPicker">
@@ -508,7 +508,7 @@ HSEL_x           // per-slave select</code></pre>
   </script>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">13</span><h2>Why Five Protocols Coexist Today</h2></div>
   <div class="cols cols-2">
     <div>
@@ -532,7 +532,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">14</span><h2>AMBA as Arm's Silent Moat</h2></div>
   <div class="cols cols-2">
     <div>
@@ -556,7 +556,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">15</span><h2>How the Specs Are Published</h2></div>
   <div class="cols cols-2">
     <div>
@@ -587,14 +587,14 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">16</span><h2>Modern Arm Server Topology</h2></div>
   <svg viewBox="0 0 900 360" class="diagram" style="width:100%;">
     <g font-family="JetBrains Mono" font-size="11">
-      <text x="20" y="20" fill="#f5a623">Neoverse N2/V2 SoC — AMBA roles at a glance</text>
+      <text x="20" y="20" fill="#f4c44d">Neoverse N2/V2 SoC — AMBA roles at a glance</text>
 
       <!-- mesh of CHI nodes -->
-      <g fill="#10101a" stroke="#f5a623">
+      <g fill="#143154" stroke="#f4c44d">
         <rect x="40"  y="50"  width="90" height="50" rx="6"/>
         <rect x="170" y="50"  width="90" height="50" rx="6"/>
         <rect x="300" y="50"  width="90" height="50" rx="6"/>
@@ -604,7 +604,7 @@ HSEL_x           // per-slave select</code></pre>
         <rect x="300" y="130" width="90" height="50" rx="6"/>
         <rect x="430" y="130" width="90" height="50" rx="6"/>
       </g>
-      <g fill="#f5a623">
+      <g fill="#f4c44d">
         <text x="85"  y="80">CPU RN-F</text>
         <text x="215" y="80">CPU RN-F</text>
         <text x="345" y="80">CPU RN-F</text>
@@ -616,7 +616,7 @@ HSEL_x           // per-slave select</code></pre>
       </g>
 
       <!-- mesh lines -->
-      <g stroke="#8888a8" stroke-width="1.3" stroke-dasharray="3 3">
+      <g stroke="#8eaac7" stroke-width="1.3" stroke-dasharray="3 3">
         <line x1="130" y1="75"  x2="170" y2="75"/>
         <line x1="260" y1="75"  x2="300" y2="75"/>
         <line x1="390" y1="75"  x2="430" y2="75"/>
@@ -628,44 +628,44 @@ HSEL_x           // per-slave select</code></pre>
         <line x1="345" y1="100" x2="345" y2="130"/>
         <line x1="475" y1="100" x2="475" y2="130"/>
       </g>
-      <text x="285" y="208" fill="#8888a8" text-anchor="middle">CMN-700 Mesh — CHI-E</text>
+      <text x="285" y="208" fill="#8eaac7" text-anchor="middle">CMN-700 Mesh — CHI-E</text>
 
       <!-- right side: AXI periphery -->
-      <rect x="600" y="50"  width="130" height="50" rx="6" fill="#10101a" stroke="#4ecb8d"/>
-      <text x="665" y="80" fill="#4ecb8d" text-anchor="middle">NIC (200 GbE)</text>
-      <rect x="600" y="110" width="130" height="50" rx="6" fill="#10101a" stroke="#4ecb8d"/>
-      <text x="665" y="140" fill="#4ecb8d" text-anchor="middle">NPU (GEMM)</text>
-      <rect x="600" y="170" width="130" height="50" rx="6" fill="#10101a" stroke="#4ecb8d"/>
-      <text x="665" y="200" fill="#4ecb8d" text-anchor="middle">DMA</text>
+      <rect x="600" y="50"  width="130" height="50" rx="6" fill="#143154" stroke="#87d5bb"/>
+      <text x="665" y="80" fill="#87d5bb" text-anchor="middle">NIC (200 GbE)</text>
+      <rect x="600" y="110" width="130" height="50" rx="6" fill="#143154" stroke="#87d5bb"/>
+      <text x="665" y="140" fill="#87d5bb" text-anchor="middle">NPU (GEMM)</text>
+      <rect x="600" y="170" width="130" height="50" rx="6" fill="#143154" stroke="#87d5bb"/>
+      <text x="665" y="200" fill="#87d5bb" text-anchor="middle">DMA</text>
 
-      <text x="520" y="145" fill="#8888a8">AXI5/ACE-Lite</text>
-      <line x1="515" y1="155" x2="598" y2="155" stroke="#4ecb8d" stroke-width="1.5" marker-end="url(#arr2)"/>
+      <text x="520" y="145" fill="#8eaac7">AXI5/ACE-Lite</text>
+      <line x1="515" y1="155" x2="598" y2="155" stroke="#87d5bb" stroke-width="1.5" marker-end="url(#arr2)"/>
 
       <!-- bottom: DDR/HBM -->
-      <rect x="40"  y="240" width="210" height="50" rx="6" fill="#10101a" stroke="#a78bfa"/>
-      <text x="145" y="270" fill="#a78bfa" text-anchor="middle">DDR5 Controller (SN-F)</text>
-      <rect x="260" y="240" width="210" height="50" rx="6" fill="#10101a" stroke="#a78bfa"/>
-      <text x="365" y="270" fill="#a78bfa" text-anchor="middle">HBM3 Controller (SN-F)</text>
-      <rect x="480" y="240" width="220" height="50" rx="6" fill="#10101a" stroke="#a78bfa"/>
-      <text x="590" y="270" fill="#a78bfa" text-anchor="middle">SMMU + PCIe/CXL Bridge</text>
-      <rect x="710" y="240" width="150" height="50" rx="6" fill="#10101a" stroke="#60a5fa"/>
-      <text x="785" y="263" fill="#60a5fa" text-anchor="middle">System Ctrl</text>
-      <text x="785" y="278" fill="#60a5fa" text-anchor="middle" font-size="10">(APB5)</text>
+      <rect x="40"  y="240" width="210" height="50" rx="6" fill="#143154" stroke="#c7b9fe"/>
+      <text x="145" y="270" fill="#c7b9fe" text-anchor="middle">DDR5 Controller (SN-F)</text>
+      <rect x="260" y="240" width="210" height="50" rx="6" fill="#143154" stroke="#c7b9fe"/>
+      <text x="365" y="270" fill="#c7b9fe" text-anchor="middle">HBM3 Controller (SN-F)</text>
+      <rect x="480" y="240" width="220" height="50" rx="6" fill="#143154" stroke="#c7b9fe"/>
+      <text x="590" y="270" fill="#c7b9fe" text-anchor="middle">SMMU + PCIe/CXL Bridge</text>
+      <rect x="710" y="240" width="150" height="50" rx="6" fill="#143154" stroke="#a5dcfe"/>
+      <text x="785" y="263" fill="#a5dcfe" text-anchor="middle">System Ctrl</text>
+      <text x="785" y="278" fill="#a5dcfe" text-anchor="middle" font-size="10">(APB5)</text>
 
-      <g fill="#8888a8" font-size="10">
+      <g fill="#8eaac7" font-size="10">
         <text x="30"  y="320">Every wire on this diagram is an AMBA protocol: CHI inside the mesh, AXI/ACE-Lite for accelerators, APB for the system-control fabric.</text>
       </g>
 
       <defs>
         <marker id="arr2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-          <path d="M0 0 L10 5 L0 10 Z" fill="#4ecb8d"/>
+          <path d="M0 0 L10 5 L0 10 Z" fill="#87d5bb"/>
         </marker>
       </defs>
     </g>
   </svg>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">17</span><h2>Key Protocol Inflection Points</h2></div>
   <div class="cols cols-2">
     <div>
@@ -687,7 +687,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">18</span><h2>Who Competes with AMBA?</h2></div>
   <div class="cols cols-2">
     <div>
@@ -718,7 +718,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">19</span><h2>AMBA in Verification &amp; VIP</h2></div>
   <div class="cols cols-2">
     <div>
@@ -747,7 +747,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">20</span><h2>Cultural Moments</h2></div>
   <div class="cols cols-2">
     <div>
@@ -774,7 +774,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">21</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
@@ -796,7 +796,7 @@ HSEL_x           // per-slave select</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">22</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>

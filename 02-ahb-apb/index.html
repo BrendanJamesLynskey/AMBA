@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
 <style>
   :root {
-    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
-    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+    --amber:#f4c44d;--green:#87d5bb;--purple:#c7b9fe;--blue:#a5dcfe;--red:#fd8c79;
+    --bg:#10294a;--bg2:#143154;--bg3:#18375d;--border:#305782;--text:#ecf1f7;--muted:#8eaac7;
   }
   .reveal-viewport { background: var(--bg); }
   .reveal .slides section { background: transparent; }
@@ -23,7 +23,7 @@
   .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
   .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
   .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
   .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
   .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
   .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
@@ -31,19 +31,19 @@
   .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
   .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
   .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
-  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #dbe5ef; }
   .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
   .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
   .slide-hdr h2 { margin: 0; font-size: 1.4em; }
   .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
-  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(10,31,58,0.3); margin: 0.4em 0; }
   .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
   .card h3 { font-size: 1em; margin: 0 0 0.4em; }
-  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #bfd1e2; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
   .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
   .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
-  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
-  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #d0ddea; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #132f51; }
   .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
   svg.diagram { display: block; margin: 0 auto; overflow: visible; }
   .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
@@ -53,7 +53,7 @@
   .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
 
   /* Waveform styling */
-  .wave { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; color: #cdd6f4; }
+  .wave { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; color: #dbe5ef; }
   .wave .sig { color: var(--amber); }
 </style>
 </head>
@@ -61,7 +61,7 @@
 <div class="reveal">
 <div class="slides">
 
-<section class="title-slide" data-background-color="#0a0a0f">
+<section class="title-slide" data-background-color="#10294a">
   <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 02</div>
   <h1>AHB &amp; APB</h1>
   <div class="subtitle">The Original AMBA Protocols · Still Everywhere Inside Your MCU</div>
@@ -70,7 +70,7 @@
   <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">02</span><h2>Why AHB &amp; APB Still Matter</h2></div>
   <div class="cols cols-2">
     <div>
@@ -90,7 +90,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">03</span><h2>AHB — Signals</h2></div>
   <div class="cols cols-2">
     <div>
@@ -129,60 +129,60 @@ HSEL_x        // per-slave, decoded from HADDR</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">04</span><h2>AHB — The Pipelined Handshake</h2></div>
   <svg viewBox="0 0 900 260" class="diagram" style="width:100%;">
-    <g font-family="JetBrains Mono" font-size="11" fill="#cdd6f4">
-      <text x="20" y="20" fill="#f5a623">Two consecutive reads — address phase of N+1 overlaps data phase of N</text>
+    <g font-family="JetBrains Mono" font-size="11" fill="#dbe5ef">
+      <text x="20" y="20" fill="#f4c44d">Two consecutive reads — address phase of N+1 overlaps data phase of N</text>
 
       <!-- Clock row -->
-      <text x="10" y="60" fill="#f5a623">HCLK</text>
-      <g stroke="#f5a623" fill="none" stroke-width="1.4">
+      <text x="10" y="60" fill="#f4c44d">HCLK</text>
+      <g stroke="#f4c44d" fill="none" stroke-width="1.4">
         <polyline points="70,70 90,70 90,50 130,50 130,70 170,70 170,50 210,50 210,70 250,70 250,50 290,50 290,70 330,70 330,50 370,50 370,70 410,70 410,50 450,50 450,70"/>
       </g>
 
-      <text x="10" y="100" fill="#f5a623">HADDR</text>
+      <text x="10" y="100" fill="#f4c44d">HADDR</text>
       <g font-size="10">
-        <rect x="90"  y="85" width="80" height="22" fill="#10101a" stroke="#f5a623"/>
-        <text x="130" y="101" text-anchor="middle" fill="#f5a623">A0</text>
-        <rect x="170" y="85" width="80" height="22" fill="#10101a" stroke="#f5a623"/>
-        <text x="210" y="101" text-anchor="middle" fill="#f5a623">A1</text>
-        <rect x="250" y="85" width="80" height="22" fill="#10101a" stroke="#f5a623"/>
-        <text x="290" y="101" text-anchor="middle" fill="#f5a623">A2</text>
+        <rect x="90"  y="85" width="80" height="22" fill="#143154" stroke="#f4c44d"/>
+        <text x="130" y="101" text-anchor="middle" fill="#f4c44d">A0</text>
+        <rect x="170" y="85" width="80" height="22" fill="#143154" stroke="#f4c44d"/>
+        <text x="210" y="101" text-anchor="middle" fill="#f4c44d">A1</text>
+        <rect x="250" y="85" width="80" height="22" fill="#143154" stroke="#f4c44d"/>
+        <text x="290" y="101" text-anchor="middle" fill="#f4c44d">A2</text>
       </g>
 
-      <text x="10" y="140" fill="#4ecb8d">HTRANS</text>
-      <g font-size="10" fill="#4ecb8d">
+      <text x="10" y="140" fill="#87d5bb">HTRANS</text>
+      <g font-size="10" fill="#87d5bb">
         <text x="130" y="140" text-anchor="middle">NONSEQ</text>
         <text x="210" y="140" text-anchor="middle">SEQ</text>
         <text x="290" y="140" text-anchor="middle">SEQ</text>
       </g>
 
-      <text x="10" y="180" fill="#a78bfa">HREADY</text>
-      <g stroke="#a78bfa" stroke-width="1.5" fill="none">
+      <text x="10" y="180" fill="#c7b9fe">HREADY</text>
+      <g stroke="#c7b9fe" stroke-width="1.5" fill="none">
         <polyline points="70,188 410,188"/>
       </g>
-      <text x="470" y="190" fill="#a78bfa">(high throughout)</text>
+      <text x="470" y="190" fill="#c7b9fe">(high throughout)</text>
 
-      <text x="10" y="220" fill="#60a5fa">HRDATA</text>
-      <g font-size="10" fill="#60a5fa">
-        <rect x="170" y="205" width="80" height="22" fill="#10101a" stroke="#60a5fa"/>
+      <text x="10" y="220" fill="#a5dcfe">HRDATA</text>
+      <g font-size="10" fill="#a5dcfe">
+        <rect x="170" y="205" width="80" height="22" fill="#143154" stroke="#a5dcfe"/>
         <text x="210" y="221" text-anchor="middle">D0</text>
-        <rect x="250" y="205" width="80" height="22" fill="#10101a" stroke="#60a5fa"/>
+        <rect x="250" y="205" width="80" height="22" fill="#143154" stroke="#a5dcfe"/>
         <text x="290" y="221" text-anchor="middle">D1</text>
-        <rect x="330" y="205" width="80" height="22" fill="#10101a" stroke="#60a5fa"/>
+        <rect x="330" y="205" width="80" height="22" fill="#143154" stroke="#a5dcfe"/>
         <text x="370" y="221" text-anchor="middle">D2</text>
       </g>
 
-      <text x="560" y="100" fill="#8888a8" font-size="11">Rule:</text>
-      <text x="560" y="120" fill="#8888a8" font-size="10">HADDR latched at rising edge when HREADY=1</text>
-      <text x="560" y="140" fill="#8888a8" font-size="10">HRDATA valid one cycle later when HREADY=1</text>
-      <text x="560" y="160" fill="#8888a8" font-size="10">Slave can stretch phases by holding HREADY low</text>
+      <text x="560" y="100" fill="#8eaac7" font-size="11">Rule:</text>
+      <text x="560" y="120" fill="#8eaac7" font-size="10">HADDR latched at rising edge when HREADY=1</text>
+      <text x="560" y="140" fill="#8eaac7" font-size="10">HRDATA valid one cycle later when HREADY=1</text>
+      <text x="560" y="160" fill="#8eaac7" font-size="10">Slave can stretch phases by holding HREADY low</text>
     </g>
   </svg>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">05</span><h2>AHB — Wait States &amp; Backpressure</h2></div>
   <div class="cols cols-2">
     <div>
@@ -206,7 +206,7 @@ HSEL_x        // per-slave, decoded from HADDR</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">06</span><h2>AHB — Burst Types</h2></div>
   <div class="cols cols-2">
     <div>
@@ -235,7 +235,7 @@ HSEL_x        // per-slave, decoded from HADDR</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">07</span><h2>AHB — Response Types</h2></div>
   <div class="cols cols-2">
     <div>
@@ -261,7 +261,7 @@ HSEL_x        // per-slave, decoded from HADDR</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">08</span><h2>AHB — Arbitration &amp; Multi-Master</h2></div>
   <div class="cols cols-2">
     <div>
@@ -275,41 +275,41 @@ HSEL_x        // per-slave, decoded from HADDR</code></pre>
     </div>
     <div>
       <svg viewBox="0 0 360 240" style="width:100%;">
-        <rect x="6" y="6" width="348" height="228" rx="8" fill="#10101a" stroke="#2a2a3a"/>
-        <text x="180" y="28" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">Full AHB with 3 masters</text>
+        <rect x="6" y="6" width="348" height="228" rx="8" fill="#143154" stroke="#305782"/>
+        <text x="180" y="28" text-anchor="middle" fill="#f4c44d" font-family="Playfair Display" font-weight="700" font-size="14">Full AHB with 3 masters</text>
 
-        <rect x="20" y="50" width="80" height="32" rx="5" fill="#181824" stroke="#f5a623"/>
-        <text x="60" y="70" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">CPU</text>
-        <rect x="20" y="90" width="80" height="32" rx="5" fill="#181824" stroke="#f5a623"/>
-        <text x="60" y="110" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">DMA</text>
-        <rect x="20" y="130" width="80" height="32" rx="5" fill="#181824" stroke="#f5a623"/>
-        <text x="60" y="150" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">USB</text>
+        <rect x="20" y="50" width="80" height="32" rx="5" fill="#18375d" stroke="#f4c44d"/>
+        <text x="60" y="70" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">CPU</text>
+        <rect x="20" y="90" width="80" height="32" rx="5" fill="#18375d" stroke="#f4c44d"/>
+        <text x="60" y="110" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">DMA</text>
+        <rect x="20" y="130" width="80" height="32" rx="5" fill="#18375d" stroke="#f4c44d"/>
+        <text x="60" y="150" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">USB</text>
 
-        <rect x="140" y="50" width="80" height="112" rx="5" fill="#181824" stroke="#4ecb8d"/>
-        <text x="180" y="104" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Arbiter +</text>
-        <text x="180" y="118" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Address Mux</text>
+        <rect x="140" y="50" width="80" height="112" rx="5" fill="#18375d" stroke="#87d5bb"/>
+        <text x="180" y="104" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">Arbiter +</text>
+        <text x="180" y="118" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">Address Mux</text>
 
-        <rect x="260" y="50" width="80" height="32" rx="5" fill="#181824" stroke="#a78bfa"/>
-        <text x="300" y="70" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">SRAM</text>
-        <rect x="260" y="90" width="80" height="32" rx="5" fill="#181824" stroke="#a78bfa"/>
-        <text x="300" y="110" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">ROM</text>
-        <rect x="260" y="130" width="80" height="32" rx="5" fill="#181824" stroke="#a78bfa"/>
-        <text x="300" y="150" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">APB BR</text>
+        <rect x="260" y="50" width="80" height="32" rx="5" fill="#18375d" stroke="#c7b9fe"/>
+        <text x="300" y="70" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="10">SRAM</text>
+        <rect x="260" y="90" width="80" height="32" rx="5" fill="#18375d" stroke="#c7b9fe"/>
+        <text x="300" y="110" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="10">ROM</text>
+        <rect x="260" y="130" width="80" height="32" rx="5" fill="#18375d" stroke="#c7b9fe"/>
+        <text x="300" y="150" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="10">APB BR</text>
 
-        <line x1="100" y1="66"  x2="140" y2="66"  stroke="#8888a8"/>
-        <line x1="100" y1="106" x2="140" y2="106" stroke="#8888a8"/>
-        <line x1="100" y1="146" x2="140" y2="146" stroke="#8888a8"/>
-        <line x1="220" y1="66"  x2="260" y2="66"  stroke="#8888a8"/>
-        <line x1="220" y1="106" x2="260" y2="106" stroke="#8888a8"/>
-        <line x1="220" y1="146" x2="260" y2="146" stroke="#8888a8"/>
+        <line x1="100" y1="66"  x2="140" y2="66"  stroke="#8eaac7"/>
+        <line x1="100" y1="106" x2="140" y2="106" stroke="#8eaac7"/>
+        <line x1="100" y1="146" x2="140" y2="146" stroke="#8eaac7"/>
+        <line x1="220" y1="66"  x2="260" y2="66"  stroke="#8eaac7"/>
+        <line x1="220" y1="106" x2="260" y2="106" stroke="#8eaac7"/>
+        <line x1="220" y1="146" x2="260" y2="146" stroke="#8eaac7"/>
 
-        <text x="180" y="205" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">Round-robin arbiter grants per transfer</text>
+        <text x="180" y="205" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="10">Round-robin arbiter grants per transfer</text>
       </svg>
     </div>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">09</span><h2>AHB-Lite (2006) — The Subset that Won</h2></div>
   <div class="cols cols-2">
     <div>
@@ -337,7 +337,7 @@ HSEL_x        // per-slave, decoded from HADDR</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">10</span><h2>AHB5 (2015) — Security, Atomics, &amp; More</h2></div>
   <div class="cols cols-2">
     <div>
@@ -362,7 +362,7 @@ HSEL_x        // per-slave, decoded from HADDR</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">11</span><h2>APB — The Peripheral Bus</h2></div>
   <div class="cols cols-2">
     <div>
@@ -396,58 +396,58 @@ PNSE / PWAKEUP      // (APB5) security / wake</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">12</span><h2>APB — Waveform</h2></div>
   <svg viewBox="0 0 900 300" class="diagram" style="width:100%;">
-    <g font-family="JetBrains Mono" font-size="11" fill="#cdd6f4">
-      <text x="20" y="20" fill="#f5a623">APB3 write followed by APB3 read — always two phases (SETUP, ACCESS)</text>
+    <g font-family="JetBrains Mono" font-size="11" fill="#dbe5ef">
+      <text x="20" y="20" fill="#f4c44d">APB3 write followed by APB3 read — always two phases (SETUP, ACCESS)</text>
 
-      <text x="10" y="60" fill="#f5a623">PCLK</text>
-      <g stroke="#f5a623" fill="none" stroke-width="1.4">
+      <text x="10" y="60" fill="#f4c44d">PCLK</text>
+      <g stroke="#f4c44d" fill="none" stroke-width="1.4">
         <polyline points="70,70 90,70 90,50 130,50 130,70 170,70 170,50 210,50 210,70 250,70 250,50 290,50 290,70 330,70 330,50 370,50 370,70 410,70 410,50 450,50 450,70 490,70"/>
       </g>
 
-      <text x="10" y="100" fill="#4ecb8d">PSEL_x</text>
-      <g stroke="#4ecb8d" fill="none" stroke-width="1.5">
+      <text x="10" y="100" fill="#87d5bb">PSEL_x</text>
+      <g stroke="#87d5bb" fill="none" stroke-width="1.5">
         <polyline points="70,108 90,108 90,92 330,92 330,108 370,108 370,92 450,92 450,108 490,108"/>
       </g>
 
-      <text x="10" y="140" fill="#a78bfa">PENABLE</text>
-      <g stroke="#a78bfa" fill="none" stroke-width="1.5">
+      <text x="10" y="140" fill="#c7b9fe">PENABLE</text>
+      <g stroke="#c7b9fe" fill="none" stroke-width="1.5">
         <polyline points="70,148 130,148 130,132 170,132 170,148 210,148 210,148 370,148 370,132 410,132 410,148 490,148"/>
       </g>
 
-      <text x="10" y="180" fill="#60a5fa">PWRITE</text>
-      <g stroke="#60a5fa" fill="none" stroke-width="1.5">
+      <text x="10" y="180" fill="#a5dcfe">PWRITE</text>
+      <g stroke="#a5dcfe" fill="none" stroke-width="1.5">
         <polyline points="70,188 90,188 90,172 210,172 210,188 370,188 490,188"/>
       </g>
 
-      <text x="10" y="220" fill="#f5a623">PADDR</text>
-      <rect x="90"  y="205" width="120" height="22" fill="#10101a" stroke="#f5a623"/>
-      <text x="150" y="221" text-anchor="middle" fill="#f5a623" font-size="10">addr W</text>
-      <rect x="330" y="205" width="120" height="22" fill="#10101a" stroke="#f5a623"/>
-      <text x="390" y="221" text-anchor="middle" fill="#f5a623" font-size="10">addr R</text>
+      <text x="10" y="220" fill="#f4c44d">PADDR</text>
+      <rect x="90"  y="205" width="120" height="22" fill="#143154" stroke="#f4c44d"/>
+      <text x="150" y="221" text-anchor="middle" fill="#f4c44d" font-size="10">addr W</text>
+      <rect x="330" y="205" width="120" height="22" fill="#143154" stroke="#f4c44d"/>
+      <text x="390" y="221" text-anchor="middle" fill="#f4c44d" font-size="10">addr R</text>
 
-      <text x="10" y="260" fill="#f87171">PREADY</text>
-      <g stroke="#f87171" fill="none" stroke-width="1.5">
+      <text x="10" y="260" fill="#fd8c79">PREADY</text>
+      <g stroke="#fd8c79" fill="none" stroke-width="1.5">
         <polyline points="70,268 170,268 170,252 210,252 210,268 410,268 410,252 450,252 450,268 490,268"/>
       </g>
 
-      <text x="130" y="290" fill="#8888a8" font-size="10">SETUP</text>
-      <text x="170" y="290" fill="#8888a8" font-size="10">ACCESS</text>
-      <text x="370" y="290" fill="#8888a8" font-size="10">SETUP</text>
-      <text x="410" y="290" fill="#8888a8" font-size="10">ACCESS</text>
+      <text x="130" y="290" fill="#8eaac7" font-size="10">SETUP</text>
+      <text x="170" y="290" fill="#8eaac7" font-size="10">ACCESS</text>
+      <text x="370" y="290" fill="#8eaac7" font-size="10">SETUP</text>
+      <text x="410" y="290" fill="#8eaac7" font-size="10">ACCESS</text>
 
-      <text x="560" y="60" fill="#8888a8" font-size="11">Phase rules:</text>
-      <text x="560" y="80" fill="#8888a8" font-size="10">SETUP:   PSEL=1, PENABLE=0 — 1 cycle</text>
-      <text x="560" y="100" fill="#8888a8" font-size="10">ACCESS:  PSEL=1, PENABLE=1 — 1 or more cycles</text>
-      <text x="560" y="120" fill="#8888a8" font-size="10">Slave holds PREADY low to stretch ACCESS.</text>
-      <text x="560" y="140" fill="#8888a8" font-size="10">After PREADY=1 high on ACCESS, return to IDLE.</text>
+      <text x="560" y="60" fill="#8eaac7" font-size="11">Phase rules:</text>
+      <text x="560" y="80" fill="#8eaac7" font-size="10">SETUP:   PSEL=1, PENABLE=0 — 1 cycle</text>
+      <text x="560" y="100" fill="#8eaac7" font-size="10">ACCESS:  PSEL=1, PENABLE=1 — 1 or more cycles</text>
+      <text x="560" y="120" fill="#8eaac7" font-size="10">Slave holds PREADY low to stretch ACCESS.</text>
+      <text x="560" y="140" fill="#8eaac7" font-size="10">After PREADY=1 high on ACCESS, return to IDLE.</text>
     </g>
   </svg>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">13</span><h2>APB Evolution — APB2/3/4/5</h2></div>
   <div class="cols cols-2">
     <div>
@@ -469,7 +469,7 @@ PNSE / PWAKEUP      // (APB5) security / wake</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">14</span><h2>AHB-to-APB Bridge</h2></div>
   <div class="cols cols-2">
     <div>
@@ -499,7 +499,7 @@ PNSE / PWAKEUP      // (APB5) security / wake</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">15</span><h2>Multi-Layer AHB</h2></div>
   <div class="cols cols-2">
     <div>
@@ -512,30 +512,30 @@ PNSE / PWAKEUP      // (APB5) security / wake</code></pre>
     </div>
     <div>
       <svg viewBox="0 0 360 260" style="width:100%;">
-        <rect x="6" y="6" width="348" height="248" rx="8" fill="#10101a" stroke="#2a2a3a"/>
-        <text x="180" y="26" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">Multi-layer AHB (3×3)</text>
+        <rect x="6" y="6" width="348" height="248" rx="8" fill="#143154" stroke="#305782"/>
+        <text x="180" y="26" text-anchor="middle" fill="#f4c44d" font-family="Playfair Display" font-weight="700" font-size="14">Multi-layer AHB (3×3)</text>
 
-        <rect x="20" y="50" width="80" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
-        <text x="60" y="70" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">CPU-M</text>
-        <rect x="20" y="90" width="80" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
-        <text x="60" y="110" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">DMA-M</text>
-        <rect x="20" y="130" width="80" height="30" rx="4" fill="#181824" stroke="#f5a623"/>
-        <text x="60" y="150" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">USB-M</text>
+        <rect x="20" y="50" width="80" height="30" rx="4" fill="#18375d" stroke="#f4c44d"/>
+        <text x="60" y="70" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">CPU-M</text>
+        <rect x="20" y="90" width="80" height="30" rx="4" fill="#18375d" stroke="#f4c44d"/>
+        <text x="60" y="110" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">DMA-M</text>
+        <rect x="20" y="130" width="80" height="30" rx="4" fill="#18375d" stroke="#f4c44d"/>
+        <text x="60" y="150" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">USB-M</text>
 
-        <rect x="140" y="40" width="80" height="160" rx="6" fill="#0e0e18" stroke="#4ecb8d"/>
-        <text x="180" y="70" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">Interconnect</text>
-        <text x="180" y="90" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">3 masters × 3</text>
-        <text x="180" y="110" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">slaves, per-slave</text>
-        <text x="180" y="130" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="10">arbiter</text>
+        <rect x="140" y="40" width="80" height="160" rx="6" fill="#132f51" stroke="#87d5bb"/>
+        <text x="180" y="70" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">Interconnect</text>
+        <text x="180" y="90" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">3 masters × 3</text>
+        <text x="180" y="110" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">slaves, per-slave</text>
+        <text x="180" y="130" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">arbiter</text>
 
-        <rect x="260" y="50" width="80" height="30" rx="4" fill="#181824" stroke="#a78bfa"/>
-        <text x="300" y="70" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">SRAM</text>
-        <rect x="260" y="90" width="80" height="30" rx="4" fill="#181824" stroke="#a78bfa"/>
-        <text x="300" y="110" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">Flash</text>
-        <rect x="260" y="130" width="80" height="30" rx="4" fill="#181824" stroke="#a78bfa"/>
-        <text x="300" y="150" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">APB BR</text>
+        <rect x="260" y="50" width="80" height="30" rx="4" fill="#18375d" stroke="#c7b9fe"/>
+        <text x="300" y="70" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="10">SRAM</text>
+        <rect x="260" y="90" width="80" height="30" rx="4" fill="#18375d" stroke="#c7b9fe"/>
+        <text x="300" y="110" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="10">Flash</text>
+        <rect x="260" y="130" width="80" height="30" rx="4" fill="#18375d" stroke="#c7b9fe"/>
+        <text x="300" y="150" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="10">APB BR</text>
 
-        <g stroke="#8888a8">
+        <g stroke="#8eaac7">
           <line x1="100" y1="65"  x2="140" y2="65"/>
           <line x1="100" y1="105" x2="140" y2="105"/>
           <line x1="100" y1="145" x2="140" y2="145"/>
@@ -543,13 +543,13 @@ PNSE / PWAKEUP      // (APB5) security / wake</code></pre>
           <line x1="220" y1="105" x2="260" y2="105"/>
           <line x1="220" y1="145" x2="260" y2="145"/>
         </g>
-        <text x="180" y="230" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">Parallelism where paths don't collide</text>
+        <text x="180" y="230" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="10">Parallelism where paths don't collide</text>
       </svg>
     </div>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">16</span><h2>Minimal AHB-Lite Slave in 30 lines</h2></div>
   <pre><code class="language-verilog">module ahb_lite_sram #(parameter ADDR_W = 12) (
   input  logic            HCLK,
@@ -588,7 +588,7 @@ endmodule</code></pre>
   <p class="small dim" style="margin-top:0.2em;">Single-port SRAM, zero wait states, OKAY only. Real peripherals add HSIZE handling, PROT checks, and byte strobes.</p>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">17</span><h2>Common AHB / APB Pitfalls</h2></div>
   <div class="cols cols-2">
     <div>
@@ -614,7 +614,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">18</span><h2>AHB vs AXI — When Each Wins</h2></div>
   <div class="cols cols-2">
     <div>
@@ -641,7 +641,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">19</span><h2>Minimal APB Slave &amp; Loopback Patterns</h2></div>
   <div class="cols cols-2">
     <div>
@@ -690,7 +690,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">20</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
@@ -712,7 +712,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">21</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>

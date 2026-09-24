@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
 <style>
   :root {
-    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
-    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+    --amber:#f4c44d;--green:#87d5bb;--purple:#c7b9fe;--blue:#a5dcfe;--red:#fd8c79;
+    --bg:#10294a;--bg2:#143154;--bg3:#18375d;--border:#305782;--text:#ecf1f7;--muted:#8eaac7;
   }
   .reveal-viewport { background: var(--bg); }
   .reveal .slides section { background: transparent; }
@@ -23,7 +23,7 @@
   .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
   .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
   .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
   .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
   .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
   .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
@@ -31,19 +31,19 @@
   .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
   .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
   .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
-  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #dbe5ef; }
   .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
   .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
   .slide-hdr h2 { margin: 0; font-size: 1.4em; }
   .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
-  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(10,31,58,0.3); margin: 0.4em 0; }
   .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
   .card h3 { font-size: 1em; margin: 0 0 0.4em; }
-  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #bfd1e2; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
   .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
   .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
-  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
-  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #d0ddea; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #132f51; }
   .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
   svg.diagram { display: block; margin: 0 auto; overflow: visible; }
   .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
@@ -54,14 +54,14 @@
 
   .trend { border: 1px solid var(--border); border-radius: 8px; padding: 0.7em 0.9em; margin: 0.3em 0; background: var(--bg2); }
   .trend h3 { font-family: 'Playfair Display', serif; font-size: 1em; color: var(--amber); margin: 0 0 0.3em; }
-  .trend p  { font-size: 0.75em; margin: 0; color: #cdd6f4; }
+  .trend p  { font-size: 0.75em; margin: 0; color: #dbe5ef; }
 </style>
 </head>
 <body>
 <div class="reveal">
 <div class="slides">
 
-<section class="title-slide" data-background-color="#0a0a0f">
+<section class="title-slide" data-background-color="#10294a">
   <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 06</div>
   <h1>The Future of AMBA</h1>
   <div class="subtitle">Chiplets · CXL Coexistence · AI Accelerators · Confidential Compute</div>
@@ -70,7 +70,7 @@
   <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">02</span><h2>The Macro Picture — Where AMBA is Going</h2></div>
   <div class="cols cols-2">
     <div>
@@ -101,7 +101,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">03</span><h2>Chiplets — the Problem Statement</h2></div>
   <div class="cols cols-2">
     <div>
@@ -133,7 +133,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">04</span><h2>CHI-C2C — Coherency over Chiplets</h2></div>
   <div class="cols cols-2">
     <div>
@@ -153,41 +153,41 @@
     </div>
     <div>
       <svg viewBox="0 0 340 260" style="width:100%;">
-        <rect x="10" y="10" width="320" height="240" rx="8" fill="#10101a" stroke="#2a2a3a"/>
-        <text x="170" y="28" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">Multi-chiplet coherent SoC</text>
+        <rect x="10" y="10" width="320" height="240" rx="8" fill="#143154" stroke="#305782"/>
+        <text x="170" y="28" text-anchor="middle" fill="#f4c44d" font-family="Playfair Display" font-weight="700" font-size="14">Multi-chiplet coherent SoC</text>
 
-        <rect x="20"  y="50"  width="140" height="80" rx="6" fill="none" stroke="#f5a623" stroke-dasharray="4 3"/>
-        <text x="90" y="66" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">Compute chiplet 0</text>
-        <text x="90" y="92" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">16 × Neoverse V2</text>
-        <text x="90" y="108" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">CMN-700 mesh</text>
+        <rect x="20"  y="50"  width="140" height="80" rx="6" fill="none" stroke="#f4c44d" stroke-dasharray="4 3"/>
+        <text x="90" y="66" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">Compute chiplet 0</text>
+        <text x="90" y="92" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="9">16 × Neoverse V2</text>
+        <text x="90" y="108" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="9">CMN-700 mesh</text>
 
-        <rect x="180" y="50"  width="140" height="80" rx="6" fill="none" stroke="#f5a623" stroke-dasharray="4 3"/>
-        <text x="250" y="66" text-anchor="middle" fill="#f5a623" font-family="JetBrains Mono" font-size="10">Compute chiplet 1</text>
-        <text x="250" y="92" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">16 × Neoverse V2</text>
-        <text x="250" y="108" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">CMN-700 mesh</text>
+        <rect x="180" y="50"  width="140" height="80" rx="6" fill="none" stroke="#f4c44d" stroke-dasharray="4 3"/>
+        <text x="250" y="66" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">Compute chiplet 1</text>
+        <text x="250" y="92" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="9">16 × Neoverse V2</text>
+        <text x="250" y="108" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="9">CMN-700 mesh</text>
 
-        <line x1="160" y1="90" x2="180" y2="90" stroke="#4ecb8d" stroke-width="2.5"/>
-        <text x="170" y="83" text-anchor="middle" fill="#4ecb8d" font-family="JetBrains Mono" font-size="9">CHI-C2C</text>
+        <line x1="160" y1="90" x2="180" y2="90" stroke="#87d5bb" stroke-width="2.5"/>
+        <text x="170" y="83" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="9">CHI-C2C</text>
 
-        <rect x="20"  y="160" width="140" height="70" rx="6" fill="none" stroke="#a78bfa" stroke-dasharray="4 3"/>
-        <text x="90" y="176" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="10">I/O chiplet</text>
-        <text x="90" y="196" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">PCIe / CXL</text>
-        <text x="90" y="212" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">Mgmt CPU</text>
+        <rect x="20"  y="160" width="140" height="70" rx="6" fill="none" stroke="#c7b9fe" stroke-dasharray="4 3"/>
+        <text x="90" y="176" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="10">I/O chiplet</text>
+        <text x="90" y="196" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="9">PCIe / CXL</text>
+        <text x="90" y="212" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="9">Mgmt CPU</text>
 
-        <rect x="180" y="160" width="140" height="70" rx="6" fill="none" stroke="#f87171" stroke-dasharray="4 3"/>
-        <text x="250" y="176" text-anchor="middle" fill="#f87171" font-family="JetBrains Mono" font-size="10">Memory chiplet</text>
-        <text x="250" y="196" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">HBM3 stacks</text>
-        <text x="250" y="212" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="9">CHI SN-F</text>
+        <rect x="180" y="160" width="140" height="70" rx="6" fill="none" stroke="#fd8c79" stroke-dasharray="4 3"/>
+        <text x="250" y="176" text-anchor="middle" fill="#fd8c79" font-family="JetBrains Mono" font-size="10">Memory chiplet</text>
+        <text x="250" y="196" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="9">HBM3 stacks</text>
+        <text x="250" y="212" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="9">CHI SN-F</text>
 
-        <line x1="90"  y1="130" x2="90"  y2="160" stroke="#4ecb8d" stroke-width="2"/>
-        <line x1="250" y1="130" x2="250" y2="160" stroke="#4ecb8d" stroke-width="2"/>
-        <line x1="160" y1="200" x2="180" y2="200" stroke="#4ecb8d" stroke-width="2"/>
+        <line x1="90"  y1="130" x2="90"  y2="160" stroke="#87d5bb" stroke-width="2"/>
+        <line x1="250" y1="130" x2="250" y2="160" stroke="#87d5bb" stroke-width="2"/>
+        <line x1="160" y1="200" x2="180" y2="200" stroke="#87d5bb" stroke-width="2"/>
       </svg>
     </div>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">05</span><h2>UCIe — What's Inside</h2></div>
   <div class="cols cols-2">
     <div>
@@ -210,7 +210,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">06</span><h2>CXL — Coexistence, not Replacement</h2></div>
   <div class="cols cols-2">
     <div>
@@ -239,7 +239,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">07</span><h2>AI &amp; Accelerators — Pulling AMBA to the Edge</h2></div>
   <div class="cols cols-2">
     <div>
@@ -269,7 +269,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">08</span><h2>MPAM — Partitioning the Cloud</h2></div>
   <div class="cols cols-2">
     <div>
@@ -299,7 +299,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">09</span><h2>RME &amp; CCA — Confidential Compute Arm-Style</h2></div>
   <div class="cols cols-2">
     <div>
@@ -327,7 +327,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">10</span><h2>AMBA-over-PCIe &amp; Virtualised I/O</h2></div>
   <div class="cols cols-2">
     <div>
@@ -354,7 +354,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">11</span><h2>Formal Verification Goes First-Class</h2></div>
   <div class="cols cols-2">
     <div>
@@ -377,7 +377,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">12</span><h2>Trends Worth Watching</h2></div>
   <div class="cols cols-2">
     <div>
@@ -411,62 +411,62 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">13</span><h2>What a 2028-class Arm SoC Might Look Like</h2></div>
   <svg viewBox="0 0 900 360" class="diagram" style="width:100%;">
     <g font-family="JetBrains Mono" font-size="10">
-      <text x="20" y="22" fill="#f5a623" font-size="12">Hypothetical Neoverse "V-next" reference system — 3 compute chiplets + 1 I/O + 2 memory chiplets</text>
+      <text x="20" y="22" fill="#f4c44d" font-size="12">Hypothetical Neoverse "V-next" reference system — 3 compute chiplets + 1 I/O + 2 memory chiplets</text>
 
       <!-- Compute chiplets -->
-      <rect x="60"  y="50"  width="220" height="100" rx="6" fill="#10101a" stroke="#f5a623"/>
-      <text x="170" y="72" text-anchor="middle" fill="#f5a623">Compute chiplet A</text>
-      <text x="170" y="92" text-anchor="middle" fill="#8888a8">32 × V-next cores</text>
-      <text x="170" y="110" text-anchor="middle" fill="#8888a8">CMN S3 mesh, MPAM, RME</text>
-      <text x="170" y="130" text-anchor="middle" fill="#8888a8">CHI-C2C edges on 3 sides</text>
+      <rect x="60"  y="50"  width="220" height="100" rx="6" fill="#143154" stroke="#f4c44d"/>
+      <text x="170" y="72" text-anchor="middle" fill="#f4c44d">Compute chiplet A</text>
+      <text x="170" y="92" text-anchor="middle" fill="#8eaac7">32 × V-next cores</text>
+      <text x="170" y="110" text-anchor="middle" fill="#8eaac7">CMN S3 mesh, MPAM, RME</text>
+      <text x="170" y="130" text-anchor="middle" fill="#8eaac7">CHI-C2C edges on 3 sides</text>
 
-      <rect x="340" y="50"  width="220" height="100" rx="6" fill="#10101a" stroke="#f5a623"/>
-      <text x="450" y="72" text-anchor="middle" fill="#f5a623">Compute chiplet B</text>
-      <text x="450" y="92" text-anchor="middle" fill="#8888a8">32 × V-next cores</text>
-      <text x="450" y="110" text-anchor="middle" fill="#8888a8">CMN S3 mesh, MPAM, RME</text>
+      <rect x="340" y="50"  width="220" height="100" rx="6" fill="#143154" stroke="#f4c44d"/>
+      <text x="450" y="72" text-anchor="middle" fill="#f4c44d">Compute chiplet B</text>
+      <text x="450" y="92" text-anchor="middle" fill="#8eaac7">32 × V-next cores</text>
+      <text x="450" y="110" text-anchor="middle" fill="#8eaac7">CMN S3 mesh, MPAM, RME</text>
 
-      <rect x="620" y="50"  width="220" height="100" rx="6" fill="#10101a" stroke="#f5a623"/>
-      <text x="730" y="72" text-anchor="middle" fill="#f5a623">Compute chiplet C</text>
-      <text x="730" y="92" text-anchor="middle" fill="#8888a8">32 × V-next cores</text>
-      <text x="730" y="110" text-anchor="middle" fill="#8888a8">NPU tiles, ACE5-Lite</text>
+      <rect x="620" y="50"  width="220" height="100" rx="6" fill="#143154" stroke="#f4c44d"/>
+      <text x="730" y="72" text-anchor="middle" fill="#f4c44d">Compute chiplet C</text>
+      <text x="730" y="92" text-anchor="middle" fill="#8eaac7">32 × V-next cores</text>
+      <text x="730" y="110" text-anchor="middle" fill="#8eaac7">NPU tiles, ACE5-Lite</text>
 
       <!-- CHI-C2C links -->
-      <line x1="280" y1="100" x2="340" y2="100" stroke="#4ecb8d" stroke-width="3"/>
-      <line x1="560" y1="100" x2="620" y2="100" stroke="#4ecb8d" stroke-width="3"/>
-      <text x="310" y="95" text-anchor="middle" fill="#4ecb8d" font-size="9">CHI-C2C</text>
-      <text x="590" y="95" text-anchor="middle" fill="#4ecb8d" font-size="9">CHI-C2C</text>
+      <line x1="280" y1="100" x2="340" y2="100" stroke="#87d5bb" stroke-width="3"/>
+      <line x1="560" y1="100" x2="620" y2="100" stroke="#87d5bb" stroke-width="3"/>
+      <text x="310" y="95" text-anchor="middle" fill="#87d5bb" font-size="9">CHI-C2C</text>
+      <text x="590" y="95" text-anchor="middle" fill="#87d5bb" font-size="9">CHI-C2C</text>
 
       <!-- Memory chiplets -->
-      <rect x="60"  y="180" width="220" height="70" rx="6" fill="#10101a" stroke="#a78bfa"/>
-      <text x="170" y="202" text-anchor="middle" fill="#a78bfa">HBM4 chiplet</text>
-      <text x="170" y="222" text-anchor="middle" fill="#8888a8">SN-F × 4 stacks = 2 TB/s</text>
+      <rect x="60"  y="180" width="220" height="70" rx="6" fill="#143154" stroke="#c7b9fe"/>
+      <text x="170" y="202" text-anchor="middle" fill="#c7b9fe">HBM4 chiplet</text>
+      <text x="170" y="222" text-anchor="middle" fill="#8eaac7">SN-F × 4 stacks = 2 TB/s</text>
 
-      <rect x="340" y="180" width="220" height="70" rx="6" fill="#10101a" stroke="#a78bfa"/>
-      <text x="450" y="202" text-anchor="middle" fill="#a78bfa">DDR5 / MCRDIMM chiplet</text>
-      <text x="450" y="222" text-anchor="middle" fill="#8888a8">12 channels, CHI SN-F</text>
+      <rect x="340" y="180" width="220" height="70" rx="6" fill="#143154" stroke="#c7b9fe"/>
+      <text x="450" y="202" text-anchor="middle" fill="#c7b9fe">DDR5 / MCRDIMM chiplet</text>
+      <text x="450" y="222" text-anchor="middle" fill="#8eaac7">12 channels, CHI SN-F</text>
 
-      <rect x="620" y="180" width="220" height="70" rx="6" fill="#10101a" stroke="#60a5fa"/>
-      <text x="730" y="202" text-anchor="middle" fill="#60a5fa">I/O chiplet</text>
-      <text x="730" y="222" text-anchor="middle" fill="#8888a8">PCIe 6.0 / CXL 3.x / NIC</text>
+      <rect x="620" y="180" width="220" height="70" rx="6" fill="#143154" stroke="#a5dcfe"/>
+      <text x="730" y="202" text-anchor="middle" fill="#a5dcfe">I/O chiplet</text>
+      <text x="730" y="222" text-anchor="middle" fill="#8eaac7">PCIe 6.0 / CXL 3.x / NIC</text>
 
-      <g stroke="#4ecb8d" stroke-width="2">
+      <g stroke="#87d5bb" stroke-width="2">
         <line x1="170" y1="150" x2="170" y2="180"/>
         <line x1="450" y1="150" x2="450" y2="180"/>
         <line x1="730" y1="150" x2="730" y2="180"/>
       </g>
 
-      <rect x="60"  y="290" width="780" height="50" rx="6" fill="none" stroke="#f87171" stroke-dasharray="4 3"/>
-      <text x="450" y="308" text-anchor="middle" fill="#f87171">Package substrate — UCIe 2.0, silicon photonics option, standard-package lanes between chiplets</text>
-      <text x="450" y="328" text-anchor="middle" fill="#8888a8">Every chiplet-to-chiplet edge runs CHI-C2C protocol over UCIe physical lanes</text>
+      <rect x="60"  y="290" width="780" height="50" rx="6" fill="none" stroke="#fd8c79" stroke-dasharray="4 3"/>
+      <text x="450" y="308" text-anchor="middle" fill="#fd8c79">Package substrate — UCIe 2.0, silicon photonics option, standard-package lanes between chiplets</text>
+      <text x="450" y="328" text-anchor="middle" fill="#8eaac7">Every chiplet-to-chiplet edge runs CHI-C2C protocol over UCIe physical lanes</text>
     </g>
   </svg>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">14</span><h2>Threats to AMBA's Dominance</h2></div>
   <div class="cols cols-2">
     <div>
@@ -491,7 +491,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">15</span><h2>Second-Order Effects</h2></div>
   <div class="cols cols-2">
     <div>
@@ -514,7 +514,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">16</span><h2>A Speculative AMBA 6?</h2></div>
   <div class="cols cols-2">
     <div>
@@ -541,7 +541,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">17</span><h2>What Engineers Should Learn Next</h2></div>
   <div class="cols cols-2">
     <div>
@@ -572,7 +572,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">18</span><h2>The Big-Picture Summary</h2></div>
   <div class="cols cols-2">
     <div>
@@ -584,7 +584,7 @@
       </ul>
     </div>
     <div>
-      <div class="quote" style="font-style: italic; color: #ccc; padding: 0.5em 1em; border-left: 3px solid var(--blue); background: var(--bg2); border-radius: 4px; font-size: 0.8em;">
+      <div class="quote" style="font-style: italic; color: #d0ddea; padding: 0.5em 1em; border-left: 3px solid var(--blue); background: var(--bg2); border-radius: 4px; font-size: 0.8em;">
         "The interconnect is no longer a piece of plumbing. It's where confidentiality is enforced, where tenants are isolated, where chiplets are stitched together, and where the semantics of your compute platform live. AMBA is quietly becoming the operating contract of modern silicon."
         <cite style="display: block; font-size: 0.72em; color: var(--muted); font-style: normal; margin-top: 0.4em;">— Industry observation, 2023</cite>
       </div>
@@ -592,7 +592,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">19</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
@@ -612,7 +612,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">20</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>

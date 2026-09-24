@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
 <style>
   :root {
-    --amber:#f5a623;--green:#4ecb8d;--purple:#a78bfa;--blue:#60a5fa;--red:#f87171;
-    --bg:#0a0a0f;--bg2:#10101a;--bg3:#181824;--border:#2a2a3a;--text:#e8e8f0;--muted:#8888a8;
+    --amber:#f4c44d;--green:#87d5bb;--purple:#c7b9fe;--blue:#a5dcfe;--red:#fd8c79;
+    --bg:#10294a;--bg2:#143154;--bg3:#18375d;--border:#305782;--text:#ecf1f7;--muted:#8eaac7;
   }
   .reveal-viewport { background: var(--bg); }
   .reveal .slides section { background: transparent; }
@@ -23,7 +23,7 @@
   .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
   .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
   .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #fff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
   .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
   .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
   .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
@@ -31,19 +31,19 @@
   .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
   .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
   .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
-  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #cdd6f4; }
+  .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #dbe5ef; }
   .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
   .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
   .slide-hdr h2 { margin: 0; font-size: 1.4em; }
   .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
-  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 0.4em 0; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(10,31,58,0.3); margin: 0.4em 0; }
   .card.amber { border-left: 3px solid var(--amber); } .card.green { border-left: 3px solid var(--green); } .card.purple{ border-left: 3px solid var(--purple); } .card.blue  { border-left: 3px solid var(--blue); } .card.red   { border-left: 3px solid var(--red); }
   .card h3 { font-size: 1em; margin: 0 0 0.4em; }
-  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #b8b8d0; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
+  .card p, .card ul  { font-size: 0.8em; margin: 0; color: #bfd1e2; } .card ul { padding-left: 1.2em; } .card li { font-size: 0.85em; margin-bottom: 0.25em; }
   .reveal table { width: 100%; border-collapse: collapse; font-size: 0.65em; margin: 0.5em 0; }
   .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
-  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #ccc; vertical-align: top; }
-  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #d0ddea; vertical-align: top; }
+  .reveal table tr:nth-child(even) td { background: #132f51; }
   .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
   svg.diagram { display: block; margin: 0 auto; overflow: visible; }
   .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
@@ -65,7 +65,7 @@
 <div class="reveal">
 <div class="slides">
 
-<section class="title-slide" data-background-color="#0a0a0f">
+<section class="title-slide" data-background-color="#10294a">
   <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 03</div>
   <h1>AXI Deep Dive</h1>
   <div class="subtitle">Channels · Bursts · IDs · Ordering · QoS · Lite &amp; Stream</div>
@@ -74,7 +74,7 @@
   <div class="meta" style="margin-top:1em;">Navigate: <span class="mono">→ ←</span> &nbsp;|&nbsp; Overview: <span class="mono">Esc</span> &nbsp;|&nbsp; Fullscreen: <span class="mono">F</span></div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">02</span><h2>What AXI Solves</h2></div>
   <div class="cols cols-2">
     <div>
@@ -103,7 +103,7 @@
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">03</span><h2>VALID / READY — The One Handshake</h2></div>
   <div class="cols cols-2">
     <div>
@@ -138,62 +138,62 @@ end</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">04</span><h2>A Read Transaction Walk-through</h2></div>
   <svg viewBox="0 0 900 320" class="diagram" style="width:100%;">
-    <g font-family="JetBrains Mono" font-size="11" fill="#cdd6f4">
-      <text x="20" y="20" fill="#f5a623">Burst read of 4 words — ARLEN=3, INCR</text>
+    <g font-family="JetBrains Mono" font-size="11" fill="#dbe5ef">
+      <text x="20" y="20" fill="#f4c44d">Burst read of 4 words — ARLEN=3, INCR</text>
 
-      <text x="10" y="60" fill="#f5a623">ACLK</text>
-      <g stroke="#f5a623" fill="none" stroke-width="1.3">
+      <text x="10" y="60" fill="#f4c44d">ACLK</text>
+      <g stroke="#f4c44d" fill="none" stroke-width="1.3">
         <polyline points="70,70 90,70 90,50 130,50 130,70 170,70 170,50 210,50 210,70 250,70 250,50 290,50 290,70 330,70 330,50 370,50 370,70 410,70 410,50 450,50 450,70 490,70 490,50 530,50 530,70 570,70 570,50 610,50 610,70"/>
       </g>
 
-      <text x="10" y="100" fill="#4ecb8d">ARVALID</text>
-      <g stroke="#4ecb8d" fill="none" stroke-width="1.5">
+      <text x="10" y="100" fill="#87d5bb">ARVALID</text>
+      <g stroke="#87d5bb" fill="none" stroke-width="1.5">
         <polyline points="70,108 90,108 90,92 170,92 170,108 610,108"/>
       </g>
-      <text x="10" y="130" fill="#4ecb8d">ARREADY</text>
-      <g stroke="#4ecb8d" fill="none" stroke-width="1.5">
+      <text x="10" y="130" fill="#87d5bb">ARREADY</text>
+      <g stroke="#87d5bb" fill="none" stroke-width="1.5">
         <polyline points="70,138 90,138 90,122 170,122 170,138 610,138"/>
       </g>
-      <text x="100" y="88" fill="#8888a8" font-size="10">AR handshake (1 cycle)</text>
+      <text x="100" y="88" fill="#8eaac7" font-size="10">AR handshake (1 cycle)</text>
 
-      <text x="10" y="170" fill="#a78bfa">RVALID</text>
-      <g stroke="#a78bfa" fill="none" stroke-width="1.5">
+      <text x="10" y="170" fill="#c7b9fe">RVALID</text>
+      <g stroke="#c7b9fe" fill="none" stroke-width="1.5">
         <polyline points="70,178 250,178 250,162 410,162 410,178 490,178 490,162 530,162 530,178 610,178"/>
       </g>
-      <text x="10" y="200" fill="#a78bfa">RREADY</text>
-      <g stroke="#a78bfa" fill="none" stroke-width="1.5">
+      <text x="10" y="200" fill="#c7b9fe">RREADY</text>
+      <g stroke="#c7b9fe" fill="none" stroke-width="1.5">
         <polyline points="70,208 250,208 250,192 610,192"/>
       </g>
 
-      <text x="10" y="240" fill="#60a5fa">RDATA</text>
-      <rect x="250" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
-      <text x="270" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">D0</text>
-      <rect x="290" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
-      <text x="310" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">D1</text>
-      <rect x="330" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
-      <text x="350" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">D2</text>
-      <rect x="370" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
-      <text x="390" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">wait</text>
-      <rect x="490" y="225" width="40" height="22" fill="#10101a" stroke="#60a5fa"/>
-      <text x="510" y="241" text-anchor="middle" fill="#60a5fa" font-size="10">D3</text>
+      <text x="10" y="240" fill="#a5dcfe">RDATA</text>
+      <rect x="250" y="225" width="40" height="22" fill="#143154" stroke="#a5dcfe"/>
+      <text x="270" y="241" text-anchor="middle" fill="#a5dcfe" font-size="10">D0</text>
+      <rect x="290" y="225" width="40" height="22" fill="#143154" stroke="#a5dcfe"/>
+      <text x="310" y="241" text-anchor="middle" fill="#a5dcfe" font-size="10">D1</text>
+      <rect x="330" y="225" width="40" height="22" fill="#143154" stroke="#a5dcfe"/>
+      <text x="350" y="241" text-anchor="middle" fill="#a5dcfe" font-size="10">D2</text>
+      <rect x="370" y="225" width="40" height="22" fill="#143154" stroke="#a5dcfe"/>
+      <text x="390" y="241" text-anchor="middle" fill="#a5dcfe" font-size="10">wait</text>
+      <rect x="490" y="225" width="40" height="22" fill="#143154" stroke="#a5dcfe"/>
+      <text x="510" y="241" text-anchor="middle" fill="#a5dcfe" font-size="10">D3</text>
 
-      <text x="10" y="280" fill="#f87171">RLAST</text>
-      <g stroke="#f87171" fill="none" stroke-width="1.5">
+      <text x="10" y="280" fill="#fd8c79">RLAST</text>
+      <g stroke="#fd8c79" fill="none" stroke-width="1.5">
         <polyline points="70,288 490,288 490,272 530,272 530,288 610,288"/>
       </g>
 
-      <text x="650" y="170" fill="#8888a8" font-size="10">Slave pauses on D3</text>
-      <text x="650" y="185" fill="#8888a8" font-size="10">by dropping RVALID.</text>
-      <text x="650" y="210" fill="#8888a8" font-size="10">RLAST only on the</text>
-      <text x="650" y="225" fill="#8888a8" font-size="10">final beat (D3).</text>
+      <text x="650" y="170" fill="#8eaac7" font-size="10">Slave pauses on D3</text>
+      <text x="650" y="185" fill="#8eaac7" font-size="10">by dropping RVALID.</text>
+      <text x="650" y="210" fill="#8eaac7" font-size="10">RLAST only on the</text>
+      <text x="650" y="225" fill="#8eaac7" font-size="10">final beat (D3).</text>
     </g>
   </svg>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">05</span><h2>Burst Types — FIXED / INCR / WRAP</h2></div>
   <p class="dim small">Click a burst type to see how the address evolves.</p>
   <div class="burst-picker" id="bp">
@@ -244,7 +244,7 @@ end</code></pre>
   </script>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">06</span><h2>Burst Lengths &amp; Alignment</h2></div>
   <div class="cols cols-2">
     <div>
@@ -277,7 +277,7 @@ end</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">07</span><h2>AXI IDs — The Out-of-Order Engine</h2></div>
   <div class="cols cols-2">
     <div>
@@ -315,7 +315,7 @@ Slave can return:
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">08</span><h2>Write Interleaving — and Why It's Gone</h2></div>
   <div class="cols cols-2">
     <div>
@@ -338,7 +338,7 @@ Slave can return:
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">09</span><h2>Write Strobes — WSTRB</h2></div>
   <div class="cols cols-2">
     <div>
@@ -367,7 +367,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">10</span><h2>Responses — BRESP &amp; RRESP</h2></div>
   <div class="cols cols-2">
     <div>
@@ -394,7 +394,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">11</span><h2>AxCACHE — Memory Attributes</h2></div>
   <div class="cols cols-2">
     <div>
@@ -428,7 +428,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">12</span><h2>AxPROT — Security &amp; Privilege</h2></div>
   <div class="cols cols-2">
     <div>
@@ -456,7 +456,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">13</span><h2>AxQOS &amp; AxREGION</h2></div>
   <div class="cols cols-2">
     <div>
@@ -489,7 +489,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">14</span><h2>AxUSER — the Escape Hatch</h2></div>
   <div class="cols cols-2">
     <div>
@@ -512,7 +512,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">15</span><h2>AXI4-Lite</h2></div>
   <div class="cols cols-2">
     <div>
@@ -547,7 +547,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">16</span><h2>AXI4-Stream</h2></div>
   <div class="cols cols-2">
     <div>
@@ -579,7 +579,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">17</span><h2>AXI5 — AMBA 5 Evolution</h2></div>
   <div class="cols cols-2">
     <div>
@@ -604,7 +604,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">18</span><h2>AXI Crossbar — What Happens in the Middle</h2></div>
   <div class="cols cols-2">
     <div>
@@ -618,34 +618,34 @@ WSTRB  = 8'b0000_1000
     </div>
     <div>
       <svg viewBox="0 0 340 260" style="width:100%;">
-        <rect x="6" y="6" width="328" height="248" rx="8" fill="#10101a" stroke="#2a2a3a"/>
-        <text x="170" y="26" text-anchor="middle" fill="#f5a623" font-family="Playfair Display" font-weight="700" font-size="14">AXI 3×3 crossbar</text>
+        <rect x="6" y="6" width="328" height="248" rx="8" fill="#143154" stroke="#305782"/>
+        <text x="170" y="26" text-anchor="middle" fill="#f4c44d" font-family="Playfair Display" font-weight="700" font-size="14">AXI 3×3 crossbar</text>
 
         <g font-family="JetBrains Mono" font-size="10">
-          <rect x="20" y="50" width="70" height="28" rx="4" fill="#181824" stroke="#f5a623"/>
-          <text x="55" y="68" text-anchor="middle" fill="#f5a623">CPU</text>
-          <rect x="20" y="90" width="70" height="28" rx="4" fill="#181824" stroke="#f5a623"/>
-          <text x="55" y="108" text-anchor="middle" fill="#f5a623">GPU</text>
-          <rect x="20" y="130" width="70" height="28" rx="4" fill="#181824" stroke="#f5a623"/>
-          <text x="55" y="148" text-anchor="middle" fill="#f5a623">DMA</text>
+          <rect x="20" y="50" width="70" height="28" rx="4" fill="#18375d" stroke="#f4c44d"/>
+          <text x="55" y="68" text-anchor="middle" fill="#f4c44d">CPU</text>
+          <rect x="20" y="90" width="70" height="28" rx="4" fill="#18375d" stroke="#f4c44d"/>
+          <text x="55" y="108" text-anchor="middle" fill="#f4c44d">GPU</text>
+          <rect x="20" y="130" width="70" height="28" rx="4" fill="#18375d" stroke="#f4c44d"/>
+          <text x="55" y="148" text-anchor="middle" fill="#f4c44d">DMA</text>
 
-          <rect x="120" y="40" width="100" height="160" rx="6" fill="#0e0e18" stroke="#4ecb8d"/>
-          <text x="170" y="70" text-anchor="middle" fill="#4ecb8d">Address</text>
-          <text x="170" y="88" text-anchor="middle" fill="#4ecb8d">decode +</text>
-          <text x="170" y="106" text-anchor="middle" fill="#4ecb8d">per-slave</text>
-          <text x="170" y="124" text-anchor="middle" fill="#4ecb8d">arbiter +</text>
-          <text x="170" y="142" text-anchor="middle" fill="#4ecb8d">per-master</text>
-          <text x="170" y="160" text-anchor="middle" fill="#4ecb8d">response mux</text>
+          <rect x="120" y="40" width="100" height="160" rx="6" fill="#132f51" stroke="#87d5bb"/>
+          <text x="170" y="70" text-anchor="middle" fill="#87d5bb">Address</text>
+          <text x="170" y="88" text-anchor="middle" fill="#87d5bb">decode +</text>
+          <text x="170" y="106" text-anchor="middle" fill="#87d5bb">per-slave</text>
+          <text x="170" y="124" text-anchor="middle" fill="#87d5bb">arbiter +</text>
+          <text x="170" y="142" text-anchor="middle" fill="#87d5bb">per-master</text>
+          <text x="170" y="160" text-anchor="middle" fill="#87d5bb">response mux</text>
 
-          <rect x="250" y="50" width="70" height="28" rx="4" fill="#181824" stroke="#a78bfa"/>
-          <text x="285" y="68" text-anchor="middle" fill="#a78bfa">DDR</text>
-          <rect x="250" y="90" width="70" height="28" rx="4" fill="#181824" stroke="#a78bfa"/>
-          <text x="285" y="108" text-anchor="middle" fill="#a78bfa">SRAM</text>
-          <rect x="250" y="130" width="70" height="28" rx="4" fill="#181824" stroke="#a78bfa"/>
-          <text x="285" y="148" text-anchor="middle" fill="#a78bfa">Peri</text>
+          <rect x="250" y="50" width="70" height="28" rx="4" fill="#18375d" stroke="#c7b9fe"/>
+          <text x="285" y="68" text-anchor="middle" fill="#c7b9fe">DDR</text>
+          <rect x="250" y="90" width="70" height="28" rx="4" fill="#18375d" stroke="#c7b9fe"/>
+          <text x="285" y="108" text-anchor="middle" fill="#c7b9fe">SRAM</text>
+          <rect x="250" y="130" width="70" height="28" rx="4" fill="#18375d" stroke="#c7b9fe"/>
+          <text x="285" y="148" text-anchor="middle" fill="#c7b9fe">Peri</text>
         </g>
 
-        <g stroke="#8888a8">
+        <g stroke="#8eaac7">
           <line x1="90" y1="64" x2="120" y2="64"/>
           <line x1="90" y1="104" x2="120" y2="104"/>
           <line x1="90" y1="144" x2="120" y2="144"/>
@@ -653,13 +653,13 @@ WSTRB  = 8'b0000_1000
           <line x1="220" y1="104" x2="250" y2="104"/>
           <line x1="220" y1="144" x2="250" y2="144"/>
         </g>
-        <text x="170" y="230" text-anchor="middle" fill="#8888a8" font-family="JetBrains Mono" font-size="10">3 masters × 3 slaves — 9 directed paths</text>
+        <text x="170" y="230" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="10">3 masters × 3 slaves — 9 directed paths</text>
       </svg>
     </div>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">19</span><h2>Common AXI Pitfalls</h2></div>
   <div class="cols cols-2">
     <div>
@@ -691,7 +691,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">20</span><h2>Protocol Comparison — AXI3 vs AXI4 vs AXI5</h2></div>
   <div class="cols cols-2">
     <div>
@@ -719,7 +719,7 @@ WSTRB  = 8'b0000_1000
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">21</span><h2>Minimal Hardware — SystemVerilog Sketches</h2></div>
   <div class="cols cols-2">
     <div>
@@ -771,7 +771,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">22</span><h2>Minimal AXI4-Lite Slave (one register + loopback)</h2></div>
   <div class="cols cols-6040">
     <div>
@@ -842,7 +842,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">23</span><h2>Interview-Ready Takeaways</h2></div>
   <div class="cols cols-2">
     <div>
@@ -864,7 +864,7 @@ endmodule</code></pre>
   </div>
 </section>
 
-<section data-background-color="#0a0a0f">
+<section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">24</span><h2>References</h2></div>
   <div style="max-width:90%;margin:0 auto;font-size:0.58em;line-height:1.8;">
     <p>
