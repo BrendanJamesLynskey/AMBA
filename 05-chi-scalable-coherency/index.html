@@ -6,7 +6,7 @@
 <title>CHI — Scalable Multi-Cluster Coherency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@400;500;600;700&family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Share+Tech+Mono:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
 <style>
@@ -21,19 +21,19 @@
   .reveal .progress { color: var(--amber); height: 3px; }
   .reveal .controls { color: var(--amber); }
   .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
-  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
-  .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal { font-family: 'Archivo', sans-serif; color: var(--text); font-size: 22px; }
+  .reveal .slide-number { font-family: 'Share Tech Mono', monospace; font-size: 0.7em; color: var(--muted); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Saira Semi Condensed', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
   .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
   .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
   .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
   .reveal p  { font-size: 0.75em; line-height: 1.5; color: var(--text); }
   .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
-  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal code { font-family: 'Share Tech Mono', monospace; font-size: .72em; }
   .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
   .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #dbe5ef; }
   .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
-  .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
+  .slide-hdr .tag { font-family: 'Share Tech Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
   .slide-hdr h2 { margin: 0; font-size: 1.4em; }
   .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
   .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(10,31,58,0.3); margin: 0.4em 0; }
@@ -44,21 +44,22 @@
   .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
   .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #d0ddea; vertical-align: top; }
   .reveal table tr:nth-child(even) td { background: #132f51; }
-  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
+  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'Share Tech Mono',monospace;}
   svg.diagram { display: block; margin: 0 auto; overflow: visible; }
-  .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
+  .pill { display: inline-block; font-family: 'Share Tech Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
   .pill.amber{color:var(--amber);border-color:var(--amber);} .pill.green{color:var(--green);border-color:var(--green);} .pill.purple{color:var(--purple);border-color:var(--purple);} .pill.blue{color:var(--blue);border-color:var(--blue);} .pill.red{color:var(--red);border-color:var(--red);}
-  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'Share Tech Mono', monospace; }
   .dim { color: var(--muted); } .small { font-size: 0.65em; } .smaller { font-size: 0.55em; } .tiny { font-size: 0.48em; }
   .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
 </style>
+<style>:root{font-synthesis-weight:none}</style>
 </head>
 <body>
 <div class="reveal">
 <div class="slides">
 
 <section class="title-slide" data-background-color="#10294a">
-  <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 05</div>
+  <div style="font-family:'Share Tech Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 05</div>
   <h1>CHI — Coherent Hub Interface</h1>
   <div class="subtitle">Packet-Based Coherency for 128+ Nodes · The Protocol Behind Neoverse</div>
   <div style="width:60px;height:3px;background:var(--amber);margin-bottom:1.4em;"></div>
@@ -136,9 +137,9 @@
     <div>
       <svg viewBox="0 0 340 220" style="width:100%;">
         <rect x="10" y="10" width="320" height="200" rx="8" fill="#143154" stroke="#305782"/>
-        <text x="170" y="30" text-anchor="middle" fill="#f4c44d" font-family="Playfair Display" font-weight="700" font-size="14">CHI link — 4 virtual channels</text>
+        <text x="170" y="30" text-anchor="middle" fill="#f4c44d" font-family="Saira Semi Condensed" font-weight="700" font-size="14">CHI link — 4 virtual channels</text>
 
-        <g font-family="JetBrains Mono" font-size="11">
+        <g font-family="Share Tech Mono" font-size="11">
           <rect x="20" y="55"  width="90" height="36" rx="5" fill="#18375d" stroke="#f4c44d"/>
           <text x="65" y="78" text-anchor="middle" fill="#f4c44d">RN-F</text>
           <rect x="230" y="55" width="90" height="36" rx="5" fill="#18375d" stroke="#87d5bb"/>
@@ -202,7 +203,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
 <section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">06</span><h2>Mesh Topology — CMN-700</h2></div>
   <svg viewBox="0 0 900 400" class="diagram" style="width:100%;">
-    <g font-family="JetBrains Mono" font-size="10">
+    <g font-family="Share Tech Mono" font-size="10">
       <text x="20" y="22" fill="#f4c44d" font-size="12">Mesh NoC — each tile holds an RN-F (CPU), HN-F (home slice), and/or SN-F (memory port)</text>
 
       <!-- Draw a 4x4 mesh -->
@@ -284,7 +285,7 @@ pending_txn   : outstanding request FSM ptr</code></pre>
 <section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">07</span><h2>Request Flow — Read Miss</h2></div>
   <svg viewBox="0 0 900 320" class="diagram" style="width:100%;">
-    <g font-family="JetBrains Mono" font-size="11">
+    <g font-family="Share Tech Mono" font-size="11">
       <text x="20" y="20" fill="#f4c44d">CPU (RN-F A) misses; address hashes to HN-F@(2,2); line cached at RN-F B in UD</text>
 
       <rect x="20" y="50" width="140" height="50" rx="6" fill="#143154" stroke="#f4c44d"/>
@@ -741,7 +742,7 @@ endmodule</code></pre>
       <strong class="a">Wikipedia</strong> — "Coherent Hub Interface" and "Arm CoreLink" — well-sourced cross-references
     </p>
     <p style="color:var(--muted);margin-top:0.8em;font-size:0.85em">
-      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Playfair Display + DM Sans + JetBrains Mono<br>
+      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Saira Semi Condensed + Archivo + Share Tech Mono<br>
       Educational use.
     </p>
   </div>

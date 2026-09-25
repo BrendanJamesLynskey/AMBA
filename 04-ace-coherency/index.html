@@ -6,7 +6,7 @@
 <title>ACE &amp; ACE-Lite — Coherency over AXI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@400;500;600;700&family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Share+Tech+Mono:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
 <style>
@@ -21,19 +21,19 @@
   .reveal .progress { color: var(--amber); height: 3px; }
   .reveal .controls { color: var(--amber); }
   .reveal section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--amber), var(--green)); }
-  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); font-size: 22px; }
-  .reveal .slide-number { font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--muted); }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
+  .reveal { font-family: 'Archivo', sans-serif; color: var(--text); font-size: 22px; }
+  .reveal .slide-number { font-family: 'Share Tech Mono', monospace; font-size: 0.7em; color: var(--muted); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Saira Semi Condensed', serif; color: #ffffff; text-transform: none; letter-spacing: -0.01em; }
   .reveal h1 { font-size: 2.4em; font-weight: 900; color: var(--amber); line-height: 1.1; }
   .reveal h2 { font-size: 1.7em; font-weight: 700; color: var(--amber); margin-bottom: 0.6em; }
   .reveal h3 { font-size: 1.2em; font-weight: 700; color: var(--green); margin-bottom: 0.3em; }
   .reveal p  { font-size: 0.75em; line-height: 1.5; color: var(--text); }
   .reveal li { font-size: 0.7em; line-height: 1.5; margin-bottom: 0.25em; }
-  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal code { font-family: 'Share Tech Mono', monospace; font-size: .72em; }
   .reveal pre  { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.5em 1em; margin: 0.4em 0; width: 100%; box-shadow: none; }
   .reveal pre code { font-size: 0.58em; line-height: 1.5; background: transparent; color: #dbe5ef; }
   .slide-hdr { display: flex; align-items: center; gap: .4em; border-bottom: 1px solid var(--border); padding-bottom: .2em; margin-bottom: .3em; }
-  .slide-hdr .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
+  .slide-hdr .tag { font-family: 'Share Tech Mono', monospace; font-size: 0.55em; font-weight: 600; color: var(--bg); background: var(--amber); padding: .1em .4em; border-radius: 3px; letter-spacing: .04em; }
   .slide-hdr h2 { margin: 0; font-size: 1.4em; }
   .cols{display:grid;gap:1em;} .cols-2{grid-template-columns:1fr 1fr;} .cols-3{grid-template-columns:1fr 1fr 1fr;} .cols-6040{grid-template-columns:6fr 4fr;} .cols-4060{grid-template-columns:4fr 6fr;}
   .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1em 1.2em; box-shadow: 0 4px 20px rgba(10,31,58,0.3); margin: 0.4em 0; }
@@ -44,30 +44,31 @@
   .reveal table th { background: var(--bg3); color: var(--amber); padding: 0.5em 0.7em; border: 1px solid var(--border); text-align: left; font-weight: 700; }
   .reveal table td { padding: 0.5em 0.7em; border: 1px solid var(--border); color: #d0ddea; vertical-align: top; }
   .reveal table tr:nth-child(even) td { background: #132f51; }
-  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'JetBrains Mono',monospace;}
+  .a{color:var(--amber);font-weight:600;} .g{color:var(--green);font-weight:600;} .p{color:var(--purple);font-weight:600;} .b{color:var(--blue);font-weight:600;} .r{color:var(--red);font-weight:600;} .mono{font-family:'Share Tech Mono',monospace;}
   svg.diagram { display: block; margin: 0 auto; overflow: visible; }
-  .pill { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
+  .pill { display: inline-block; font-family: 'Share Tech Mono', monospace; font-size: 0.6em; padding: 0.15em 0.6em; border-radius: 999px; border: 1px solid; margin: 0 .08em; }
   .pill.amber{color:var(--amber);border-color:var(--amber);} .pill.green{color:var(--green);border-color:var(--green);} .pill.purple{color:var(--purple);border-color:var(--purple);} .pill.blue{color:var(--blue);border-color:var(--blue);} .pill.red{color:var(--red);border-color:var(--red);}
-  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .title-slide h1 { font-size: 2.4em; } .title-slide .subtitle { font-size: 0.85em; color: var(--green); font-weight: 400; letter-spacing: 0.06em; margin: 0.3em 0 0.6em; } .title-slide .meta { font-size: 0.6em; color: var(--muted); font-family: 'Share Tech Mono', monospace; }
   .dim { color: var(--muted); } .small { font-size: 0.65em; } .smaller { font-size: 0.55em; } .tiny { font-size: 0.48em; }
   .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
 
   .state-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4em; margin: 0.4em 0; }
   .state-box { border: 1px solid var(--border); border-radius: 8px; padding: 0.6em 0.6em; background: var(--bg2); font-size: 0.65em; }
-  .state-box h4 { margin: 0 0 0.2em; font-family: 'Playfair Display', serif; font-size: 1em; color: var(--amber); }
+  .state-box h4 { margin: 0 0 0.2em; font-family: 'Saira Semi Condensed', serif; font-size: 1em; color: var(--amber); }
   .state-box p { margin: 0; font-size: 0.85em; color: #bfd1e2; }
   .state-box.unique  { border-left: 3px solid var(--amber); }
   .state-box.shared  { border-left: 3px solid var(--green); }
   .state-box.dirty   { background: #263240; }
   .state-box.invalid { border-left: 3px solid var(--red); opacity: 0.8; }
 </style>
+<style>:root{font-synthesis-weight:none}</style>
 </head>
 <body>
 <div class="reveal">
 <div class="slides">
 
 <section class="title-slide" data-background-color="#10294a">
-  <div style="font-family:'JetBrains Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 04</div>
+  <div style="font-family:'Share Tech Mono',monospace;font-size:.5em;color:var(--muted);margin-bottom:.4em;letter-spacing:.1em;">ARM AMBA · PRESENTATION 04</div>
   <h1>ACE &amp; ACE-Lite</h1>
   <div class="subtitle">Bringing Cache Coherency to AXI · Five Cache States, Three Snoop Channels</div>
   <div style="width:60px;height:3px;background:var(--amber);margin-bottom:1.4em;"></div>
@@ -191,16 +192,16 @@
     <div>
       <svg viewBox="0 0 340 260" style="width:100%;">
         <rect x="10" y="10" width="320" height="240" rx="8" fill="#143154" stroke="#305782"/>
-        <text x="170" y="30" text-anchor="middle" fill="#f4c44d" font-family="Playfair Display" font-weight="700" font-size="14">ACE master ports</text>
+        <text x="170" y="30" text-anchor="middle" fill="#f4c44d" font-family="Saira Semi Condensed" font-weight="700" font-size="14">ACE master ports</text>
 
         <rect x="30" y="54" width="90" height="40" rx="5" fill="#18375d" stroke="#f4c44d"/>
-        <text x="75" y="78" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">ACE Master</text>
+        <text x="75" y="78" text-anchor="middle" fill="#f4c44d" font-family="Share Tech Mono" font-size="10">ACE Master</text>
 
         <rect x="200" y="54" width="110" height="170" rx="6" fill="#18375d" stroke="#87d5bb"/>
-        <text x="255" y="78" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">CCI / ACE</text>
-        <text x="255" y="92" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">Interconnect</text>
+        <text x="255" y="78" text-anchor="middle" fill="#87d5bb" font-family="Share Tech Mono" font-size="10">CCI / ACE</text>
+        <text x="255" y="92" text-anchor="middle" fill="#87d5bb" font-family="Share Tech Mono" font-size="10">Interconnect</text>
 
-        <g stroke-width="1.4" font-family="JetBrains Mono" font-size="9">
+        <g stroke-width="1.4" font-family="Share Tech Mono" font-size="9">
           <line x1="120" y1="60"  x2="200" y2="60"  stroke="#f4c44d"/>
           <text x="160" y="55" fill="#f4c44d" text-anchor="middle">AR/AW</text>
           <line x1="120" y1="78"  x2="200" y2="78"  stroke="#c7b9fe"/>
@@ -215,7 +216,7 @@
           <text x="160" y="159" fill="#c7b9fe" text-anchor="middle">CD (data)</text>
         </g>
 
-        <text x="170" y="240" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="10">5 AXI channels + 3 snoop channels = 8 total</text>
+        <text x="170" y="240" text-anchor="middle" fill="#8eaac7" font-family="Share Tech Mono" font-size="10">5 AXI channels + 3 snoop channels = 8 total</text>
       </svg>
     </div>
   </div>
@@ -309,7 +310,7 @@ CRRESP[4] WasUnique     — responder was unique</code></pre>
 <section data-background-color="#10294a">
   <div class="slide-hdr"><span class="tag">09</span><h2>A Coherent Read — Full Flow</h2></div>
   <svg viewBox="0 0 900 300" class="diagram" style="width:100%;">
-    <g font-family="JetBrains Mono" font-size="11" fill="#dbe5ef">
+    <g font-family="Share Tech Mono" font-size="11" fill="#dbe5ef">
       <text x="20" y="20" fill="#f4c44d">CPU0 issues ReadShared; CPU1 holds the line in UD (Modified)</text>
 
       <rect x="20"  y="50" width="140" height="60" rx="6" fill="#143154" stroke="#f4c44d"/>
@@ -504,34 +505,34 @@ CRRESP[4] WasUnique     — responder was unique</code></pre>
         <rect x="10" y="10" width="320" height="240" rx="8" fill="#143154" stroke="#305782"/>
 
         <rect x="20" y="30" width="140" height="110" rx="6" fill="none" stroke="#f4c44d" stroke-dasharray="4 3"/>
-        <text x="90" y="46" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="10">Inner (cluster 0)</text>
+        <text x="90" y="46" text-anchor="middle" fill="#f4c44d" font-family="Share Tech Mono" font-size="10">Inner (cluster 0)</text>
 
         <rect x="30" y="56" width="50" height="30" rx="4" fill="#18375d" stroke="#f4c44d"/>
-        <text x="55" y="75" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="9">CPU A</text>
+        <text x="55" y="75" text-anchor="middle" fill="#f4c44d" font-family="Share Tech Mono" font-size="9">CPU A</text>
         <rect x="100" y="56" width="50" height="30" rx="4" fill="#18375d" stroke="#f4c44d"/>
-        <text x="125" y="75" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="9">CPU B</text>
+        <text x="125" y="75" text-anchor="middle" fill="#f4c44d" font-family="Share Tech Mono" font-size="9">CPU B</text>
         <rect x="30" y="92" width="50" height="30" rx="4" fill="#18375d" stroke="#f4c44d"/>
-        <text x="55" y="111" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="9">CPU C</text>
+        <text x="55" y="111" text-anchor="middle" fill="#f4c44d" font-family="Share Tech Mono" font-size="9">CPU C</text>
         <rect x="100" y="92" width="50" height="30" rx="4" fill="#18375d" stroke="#f4c44d"/>
-        <text x="125" y="111" text-anchor="middle" fill="#f4c44d" font-family="JetBrains Mono" font-size="9">CPU D</text>
+        <text x="125" y="111" text-anchor="middle" fill="#f4c44d" font-family="Share Tech Mono" font-size="9">CPU D</text>
 
         <rect x="180" y="30" width="140" height="110" rx="6" fill="none" stroke="#87d5bb" stroke-dasharray="4 3"/>
-        <text x="250" y="46" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="10">Inner (cluster 1)</text>
+        <text x="250" y="46" text-anchor="middle" fill="#87d5bb" font-family="Share Tech Mono" font-size="10">Inner (cluster 1)</text>
         <rect x="190" y="56" width="50" height="30" rx="4" fill="#18375d" stroke="#87d5bb"/>
-        <text x="215" y="75" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="9">CPU E</text>
+        <text x="215" y="75" text-anchor="middle" fill="#87d5bb" font-family="Share Tech Mono" font-size="9">CPU E</text>
         <rect x="260" y="56" width="50" height="30" rx="4" fill="#18375d" stroke="#87d5bb"/>
-        <text x="285" y="75" text-anchor="middle" fill="#87d5bb" font-family="JetBrains Mono" font-size="9">CPU F</text>
+        <text x="285" y="75" text-anchor="middle" fill="#87d5bb" font-family="Share Tech Mono" font-size="9">CPU F</text>
 
         <rect x="20" y="160" width="300" height="50" rx="6" fill="#132f51" stroke="#c7b9fe" stroke-dasharray="4 3"/>
-        <text x="170" y="176" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="10">Outer Shareable — CCI + ACE-Lite masters</text>
+        <text x="170" y="176" text-anchor="middle" fill="#c7b9fe" font-family="Share Tech Mono" font-size="10">Outer Shareable — CCI + ACE-Lite masters</text>
         <rect x="32" y="184" width="80" height="20" rx="4" fill="#18375d" stroke="#c7b9fe"/>
-        <text x="72" y="198" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="9">Mali GPU</text>
+        <text x="72" y="198" text-anchor="middle" fill="#c7b9fe" font-family="Share Tech Mono" font-size="9">Mali GPU</text>
         <rect x="130" y="184" width="80" height="20" rx="4" fill="#18375d" stroke="#c7b9fe"/>
-        <text x="170" y="198" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="9">DMA</text>
+        <text x="170" y="198" text-anchor="middle" fill="#c7b9fe" font-family="Share Tech Mono" font-size="9">DMA</text>
         <rect x="228" y="184" width="80" height="20" rx="4" fill="#18375d" stroke="#c7b9fe"/>
-        <text x="268" y="198" text-anchor="middle" fill="#c7b9fe" font-family="JetBrains Mono" font-size="9">NIC</text>
+        <text x="268" y="198" text-anchor="middle" fill="#c7b9fe" font-family="Share Tech Mono" font-size="9">NIC</text>
 
-        <text x="170" y="240" text-anchor="middle" fill="#8eaac7" font-family="JetBrains Mono" font-size="10">Inner scope = one cluster; Outer = whole coherent domain</text>
+        <text x="170" y="240" text-anchor="middle" fill="#8eaac7" font-family="Share Tech Mono" font-size="10">Inner scope = one cluster; Outer = whole coherent domain</text>
       </svg>
     </div>
     <div>
@@ -711,7 +712,7 @@ endmodule</code></pre>
       <strong class="a">Wikipedia</strong> — "MOESI protocol", "Cache coherence" — well-sourced cross-references
     </p>
     <p style="color:var(--muted);margin-top:0.8em;font-size:0.85em">
-      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Playfair Display + DM Sans + JetBrains Mono<br>
+      Presentation built with <a href="https://revealjs.com">Reveal.js 4.6</a> · Saira Semi Condensed + Archivo + Share Tech Mono<br>
       Educational use.
     </p>
   </div>
