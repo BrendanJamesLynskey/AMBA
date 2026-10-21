@@ -1,3 +1,7 @@
+<!-- portfolio-strip:start (brief 40) -->
+<sub>**Brendan Lynskey** · [Portfolio home](https://brendanjameslynskey.github.io/) · [Interactive sites](https://brendanjameslynskey.github.io/#sites)</sub>
+<!-- portfolio-strip:end -->
+
 # ⇄ Arm AMBA Presentation Series
 
 Interactive slide decks covering Arm's **Advanced Microcontroller Bus Architecture (AMBA)** — from the 1996 release of AMBA 1 through the modern AMBA 5 CHI used in every multi-cluster Arm SoC, plus what comes next for chiplets, accelerators, and confidential compute.
